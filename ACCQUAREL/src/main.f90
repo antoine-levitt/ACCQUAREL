@@ -7,19 +7,19 @@ PROGRAM ACCQUAREL
 
   WRITE(*,*)' *** ACCQUAREL using A.S.P.I.C. *** '
   !$ WRITE(*,*)' (parallel version compiled by an OpenMP-compliant implementation)'
-  ! Case setup
+! Case setup
   CALL SETUP_CASE
-  ! Approximation setup
+! Approximation setup
   CALL SETUP_APPROXIMATION
-  ! Formalism/model setup
+! Formalism/model setup
   CALL SETUP_FORMALISM
-  ! SCF algorithms setup
+! SCF algorithms setup
   CALL SETUP_SCF
-  ! Molecular system setup
+! Molecular system setup
   CALL SETUP_DATA
-  ! Discretization basis setup
+! Discretization basis setup
   CALL SETUP_BASIS
-  ! Computation
+! Computation
   IF (RELATIVISTIC) THEN
      CALL DRIVER_relativistic
   ELSE
