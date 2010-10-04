@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+						<xs:simpleType name="tensorType">
+							<xs:restriction base="xs:string">
+							<xs:enumeration value="Full"/>
+							<xs:enumeration value="SymetricFull"/>
+							</xs:restriction>
+						</xs:simpleType>
+
+    <xs:element name="Tensor">
+        <xs:complexType>
+            <xs:sequence>
+								<xs:element name="NbrOfRows" type="xs:nonNegativeInteger"/>
+								<xs:element name="NbrOfColumns" type="xs:nonNegativeInteger"/>	
+								<xs:element name="NbrOfWidths" type="xs:nonNegativeInteger"/>	
+								<xs:element name="NbrOfHeights" type="xs:nonNegativeInteger"/>								
+                <xs:element name="Coefficient" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="Row" type="xs:nonNegativeInteger"/>
+                            <xs:element name="Column" type="xs:nonNegativeInteger"/>
+                            <xs:element name="Width" type="xs:nonNegativeInteger"/>
+                            <xs:element name="Height" type="xs:nonNegativeInteger"/>
+                           
+														 <xs:element name="Value" type="xs:double"/>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+							</xs:sequence>
+						<xs:attribute name="TensorType" type="tensorType" />
+																		
+				</xs:complexType>
+    </xs:element>
+</xs:schema>

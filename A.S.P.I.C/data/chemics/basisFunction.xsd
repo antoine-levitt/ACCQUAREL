@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="BasisFunction">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Center">
+                    <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="Position">
+                                    <xs:complexType> 
+                                        <xs:sequence>
+                                            <xs:element name="x" type="xs:double"/>
+                                            <xs:element name="y" type="xs:double"/>
+                                            <xs:element name="z" type="xs:double"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="MonomeDegree">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="x" type="xs:nonNegativeInteger"/>
+                            <xs:element name="y" type="xs:nonNegativeInteger"/>
+                            <xs:element name="z" type="xs:nonNegativeInteger"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ContractionsList">
+                    <xs:complexType>
+                        <xs:sequence>
+                    <xs:element name="Contraction" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Coefficient" type="xs:double"/>
+                            <xs:element name="Exponent" type="xs:double"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                    </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

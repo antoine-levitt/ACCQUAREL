@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Matrix MatrixType="SymetricFull">
+
+<NbrOfRows> 3 </NbrOfRows>
+
+<NbrOfColumns> 3 </NbrOfColumns>
+
+
+<Coefficient>
+	<Row> 0 </Row>
+	<Column> 0 </Column>
+	<Value> 4 </Value>
+</Coefficient>
+
+<Coefficient>
+	<Row> 0 </Row>
+	<Column> 1 </Column>
+	<Value> 1 </Value>
+</Coefficient>
+
+
+<Coefficient>
+	<Row> 1 </Row>
+	<Column> 1 </Column>
+	<Value> 3 </Value>
+</Coefficient>
+
+<Coefficient>
+	<Row> 0 </Row>
+	<Column> 2 </Column>
+	<Value> 1 </Value>
+</Coefficient>
+
+<Coefficient>
+	<Row> 1 </Row>
+	<Column> 2 </Column>
+	<Value> 1 </Value>
+</Coefficient>
+
+<Coefficient>
+	<Row> 2 </Row>
+	<Column> 2 </Column>
+	<Value> 3 </Value>
+</Coefficient>
+
+</Matrix>

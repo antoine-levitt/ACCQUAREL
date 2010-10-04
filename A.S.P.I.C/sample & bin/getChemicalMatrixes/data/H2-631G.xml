@@ -1,0 +1,61 @@
+<? xml version="1.0" ?>
+<Molecule>
+  
+  <Name> H2 </Name>
+
+<Description> Di Hydrogen to perform tests on A.S.P.I.C. </Description>
+
+<Charge> 0 </Charge>
+  
+  <ElementsList>
+<Element>
+        
+	<Atom>
+  <ChemicalElement>
+    <ChemicalElementKey> 		H				</ChemicalElementKey>
+    </ChemicalElement>
+      
+  <AtomCenter>
+	<Position>
+            <x>0.</x>
+            <y>0.</y>
+            <z>0.</z>
+	</Position>
+    <DistanceUnit>Angstroem</DistanceUnit>
+      </AtomCenter>
+	
+	  </Atom>
+	    
+	  <BasisKey>631-n</BasisKey>
+    
+</Element>
+         
+    
+  <Element>
+    
+    <Atom>
+    <ChemicalElement>
+      <ChemicalElementKey>H</ChemicalElementKey>
+    </ChemicalElement>
+    
+    <AtomCenter>
+        <Position>
+      <!-- 1.889726134 : la distance en au. Normalement on peut mettre des Angstoems en entrée maintenant. -->
+      <x> 1</x>
+      <y>0.</y>
+      <z>0.</z>        
+        </Position>
+      <DistanceUnit>Angstroem</DistanceUnit>
+    </AtomCenter>
+    </Atom>
+      
+    <BasisKey>631-n</BasisKey>
+  
+  </Element> 
+    
+  
+  </ElementsList>
+      
+</Molecule>
+
+

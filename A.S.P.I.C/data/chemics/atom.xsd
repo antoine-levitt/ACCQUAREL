@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Atom">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ChemicalElement">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ChemicalElementKey" type="xs:string" />
+                            <xs:element name="NbrOfNeutrons" type="xs:nonNegativeInteger" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="AtomCenter">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Position">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name ="x" type="xs:double" />
+                                        <xs:element name ="y" type="xs:double" />
+                                        <xs:element name ="z" type="xs:double" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="DistanceUnit">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <!-- Pout dire que l'on mnupule des angstrems. -->
+                                        <xs:enumeration value="Angstroem"/>
+                                        <xs:enumeration value="A"/>
+                                        <!-- Pout dire que l'on mnupule des angstrems. -->
+                                        <xs:enumeration value="AtomicUnitl"/>
+                                        <xs:enumeration value="au"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    </xs:schema>

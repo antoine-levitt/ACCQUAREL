@@ -1,0 +1,10 @@
+.DS_Store
+CVS.sandboxinfo
+RBMforRHFStep1.cpp
+RHFDihydrogenSample.cpp
+RHFWaterSample.cpp
+getmatrixdensity.cpp
+linearRHFsample.cpp
+matrixsamples.cpp
+testsfile.cpp
+

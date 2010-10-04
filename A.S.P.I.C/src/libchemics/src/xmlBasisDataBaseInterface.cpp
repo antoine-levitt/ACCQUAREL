@@ -1,0 +1,333 @@
+/* 
+* The chemics library of A.S.P.I.C. 
+ * Written and directed by François Lodier francois.lodier@gmail.com.
+ *
+ * Copyright (C) 2005  François Lodier
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+#include <aspicConfiguration.h>
+#include "xmlBasisDataBaseInterface.h"
+#include "xmlBasisElementParser.h"
+using namespace std;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This is a pointer to the only object of the class gaussianBasisDataBase interface  that
+// can be instancieted.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+xmlBasisDataBaseInterface * xmlBasisDataBaseInterface::BasisDataBase = NULL;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Default constructor.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+xmlBasisDataBaseInterface::xmlBasisDataBaseInterface(void)
+: xmlDataBaseInterface(xmlBasisElementParser::getBasisElementTagName(),
+											 xmlBasisElementParser::getElementKeyAttributeName()) , 
+BasisName("")
+{
+	;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Constructor with a specific basis name.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+xmlBasisDataBaseInterface::xmlBasisDataBaseInterface(const string basisName)
+: xmlDataBaseInterface(xmlBasisElementParser::getBasisElementTagName(),
+											 xmlBasisElementParser::getElementKeyAttributeName()) , 
+BasisName("")
+{
+	setBasisName(basisName);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Destructor.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+xmlBasisDataBaseInterface::~xmlBasisDataBaseInterface(void)
+{
+	;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Method connect.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void xmlBasisDataBaseInterface::connect(const string & basisName)
+{
+	// We look for need of connection
+	if(connected()) {
+		if(getConnectionId() == basisName) {
+			return;
+		} 
+		disconnect();
+	}
+	
+	// We construct an object :
+	BasisDataBase = new xmlBasisDataBaseInterface(basisName);
+		
+	// Checking the setBasisName ..
+	if(BasisDataBase->getBasisName().empty()) {
+		// if we are here ther is a problem with the data base file.
+		cerr << "Error : in void xmlBasisDataBaseInterface::connect(const string & basisName)." << endl;
+		cerr << "Error : no gaussian basis data base with name \"" << basisName << "\" was found." << endl;
+		cerr << "Error : no connection will be available" << endl;
+		// We disconnect in order to make all clean.
+		disconnect();
+		return;
+	}
+	
+	// We load the file.
+	BasisDataBase->load(BasisDataBase->getDocumentURI());
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Method to know if we are currently connected.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool xmlBasisDataBaseInterface::connected(void)
+{
+	if( BasisDataBase == NULL) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Diconnect Method.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void xmlBasisDataBaseInterface::disconnect(void)
+{
+	if(BasisDataBase != NULL) {
+		delete BasisDataBase;
+		BasisDataBase = NULL;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Method GET for the basis name.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const string & xmlBasisDataBaseInterface::getBasisName(void) const
+{
+	return BasisName;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Method GET for the document data location.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+string xmlBasisDataBaseInterface::getDocumentURI(void) const
+{
+	
+	if(getBasisName().empty()) {
+		cerr << "Error : in string xmlBasisDataBaseInterface::getDocumentURI(void) const" << endl;
+		cerr << "Error : no basis name was set."<< endl;
+		cerr << "Error : unable to build document URI." << endl;
+		return "";
+	}
+	
+	return aspicConfiguration::getBasisDataBasePath(getBasisName());
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Static  Method get for a gassian basis element.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+basisElement xmlBasisDataBaseInterface::getBasisElement(const int & item)
+{
+	DOMElement * rootElement;
+	xmlBasisElementParser elementParser;
+	basisElement element;
+
+	////////////////////////////////////////////////////////////////
+	// Pour faire cela nous devons etre connecté. Si on ne
+	// l'est pas, alors on renvoie un élément vide.
+	//
+	// Ici je renvoie un élément vide parce que cela peut juste
+	// etre du a une erreur d'utilisation et pas un problème
+	// dans le programme.
+	////////////////////////////////////////////////////////////////
+	if(!connected()) {
+		cerr << "Error : in basisElement xmlBasisDataBaseInterface::getBasisElement(const int & item)" << endl;
+		cerr << "Error : no connection is available." << endl;
+		cerr << "Error : an empty element will be returned." << endl;
+		element.clear();
+		return element;
+	}
+	
+	///////////////////////////////////////////////////////////////////////
+	// To do this we need to have a proper item.
+	// in debug we ensure that 0<= item < nbrOfBasisElements
+	////////////////////////////////////////////////////////////////////////
+	assert(item >= 0);
+	assert(item < getNbrOfBasisElements());
+		
+	/////////////////////////////////////////////////////////////////////////
+	// On retrouve, dans la base de donnée, l'élément qui nous intéresse.
+	//
+	// Lorsque cet élément est introuvable on arrete le programme.
+	/////////////////////////////////////////////////////////////////////////
+	rootElement = (DOMElement *)BasisDataBase->getDataBaseEntry(item);
+
+	if(rootElement == NULL) {
+		cerr << "Error : in basisElement xmlBasisDataBaseInterface::getBasisElement(const int & item)" << endl;
+		cerr << "Error : no element " << item <<" was found in the "<< BasisDataBase->getBasisName() <<" basis." << endl;
+		cerr << "Error : aborting." << endl;
+		exit(1);
+	}
+	
+	////////////////////////////////////////////////////////////////
+	// Dans le cas contraire on laisse le parser faire son
+	// travaille.
+	// On précise cependant la base dans laquelle l'élément
+	// à été retrouvé.
+	////////////////////////////////////////////////////////////////
+	element = elementParser.getBasisElement(rootElement);
+	
+	//////////////////////////////////////////////////////////////////////
+	// On renvoie l'élément ...
+	//////////////////////////////////////////////////////////////////////
+	return element;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Static  Method get for a gassian basis element.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+basisElement xmlBasisDataBaseInterface::getBasisElement(const string & basisName , const int & item)
+{
+	
+	connect(basisName);	
+	return getBasisElement(item);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Static  Method get for a gassian basis element.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+basisElement xmlBasisDataBaseInterface::getBasisElement(const string & elementKey)
+{
+	DOMElement * rootElement;
+	xmlBasisElementParser elementParser;
+	basisElement element;
+	
+	////////////////////////////////////////////////////////////////
+	// Pour faire cela nous devons etre connecté. Si on ne
+	// l'est pas, alors on renvoie un élément vide.
+	//
+	// Ici je renvoie un élément vide parce que cela peut juste
+	// etre du a une erreur d'utilisation et pas un problème
+	// dans le programme.
+	////////////////////////////////////////////////////////////////
+	if(!connected()) {
+		cerr << "Error : in basisElement xmlBasisDataBaseInterface::getBasisElement(const string & elementKey)" << endl;
+		cerr << "Error : no connection is available." << endl;
+		cerr << "Error : an empty element will be returned." << endl;
+		element.clear();
+		return element;
+	}
+	
+	/////////////////////////////////////////////////////////////////////////
+	// On retrouve, dans la base de donnée, l'élément qui nous intéresse.
+	//
+	// Lorsque cet élément est introuvable on arrete le programme.
+	/////////////////////////////////////////////////////////////////////////
+	rootElement = (DOMElement *)BasisDataBase->getElementById(elementKey);
+	
+	if(rootElement == NULL) {
+		cerr << "Error : in basisElement xmlBasisDataBaseInterface::getBasisElement(const string & elementKey)" << endl;
+		cerr << "Error : no element with key " << elementKey <<" was found in the "<< BasisDataBase->getBasisName() <<" basis." << endl;
+		cerr << "Error : returning an empty element." << endl;
+		element.clear();
+		return element;
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Dans le cas contraire on laisse le parser faire son
+	// travaille.
+	// On précise cependant la base dans laquelle l'élément
+	// à été retrouvé.
+	////////////////////////////////////////////////////////////////
+	element = elementParser.getBasisElement(rootElement);
+
+	//////////////////////////////////////////////////////////////////
+	// On utilise la méthode return.
+	//////////////////////////////////////////////////////////////////
+	return element;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Static  Method get for a gassian basis element.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+basisElement xmlBasisDataBaseInterface::getBasisElement(const string & basisName , const string & elementKey)
+{
+	
+	connect(basisName);	
+	return getBasisElement(elementKey);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Static  Method GET for the current basis name.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const string xmlBasisDataBaseInterface::getConnectionId(void)
+{
+	if(connected()) return BasisDataBase->getBasisName();
+	else return "";
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Static  Method GET for the number of entries in the data base.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+int xmlBasisDataBaseInterface::getNbrOfBasisElements(void)
+{
+	if(connected()) {
+		return BasisDataBase->getNbrOfEntries();
+	} else {
+		return 0;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Static  Method GET for the number of entries in the data base.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+int xmlBasisDataBaseInterface::getNbrOfBasisElements(const string & basisName)
+{
+	connect(basisName);
+	return getNbrOfBasisElements();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Method GET for the schema location.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+string xmlBasisDataBaseInterface::getSchemaURI(void) const
+{
+	return aspicConfiguration::getBasisDataBaseSchemaPath();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Method SET for the basis name.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void xmlBasisDataBaseInterface::setBasisName(const string & basisName)
+{
+	// We just copy the value ...
+	BasisName = basisName;
+	
+	if( !getDocumentURI().empty() ) {
+		return;
+	}
+	
+	////////////////////////////////////////////////////////////////////////
+	// Else there might be a problem.
+	////////////////////////////////////////////////////////////////////////
+	cerr << "Error : in void xmlBasisDataBaseInterface::setBasisName(const string & basisName)" << endl;
+	cerr << "Error : no gaussian basis data where found for basis name " << basisName << "." << endl;
+	cerr << "Error : reseting basis name to empty string." << endl;
+	BasisName = "";
+}
+

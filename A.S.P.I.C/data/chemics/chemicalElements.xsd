@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="ChemicalElements">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ChemicalElement" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+							<xs:element name="Symbol" type="xs:string" minOccurs="1" maxOccurs="1"/>
+							<xs:element name="NbrOfProtons" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+							<xs:element name="ElectronicConfiguration" type="xs:string" minOccurs="0" maxOccurs="1"/>
+							<xs:element name="Isotope" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="NbrOfNeutrons" type="xs:nonNegativeInteger"/>
+										<xs:element name="Probability" type="xs:double"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="ElementKey" type="xs:ID"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
+

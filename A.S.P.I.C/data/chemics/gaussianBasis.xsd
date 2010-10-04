@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="GaussianBasis">
+    
+    <xs:complexType>
+        <xs:sequence>
+            
+            
+            <xs:element name="BasisElement" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ShellsList">
+                            <xs:complexType>
+                                <xs:sequence>
+                                   
+                    <xs:element name="Shell" maxOccurs="unbounded">
+		<xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="ShellTypeKey" type="xs:string"/>
+                                   
+                                    <xs:element name="ContractionsList">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                        
+                                             
+                                    <xs:element name="Contraction" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:all>
+                                                <xs:element name="Coefficient" type="xs:double"/>
+                                                 <xs:element name="Exponent" type="xs:double"/>       
+                                            </xs:all>
+                                        </xs:complexType> 
+                                    </xs:element>
+                                    
+                                    
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                
+                                
+                                
+                                </xs:sequence>
+		</xs:complexType> 
+                    	    
+                        </xs:element>
+                    </xs:sequence>
+	</xs:complexType>
+            </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="ElementKey" type="xs:ID"/>
+                    <xs:attribute name="BasisKey" type="xs:string"/>
+                </xs:complexType>
+                </xs:element>
+                    </xs:sequence>
+    </xs:complexType>
+</xs:element> 
+</xs:schema>
+

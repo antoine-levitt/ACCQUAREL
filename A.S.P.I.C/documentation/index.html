@@ -1,0 +1,830 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr">
+<head>
+
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+
+  <title>A.S.P.I.C index</title>
+
+  <style>
+h1 {color : red}
+h1.titel {text-align : center}
+h2 {color : blue}
+h3 {color : green}
+  </style>
+</head>
+
+
+<body>
+
+<h1 class="titel">A.S.P.I.C</h1>
+
+<ul>
+
+  <li> <a href="#General">Pr&eacute;sentation
+g&eacute;n&eacute;rale de la
+plate
+forme A.S.P.I.C</a>
+    <ul>
+
+      <li><a href="#Pourquoi_faire_encore_un_code_de_chimie">Pourquoi
+faire encore un code de chimie ?</a></li>
+
+      <li><a href="#Philosophie_de_d%E9veloppement.">Philosophie
+de d&eacute;veloppement.</a></li>
+
+      <li><a href="#Les_solutions_propos%E9es.">Solutions
+propos&eacute;es.</a></li>
+
+      <li><a href="#Sch%E9ma_global">Sch&eacute;ma
+global de fonctionnement.</a></li>
+
+    </ul>
+
+  </li>
+
+  <li><a href="#Download">T&eacute;l&eacute;chargement</a>
+    <ul>
+
+      <li><a href="#DownloadSrc">Sources.</a></li>
+
+      <li><a href="#DownloadBin">Binaires.</a></li>
+
+    </ul>
+
+  </li>
+
+  <li><a href="#install">Installation</a></li>
+
+  <li><a href="#dataBases">Les Bases de
+donn&eacute;es</a></li>
+
+  <ul>
+
+    <li><a href="#dbGeneral">G&eacute;n&eacute;ralit&eacute;s</a>
+    </li>
+
+    <li><a href="#dbChemicalElements">La base de
+donn&eacute;es des
+&eacute;l&eacute;ments chimiques </a></li>
+
+    <li> <a href="#dbShellTypes">La base de
+donn&eacute;es des types de couches</a> </li>
+
+    <li> <a href="#dbBasis">La base de
+donn&eacute;es des fonctions de bases</a> </li>
+
+  </ul>
+
+  <li><a href="#Library">Les Biblioth&egrave;ques<br>
+
+    </a>
+    <ul>
+
+      <li><a href="#libGeneral">G&eacute;n&eacute;ralit&eacute;s</a></li>
+
+      <li><a href="#libAspicUtils">La librairie
+aspicUtils</a></li>
+
+      <li><a href="#libChemics">La librairie chemics</a></li>
+
+    </ul>
+
+  </li>
+
+  <li><a href="#BinsAndSamples">Binaires et Exemples</a><br>
+
+    <ul>
+
+      <li><a href="#aspicDataBasePrinter">aspicDataBasePrinter</a></li>
+
+      <li><a href="#basisNormaliser">gaussianBasisNormalizer</a></li>
+
+      <li><a href="#getChemicalMatrixes.">getChemicalMatrixes</a></li>
+
+      <li><a href="#shellTypesDBInterfaceSample">shellTypesDBInterfaceSample</a></li>
+
+    </ul>
+
+  </li>
+
+</ul>
+
+<h1><a name="General">Pr&eacute;sentation
+g&eacute;n&eacute;rale de la
+plate
+forme A.S.P.I.C</a></h1>
+
+<h2><a name="Pourquoi_faire_encore_un_code_de_chimie"></a>Pourquoi
+faire encore un code de chimie ?</h2>
+
+<p>Avant de d&eacute;buter un projet aussi titanesque que
+celui ci, il me semble n&eacute;cessaire de r&eacute;pondre
+&agrave; cette question. Pour cela deux arguments s'imposent :</p>
+
+<ul>
+
+  <li>
+    <p>Si de nombreux codes existent d&eacute;ja, ceux ci
+s'adressent de fa&ccedil;on quasi exclusive aux chimistes et peu
+aux informaticiens et aux math&eacute;maticiens suceptibles
+d'appliquer leurs connaissances &agrave; la chimie
+mol&eacute;culaire.</p>
+
+  </li>
+
+  <li>
+    <p>De plus l'objectif principal de ces codes est
+g&eacute;n&eacute;ralement l'obtention d'un r&eacute;sultat
+num&eacute;rique (&eacute;nergie, force, ...) suceptible d'etre
+interpr&eacute;t&eacute; par les chimistes, plus rarement de
+servir de tremplin &agrave; de nouveaux d&eacute;veloppements.</p>
+
+  </li>
+
+</ul>
+
+<p>La plate forme A.S.P.I.C souhaite combler ce
+manque. Le but de cette "boite &agrave; outils" est de permettre
+aux chimistes et aux num&eacute;riciens de d&eacute;velopper et
+de tester de fa&ccedil;on rapide et fiable de nouveaux algorithmes
+pour la chimie mol&eacute;culaire.</p>
+
+<h2><a name="Philosophie_de_d&eacute;veloppement."></a>Philosophie
+de d&eacute;veloppement.</h2>
+
+<p>Lors du d&eacute;veloppement de la plate forme, une
+attention toute particuli&egrave;re a &eacute;t&eacute;
+apport&eacute;e aux trois point suivants :</p>
+
+<h3>Fiabilit&eacute;.</h3>
+
+<p>Si le but est de tester de nouvelles m&eacute;thodes, il
+faut que les r&eacute;sultats soient fiables : c'est &agrave;
+dire que l'echec d'un test ou une boucle d'optimisation qui ne converge
+pas doivent etre du &agrave; un probl&egrave;me conceptuel et
+non &agrave; une erreur de programmation. A.S.P.I.C a
+&eacute;t&eacute;
+&eacute;labor&eacute; pour conscrire au maximum les sources
+d'erreurs.&nbsp;</p>
+
+<h3>Transparence.</h3>
+
+<p>La plate forme doit rester un outil et uniquement un outil. Il
+ne
+faut pas que le fait d'utiliser A.S.P.I.C pour un besoin entraine la
+n&eacute;cessit&eacute; de l'utiliser pour tout.</p>
+
+<p>Nous souhaitons que le code soit accessible par le plus grand
+nombre, pour ce faire il faut aussi pouvoir &eacute;tendre son
+champ de
+comp&eacute;tence de fa&ccedil;on simple. Le principe consiste
+&agrave; laisser suffisamment
+de souplesse au code pour qu'il puisse &eacute;voluer.</p>
+
+<h2><a name="Les_solutions_propos&eacute;es."></a>Les
+solutions propos&eacute;es.</h2>
+
+Afin de r&eacute;pondre &agrave; ce "cahier des charges" la
+plate forme propose une solution&nbsp;
+<h3>Utilisation d'objets.</h3>
+
+<p>
+Les sources de la plate forme sont en C++ et les quantit&eacute;s
+manipul&eacute;es sont des objets. Cela permet de manipuler les
+concepts comme des "boites noires" sans avoir &agrave; se
+pr&eacute;occuper de la gestion des donn&eacute;es interne
+&agrave; l'objet.</p>
+
+<h3>Modularit&eacute;.</h3>
+
+<p>
+Le code se pr&eacute;sente sous forme de modules qui peuvent etre
+r&eacute;utilis&eacute; ou pas par l'utilisateur. Cela permet
+de ne pas imposer de s&eacute;quence d'instructions et donc de
+laisser une grande souplesse &agrave; l'utilisateur final.</p>
+
+<h3>XML &amp; Sch&eacute;mas</h3>
+
+<p>L'utilisation de fichiers XML permet de ne pas
+g&eacute;rer, au sein
+de la plate forme, de format de donn&eacute;e mais uniquement des
+informations. Suivant les utilisateurs int&eacute;ress&eacute;s
+une ou
+plusieurs interfaces pourront &ecirc;tre rajout&eacute;es afin
+de
+formatter ces informations.</p>
+
+<h3>Utilisation d'outils informatiques appropri&eacute;s au
+d&eacute;veloppement.</h3>
+
+<p>Dans la mesure du possible la plate forme utilise des
+programmes
+externe qui permettent, &agrave; moindre cout de
+d&eacute;veloppement,
+d'augmenter les fonctionnalit&eacute;s disponibles.</p>
+
+<p>Pour l'instant nous utilisons</p>
+
+<ul>
+
+  <li><a href="http://www.doxygen.org">Doxygen</a>
+et <a href="http://www.graphviz.org/">Dot</a> pour
+la g&eacute;n&eacute;ration automatique de la documentation</li>
+
+  <li><a href="http://www.maplesoft.com/">Maple</a>
+pour la validation des modules de calcul</li>
+
+  <li>CVS pour la gestion des versions.</li>
+
+</ul>
+
+<h2><a name="Sch&eacute;ma_global"></a>Sch&eacute;ma
+global de fonctionnement.</h2>
+
+<img style="width: 100%; height: 490px;" alt="Sch&eacute;ma global de la structure ASPIC" src="global.jpg">
+<h1><a name="Download">T&eacute;l&eacute;chargement.</a></h1>
+
+<h2><a name="DownloadSrc">Sources.</a></h2>
+
+<p>Merci de vous référer à la page <a
+href="http://www.ann.jussieu.fr/A.S.P.I.C/">http://www.ann.jussieu.fr/A.S.P.I.C/</a>.
+
+<h2><a name="DownloadBin">Binaires.</a></h2>
+
+<p>Merci de vous référer à la page <a
+href="http://www.ann.jussieu.fr/A.S.P.I.C/">http://www.ann.jussieu.fr/A.S.P.I.C/</a>.
+
+<h1><a name="install">Installation.</a></h1>
+
+<h2>Pr&eacute;requis.</h2>
+
+<p>Afin d'installer correctement le code fourni avec la plate
+forme
+A.S.P.I.C, deux&nbsp;bilbioth&egrave;ques sont
+n&eacute;cessaires : </p>
+
+<ul>
+
+  <li>
+    <p><a href="http://www.netlib.org/lapack/">lapack</a>
+(et
+ces d&eacute;pendances donc principalement blas et&nbsp;g2c).
+Cette
+biblitoh&egrave;que est utilis&eacute; pour la
+r&eacute;solution du
+syst&egrave;me aux valeurs propres
+g&eacute;n&eacute;ralis&eacute;.</p>
+
+  </li>
+
+  <li>
+    <p><a href="http://xml.apache.org/xerces-c/">Xerces
+C++</a>. Cette
+biblioth&egrave;que est utilis&eacute; pour la
+lecture&nbsp;des
+fichiers XML. Si cette biblioth&egrave;que n'est pas
+install&eacute;e
+&agrave; un endroit standard, alors la variable d'environnement
+XERCESCROOT est utilis&eacute;e pour sp&eacute;cifier le
+r&eacute;pertoire contenant cette librairie.</p>
+
+  </li>
+
+</ul>
+
+<p>Dans ce qui suit, nous supposerons que ces
+biblitoh&egrave;ques sont
+install&eacute;es sur la machine qui accueillera le code A.S.P.I.C.</p>
+
+<h2>D&eacute;packetage.</h2>
+
+<p>Apr&egrave;s avoir
+<a href="#Download">t&eacute;l&eacute;charg&eacute;</a> une version du code A.S.P.I.C,
+placez vous dans le r&eacute;pertoire qui devra contenir A.S.P.I.C.
+Pour depacketer l'archive utilisez la commande :</p>
+
+<p><span style="font-family: monospace;">% tar jxvf
+&nbsp;&lt;chemin vers le
+r&eacute;pertoire&gt;/aspic-src.1.1.0.tar.bz2</span></p>
+
+<p>Ensuite la varaible d'environnement <span style="font-family: monospace;">$ASPICROOT</span>
+est utilis&eacute;e pour &nbsp;que l'on puisse
+retrouv&eacute;e de
+fa&ccedil;on certaine le r&eacute;pertoire contenant les
+inforamtions
+relatives &agrave; la plate forme A.S.P.I.C. Afin de fixer cette
+valeur, du r&eacute;pertoire o&ugrave; les sources ont
+&eacute;t&eacute; depacket&eacute;es :</p>
+
+<p><span style="font-family: monospace;">% cd
+A.S.P.I.C</span></p>
+
+<p><span style="font-family: monospace;">% export
+ASPICROOT=$PWD</span></p>
+
+<p>Il est possible de v&eacute;rifier que
+l'op&eacute;ration en effectuant l'op&eacute;ration suivante :</p>
+
+<p style="font-family: monospace;">%echo $ASPICROOT</p>
+
+<h2>Compilation des librairies.</h2>
+
+<p>La compilation des librairies, s'effectue en trois
+&eacute;tapes.
+Tout d'abord il faut se rendre dans le r&eacute;pertoire principal
+qui
+contient les sources de celles ci.</p>
+
+<p><span style="font-family: monospace;">% cd
+$ASPICROOT/src</span></p>
+
+<p>Ensuite il faut cr&eacute;er les librairies.&nbsp;</p>
+
+<p><span style="font-family: monospace;">%
+MODE=Release make </span>(pour le mode de production).</p>
+
+<p><span style="font-family: monospace;">%
+MODE=Debug make </span>(pour le mode de debuggage).</p>
+
+<p>Enfin, l'ensemble des ent&ecirc;tes peuvent etre
+regroup&eacute;es (copi&eacute;es) dans le
+r&eacute;pertoire <span style="font-family: monospace;">$ASPICROOT/include</span>
+&agrave; l'aide de la commande.</p>
+
+<p><span style="font-family: monospace;">%make
+exportIncludes</span></p>
+
+<h2>Compilation des Exemples.&nbsp;</h2>
+
+Les exemples se trouvent dans le r&eacute;pertoire <span style="font-family: monospace;">$(ASPICROOT)/sample
+&amp; bin</span>
+et se divise en plusieurs sous r&eacute;pertoire qui contiennent
+chacun
+un exemple d'utilisation d'une partie du code A.S.P.I.C. <br>
+
+<br>
+
+Pour chacun de ceux ci, chaque r&eacute;pertoire se divise en deux
+parties : le r&eacute;pertoire src contient les &nbsp;sources
+de
+l'exemple et le r&eacute;pertoire <span style="font-family: monospace;">build</span> contient
+le <span style="font-family: monospace;">makefile</span>
+qui permet de g&eacute;n&eacute;rer l'executable.<br>
+
+<br>
+
+Une fois compil&eacute;s, les binaires sont disponibles dans le
+repertoire <span style="font-family: monospace;">$(ASPICROOT)/bin</span>.<span style="font-weight: bold;"><br>
+</span>
+<h2><span style="font-weight: bold;">G&eacute;n&eacute;ration de la documentation de classe.</span></h2>
+
+<p><span style="font-weight: bold;"></span>Il est possible de
+g&eacute;n&eacute;rer de la documentation pour toutes les classes du
+code A.S.P.I.C. Cela se fait &agrave; l'aide de Doxygen.Un fichier de
+configuration pour cet utilitaire est disponible avec le code : <span style="font-family: monospace;">$(ASPICROOT)/documentation/API/aspic.dox</span>.</p>
+
+
+<span style="font-weight: bold;"></span>
+
+<h1><a name="dataBases">Les Bases de
+donn&eacute;es</a></h1>
+
+<h2><a name="dbGeneral"></a>G&eacute;n&eacute;ralit&eacute;s.</h2>
+
+<p>Une base de donn&eacute;es est un ensemble
+structur&eacute; et organis&eacute; permettant le stockage de
+grandes quantit&eacute;s d'informations afin d'en faciliter
+l'exploitation (ajout, mise &agrave; jour, recherche de
+donn&eacute;es). Une base de donn&eacute;es se traduit
+physiquement par un ensemble de fichiers sur disque.</p>
+
+<p>L'acc&egrave;s &agrave; une information contenue dans
+une base de donn&eacute;es se fait par l'interm&eacute;diaire
+d'une interface &agrave; l'aide de la cl&eacute; qui
+l'identifie de mani&egrave;re unique. pour chaque base de
+donn&eacute;es, la plate forme fourni une interface&nbsp; qui
+construit &agrave; partir d'un identifiant des objets C++ contenant
+les informations qui&nbsp; se trouvent dans la base de
+donn&eacute;es.</p>
+
+<p>Pour la plate forme, la r&eacute;alisation des bases de
+donn&eacute;es a &eacute;t&eacute; faite &agrave;
+l'aide de fichiers
+XML. Cette solution a
+&eacute;t&eacute; choisie pour deux raisons : tout d'abord elle
+est simple &agrave; mettre en oeuvre (beaucoup plus simple qu'une
+base
+SQL), ensuite le XML peut etre
+facilement transcrit dans diff&eacute;rents format &agrave;
+l'aide de <a href="http://www.w3.org/TR/xslt">XSLT</a>
+ou de <a href="http://www.w3.org/XML/Query/">XML Query</a>
+ce qui permet de pr&eacute;senter les donn&eacute;es dans
+divers formats sans impl&eacute;mentations.&nbsp;</p>
+
+<h2><a name="dbChemicalElements">La base de
+donn&eacute;es des
+&eacute;l&eacute;ments chimiques.</a></h2>
+
+<h3>Contenu</h3>
+
+<p>La base de donn&eacute;es des
+&eacute;l&eacute;ments
+chimiques permet de stocker afin de pouvoir y
+acc&eacute;der&nbsp;au sein d'un programme des
+donn&eacute;es que l'on trouve g&eacute;n&eacute;ralement
+dans le <a href="http://fr.wikipedia.org/wiki/Tableau_p%C3%A9riodique_des_%C3%A9l%C3%A9ments">tableau
+de Mendele&iuml;ev</a>. Les donn&eacute;es
+renseign&eacute;es dans cette base sont disponibles sur cette <a href="chemicalElements.html">page</a> (fichier
+g&eacute;n&eacute;r&eacute; par le programme <a href="#aspicDataBasePrinter">aspicDataBasePrinter</a>).</p>
+
+<h3>Acc&eacute;der &agrave; la base de donn&eacute;es
+depuis un programme.</h3>
+
+<p>L'acc&egrave;s aux informations pr&eacute;snete dans
+cette base de donn&eacute;e depuis un programme ce fait par
+l'interm&eacute;diaire de la classe <a href="API/html/classxmlChemicalElementsDataBaseInterface.html"><span style="font-family: monospace;">chemicalElementsDataBaseInerface</span></a>
+et la cl&eacute; qui permet d'acc&eacute;der &agrave; un
+&eacute;l&eacute;ment chimique est
+g&eacute;n&eacute;ralement son symbole. Pour plus de
+pr&eacute;cisions, le mieux est de se reporter &agrave; <a href="index.html#chemicalElementsDBinterfaceSample">l'exemple</a>
+qui illustre ce propos.</p>
+
+<p>La possibilit&eacute; de modifier cette base de
+donn&eacute;e au sein d'un programme n'a pas
+impl&eacute;ment&eacute;e. </p>
+
+<h3>Administrer la base de donn&eacute;es.</h3>
+
+L'ensemble des &eacute;l&eacute;ments chimiques est contenu
+dans le fichier XML :<br>
+
+<ul>
+
+  <li><span style="font-family: monospace;">$ASPICROOT/data/chemics/chemicalElements.xml</span></li>
+
+</ul>
+
+Le sch&eacute;ma qui r&eacute;git la syntaxe de ce fichier est
+disponible dans le fichier :<br>
+
+<ul>
+
+  <li><span style="font-family: monospace;">$ASPICROOT/data/chemics/chemicalElements.xsd</span></li>
+
+</ul>
+
+<h2><a name="dbShellTypes"></a>La base de
+donn&eacute;es des types de couches.</h2>
+
+<h3>Contenu</h3>
+
+
+
+<p>La base de donn&eacute;es des types de couches permet de
+stocker
+afin de
+pouvoir y acc&eacute;der&nbsp;au sein d'un programme les
+donn&eacute;es qui d&eacute;crivent les diff&eacute;rents
+types de couche en chimie mol&eacute;culaire.
+Les donn&eacute;es renseign&eacute;es dans cette base sont
+disponibles sur cette <a href="shellTypes.html">page</a>
+(fichier g&eacute;n&eacute;r&eacute; par le programme <a href="index.html#aspicDataBasePrinter">aspicDataBasePrinter</a>).</p>
+
+<h3>Acc&eacute;der &agrave; la base de donn&eacute;es
+depuis un programme.</h3>
+
+<p>L'acc&egrave;s aux informations pr&eacute;snete dans
+cette base de donn&eacute;e depuis un programme ce fait par
+l'interm&eacute;diaire de la classe <a href="API/html/classxmlShellTypesDataBaseInterface.html"><span style="font-family: monospace;">xmlShellTypesDataBaseInerface</span></a>
+et la cl&eacute; qui permet d'acc&eacute;der &agrave; un
+type de couche est le nom du type de couche. Pour plus de
+pr&eacute;cisions, le mieux est de se reporter &agrave; <a href="#shellTypesDBInterfaceSample">l'exemple</a> qui
+illustre ce propos.</p>
+
+<p>La possibilit&eacute; de modifier cette base de
+donn&eacute;e au sein d'un programme n'a pas
+impl&eacute;ment&eacute;e. </p>
+
+<h3>Administrer la base de donn&eacute;es.</h3>
+
+L'ensemble des types de couches est contenu dans le fichier XML :<br>
+
+<ul>
+
+  <li><span style="font-family: monospace;">$ASPICROOT/data/chemics/shellTypes.xml</span></li>
+
+</ul>
+
+Le sch&eacute;ma qui r&eacute;git la syntaxe de ce fichier est
+disponible dans le fichier :<br>
+
+<ul>
+
+  <li><span style="font-family: monospace;">$ASPICROOT/data/chemics/shellTypes.xsd</span></li>
+
+</ul>
+
+<h2><a name="dbBasis">La base de donn&eacute;e
+des bases pour la chimie.</a></h2>
+
+<h3>Contenu</h3>
+
+<p>La base de donn&eacute;es des bases
+gaussiennes&nbsp;permet de
+stocker
+afin de
+pouvoir y acc&eacute;der&nbsp;au sein d'un programme les
+donn&eacute;es qui d&eacute;crivent diff&eacute;rents
+&eacute;l&eacute;ments chimiques dans une base de gaussiennes
+donn&eacute;e. Les donn&eacute;es renseign&eacute;es sur
+dans cette base de donn&eacute;es sont disponibles sur
+cette&nbsp;<a href="gaussianBasis.html">page</a>
+(fichier g&eacute;n&eacute;r&eacute; par le programme <a href="index.html#aspicDataBasePrinter">aspicDataBasePrinter</a>).
+</p>
+
+<p>Il faut remarquer que certaines bases gaussiennes sont
+normalis&eacute;es (celle dont la cl&eacute; est en
+"nomDeBase-n") et d'autres ne le sont pas (la cl&eacute; est en
+"nomDeBase"). Naturellement, les bases "nomDeBase" et "nomDeBase-n"
+contiennent les m&ecirc;mes inforamtions (en terme de finesse de
+description des &eacute;l&eacute;ments chimiques). Les bases
+&nbsp;normalis&eacute;es ont &eacute;t&eacute;
+g&eacute;n&eacute;r&eacute;es par le <a href="#basisNormaliser">programme
+de
+nomralisation</a> fourni avec la plate forme A.S.P.I.C.</p>
+
+<h3>Acc&eacute;der &agrave; la base de donn&eacute;es
+depuis un programme.</h3>
+
+<p>L'acc&egrave;s aux informations pr&eacute;sentes dans
+cette base de donn&eacute;e depuis un programme ce fait par
+l'interm&eacute;diaire de la classe&nbsp;<a href="API/html/classxmlBasisDataBaseInterface.html"><span style="font-family: monospace;">xmlBasisDataBaseInerface</span></a>
+et la cl&eacute; qui permet d'acc&eacute;der &agrave; la
+description d'un &eacute;l&eacute;ment chimique dans une base
+est le &nbsp;couple form&eacute; par le nom de la base et le
+symbole de l'&eacute;l&eacute;ment chimique. Pour plus de
+pr&eacute;cisions, le mieux est de se reporter &agrave; <a href="index.html#shellTypesDBinterfaceSample">l'exemple</a>
+qui illustre ce propos.</p>
+
+<p>La possibilit&eacute; de modifier cette base de
+donn&eacute;e au sein d'un programme n'a pas
+impl&eacute;ment&eacute;e. </p>
+
+<h3>Administrer la base de donn&eacute;es.</h3>
+
+<p>Contrairement &nbsp;aux bases de donn&eacute;es pour
+les &eacute;l&eacute;ments chimiques et pour les types de
+couches, celle des bases gaussiennes ne se compose pas d'un seul
+fichier. En effet le choix a &eacute;t&eacute; fait de stocker
+chaque base (avec tout les &eacute;l&eacute;ments qu'elle
+contient) dans un document XML qui lui est propre. Ainsi, cette base de
+donn&eacute;es comporte autant de fichiers qu'elle contient de
+bases chimiques.</p>
+
+Le r&eacute;pertoire qui contient tout les fichiers XML :
+<ul>
+
+  <li><span style="font-family: monospace;">$ASPICROOT/data/chemics/gaussianBasis</span></li>
+
+</ul>
+
+Le sch&eacute;ma qui r&eacute;git la syntaxe de chaque fichier
+de base&nbsp;est disponible dans le fichier :<br>
+
+<ul>
+
+  <li><span style="font-family: monospace;">$ASPICROOT/data/chemics/gaussianBasis.xsd</span></li>
+
+</ul>
+
+<h1><a name="Library"></a>Les
+Biblioth&egrave;ques.</h1>
+
+<h2><a name="libGeneral"></a>G&eacute;n&eacute;ralit&eacute;s</h2>
+
+<p>La plate forme &eacute;tant destin&eacute;e
+particuli&egrave;rement aux personnes qui
+souhaitent tester de nouvelles m&eacute;thodes en chimie
+mol&eacute;culaire, il a &eacute;t&eacute; choisi de
+proposer
+principalement des biblioth&egrave;ques sur lequelles les
+d&eacute;veloppeurs pourront s'appuyer.</p>
+
+<p>Le propos est ici de pr&eacute;senter succinctement les
+fonctionnalit&eacute;s propos&eacute;es par chacune d'elles.
+Les
+personnes souahitant une documentation d&eacute;taill&eacute;e
+de
+chaque classe peuvent se reporter directement &agrave; l'<a href="API/html/index.html">API</a>.</p>
+
+<h2><a name="libAspicUtils"></a>La
+biblioth&egrave;que &nbsp;aspicUtils.</h2>
+
+<p>Le r&ocirc;le de cette biblioth&egrave;que est de
+fournir une aide substantielle pou la manipulation des
+donn&eacute;es au sein de programmes qui s'appuient sur la plate
+forme. En fait cette bibliot&egrave;que contient&nbsp; la
+classe <a href="API/html/classaspicConfiguration.html"><span style="font-family: monospace;">aspicConfiguration</span></a>
+et la classe <a href="API/html/classcmdLineParser.html"><span style="font-family: monospace;">cmdLineParser</span></a>.</p>
+
+<p>La classe <a href="API/html/classcmdLineParser.html"><span style="font-family: monospace;">cmdLineParser</span></a>
+est
+un utilitaire qui facilite la gestion des arguments
+pass&eacute;s en ligne de commande.</p>
+
+<p>La classe<a href="API/html/classaspicConfiguration.html"><span style="font-family: monospace;">aspicConfiguration</span></a>
+&nbsp;permet de retrouver, au sein d'un programme les
+diff&eacute;rents chemins vers les fichiers de donn&eacute;es
+qui viennent avec la plate forme.
+</p>
+
+<h2><a name="libChemics"></a>La
+biblioth&egrave;que chemics.</h2>
+
+<p>La biblioth&egrave;que chemics impl&eacute;mente
+toutes (ou presque)
+les classes n&eacute;cessaires &agrave; la manipulation
+d'objets pour
+la chimiqe mol&eacute;culaire ainsi que les interfaces qui
+permettent
+de lire les informations correspondantes &agrave; ces
+objets&nbsp;dans
+des fichiers XML.</p>
+
+<h2>La biblioth&egrave;que complex.</h2>
+
+gestion des nombre complexes.
+<h2>La biblioth&egrave;que containor.</h2>
+
+gestion de tout ce qui est tableau dynaique ou statiques.
+<h2>La biblioth&egrave;que gaussian.</h2>
+
+biblioth&egrave;que de mod&eacute;lisation des fonction
+gaussienne mono et
+tri dimentsionnelles, ainsi que des produits de polynomes et de
+gaussiennes.
+<h2>La biblioth&egrave;que gintegrals.</h2>
+
+biblioth&egrave;ques pour calculer les int&eacute;grales de la
+chimie.
+<h2>La biblioth&egrave;que model.</h2>
+
+gestion des mod&egrave;les chimiques. A &eacute;toffer...
+<h2>La biblioth&egrave;que matrix.</h2>
+
+gestion simplissime des matrices. Ici elle est utilis&eacute; pour
+des raisons de debugages.
+<h2>La biblioth&egrave;que polynome.</h2>
+
+gestion des polynomes.
+<h2>La biblioth&egrave;que xmlParser.</h2>
+
+couplage du code aspic avec un parser XML (dans notre cas nous avons
+choisi XERCES C++).
+<h1><a name="BinsAndSamples"></a>Binaires et
+Exemples.</h1>
+
+<h2><a name="aspicDataBasePrinter">aspicDataBasePrinter.</a></h2>
+
+<h3> Principe.</h3>
+
+<p>
+Le but de se programme est de cr&eacute;er des fichiers html qui
+synth&eacute;tisent les informations pr&eacute;sentes dans les
+bases de donn&eacute;es fournies avec la plate forme.</p>
+
+<h3>Entr&eacute;es.</h3>
+
+<p>
+Ce programe ne n&eacute;cessite pas de fichier d'entr&eacute;e.
+</p>
+
+<h3>Sorties.</h3>
+
+<p>
+Ce programme g&eacute;n&egrave;re les trois fichiers :
+</p>
+
+<ul>
+
+  <li><a href="chemicalElements.html"><span style="font-family: monospace;">$(ASPICROOT)/documentation/chemicalElements.html</span></a>
+  </li>
+
+  <li><a href="shellTypes.html"><span style="font-family: monospace;">$(ASPICROOT)/documentation/shellTypes.html</span></a>
+  </li>
+
+  <li><a href="gaussianBasis.html"><span style="font-family: monospace;">$(ASPICROOT)/documentation/gaussianBasis.html</span></a></li>
+
+</ul>
+
+<h2><a name="basisNormaliser">gaussianBasisNormaliser.</a></h2>
+
+<h3> Principe.</h3>
+
+<p>Souvent les donn&eacute;es fournies pour les bases
+gaussiennes ne
+corresponde pas &agrave; des coefficients de base
+normais&eacute;es
+(telles que le produit scalaire de deux fonctions de bases soit
+&eacute;gal &agrave; 1). Mais, &nbsp;pour des raisons
+num&eacute;riques, il est parfois n&eacute;cessaire de
+travailler avec
+des fonctions de base normalis&eacute;es. A.S.P.I.C propose un
+programe
+qui, &agrave; partir d'une base gaussienne quelquonque,
+cr&eacute;e une
+base normalis&eacute;e.</p>
+
+<h3>Entr&eacute;es.</h3>
+
+<p>Un fichier XML qui contient les donn&eacute;es pour une
+base gaussienne quelquonque.</p>
+
+<h3>Sorties.</h3>
+
+<p>Un fichier XML qui contient la m&ecirc;me base que le
+fichier
+d'entr&eacute; mais dont les coefficients de contractions ont
+&eacute;t&eacute; normalis&eacute;s.</p>
+
+<h2><a name="getChemicalMatrixes."></a>getChemicalMatrixes.</h2>
+
+<h3>Principe.</h3>
+
+<p>Ce programme calcule les diff&eacute;rentes composants
+matriciels du hamiltonien d'une mol&eacute;cule.</p>
+
+<h3>Entr&eacute;es.</h3>
+
+Les entr&eacute;es de ce programme sont :<br>
+
+<ul>
+
+  <li>Un fichier XML qui contient la description d'un
+syst&egrave;me mol&eacute;culaire.</li>
+
+  <li>Le format dans lequel les donn&eacute;es de sortie
+doivent
+&ecirc;tre &eacute;crites. Il existe &agrave; pour le
+moment trois
+formats disponibles. Tout d'abord le format huamain
+g&eacute;n&egrave;re un fichier facilement lisible par
+l'homme.Enuite
+le format texte est un format pour lequel les information peuvent etre
+relues facilement dans un programme externe &agrave; condition de
+connaitre l'ordre dans lequel les donn&eacute;es ont
+&eacute;t&eacute;
+&eacute;crites. Enfin le format XML g&eacute;n&egrave;re un
+fichier au
+format XML dont les donn&eacute;es peuvent etre
+r&eacute;utilis&eacute;es au sein de la pkate forme.</li>
+
+  <li>La liste des matrices &agrave;
+g&eacute;n&eacute;rer. Cette liste
+peut comporter cinq &eacute;l&eacute;ments : le recouvrement;
+l'&eacute;nergie cin&eacute;tique, l'&eacute;nergie
+potentielle, le
+hamiltoinien et le tenseur de coulomb.</li>
+
+  <li>Le nom du fichier dans lequel les matrices
+calcul&eacute;es devront etre &eacute;crites.</li>
+
+</ul>
+
+<h3>Sorties.</h3>
+
+<p>Le programme g&eacute;n&egrave;re un unique fichier
+texte. Le format
+de ce fichier est celui qui a &eacute;t&eacute;
+demand&eacute; par
+l'utilisateur (humain , texte ou XML). Les donn&eacute;es contenues
+dans ce fichier sont une description la mol&eacute;cule pour
+laquelle
+les matrices ont &eacute;t&eacute;
+g&eacute;n&eacute;r&eacute;es, ainsi
+que toutes les matrices demand&eacute;es par l'utilisateur
+(recouvrement , &eacute;nergie cin&eacute;tique,
+&eacute;nergie
+potentielle, hamiltonien, tenseur de coulomb).</p>
+
+<h2><a name="shellTypesDBInterfaceSample">shellTypesDBInterfaceSample.</a></h2>
+
+<h3> Principe.</h3>
+
+<p>Ce programme illustre l'utilisation de l'interface qui permet
+d'acc&eacute;der &agrave; <a href="#shellTypesDB">la
+base de donn&eacute;es des type de couches</a> au sein d'un
+programme. Ce programme ayant &eacute;t&eacute;
+&eacute;crit
+&agrave; des fins
+didactiques, il ne comporte pas de fonctionnalit&eacute; flagrante,
+</p>
+
+<h3>Entr&eacute;es.</h3>
+
+<h3>Sorties.</h3>
+
+</body>
+</html>

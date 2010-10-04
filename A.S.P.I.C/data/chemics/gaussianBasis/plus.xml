@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<GaussianBasis xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<BasisElement ElementKey="Li">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0074</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0074</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="Be">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0207</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0207</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="B">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0315</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0315</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="C">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0438</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0438</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="N">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0639</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0639</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="O">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0845</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0845</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="F">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.1076</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.1076</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="Na">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0076</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0076</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="Mg">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0146</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0146</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="Al">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0318</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0318</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="Si">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0331</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0331</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="P">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0348</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0348</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="S">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0405</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0405</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="Cl">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey> s </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0483</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey> p </ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0483</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+</GaussianBasis>

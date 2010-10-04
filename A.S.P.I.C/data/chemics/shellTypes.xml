@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<GaussianBasisShellTypes>
+
+<ShellType ShellTypeKey="s">
+	<Name> s </Name>
+
+	<MonomeDegreesList>
+		<MonomeDegree> <x> 0 </x>  <y> 0 </y> <z> 0 </z>  </MonomeDegree>
+	</MonomeDegreesList>
+</ShellType>
+
+<ShellType ShellTypeKey="p">
+	<Name> p </Name>
+	
+	<MonomeDegreesList>
+		<MonomeDegree> <x> 1 </x> <y> 0 </y> <z> 0 </z>  </MonomeDegree>
+		<MonomeDegree> <x> 0 </x> <y> 1 </y> <z> 0 </z> </MonomeDegree>
+		<MonomeDegree> <x> 0 </x> <y> 0 </y> <z> 1 </z> </MonomeDegree>
+	</MonomeDegreesList>
+</ShellType>
+
+<ShellType ShellTypeKey="d">
+	
+	<Name> d </Name>
+	
+	<MonomeDegreesList>
+		<MonomeDegree> <x> 2 </x> <y> 0 </y> <z> 0 </z> </MonomeDegree>
+		<MonomeDegree> <x> 1 </x> <y> 1 </y> <z> 0 </z> </MonomeDegree>
+		<MonomeDegree> <x> 1 </x> <y> 0 </y> <z> 1 </z> </MonomeDegree>
+		<MonomeDegree> <x> 0 </x> <y> 2 </y> <z> 0 </z> </MonomeDegree>
+		<MonomeDegree> <x> 0 </x> <y> 1 </y> <z> 1 </z> </MonomeDegree>
+		<MonomeDegree> <x> 0 </x> <y> 0 </y> <z> 2 </z> </MonomeDegree>
+	</MonomeDegreesList>
+</ShellType>
+
+<ShellType ShellTypeKey="d5">
+	
+	<Name> d5 </Name>
+
+	<MonomeDegreesList>
+	<MonomeDegree> <x> 2 </x> <y> 0 </y> <z> 0 </z> </MonomeDegree>
+	<MonomeDegree> <x> 1 </x> <y> 1 </y> <z> 0 </z> </MonomeDegree>
+	<MonomeDegree> <x> 1 </x> <y> 0 </y> <z> 1 </z> </MonomeDegree>
+	<MonomeDegree> <x> 0 </x> <y> 2 </y> <z> 0 </z> </MonomeDegree>
+	<MonomeDegree> <x> 0 </x> <y> 1 </y> <z> 1 </z> </MonomeDegree>
+	</MonomeDegreesList>
+</ShellType>
+
+</GaussianBasisShellTypes>
+

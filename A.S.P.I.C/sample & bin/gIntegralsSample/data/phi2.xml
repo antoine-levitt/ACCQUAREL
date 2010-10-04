@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<BasisFunction>
+
+	<Center>
+		<Position>
+			<x> 0 </x>
+			<y> 0 </y>
+			<z> 0 </z>
+		</Position>
+	</Center>
+	
+	<MonomeDegree>
+		<x> 0 </x>
+		<y> 0</y>
+		<z> 0 </z>
+	</MonomeDegree>
+
+	<ContractionsList>
+<Contraction>
+<Coefficient>0.2149354488921539</Coefficient>
+<Exponent>18.73113696</Exponent>
+</Contraction>
+<Contraction>
+<Coefficient>0.3645712021918747</Coefficient>
+<Exponent>2.825394365</Exponent>
+</Contraction>
+<Contraction>
+<Coefficient>0.4150514278828989</Coefficient>
+<Exponent>0.6401216923</Exponent>
+</Contraction>
+	</ContractionsList>
+			
+</BasisFunction>
+

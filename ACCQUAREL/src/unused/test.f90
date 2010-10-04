@@ -1,0 +1,152 @@
+SUBROUTINE ROOTHAAN_test(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
+! Roothaan's algorithm (relativistic case)
+! Reference: C. C. J. Roothaan, New developments in molecular orbital theory, Rev. Modern Phys., 23(2), 69-89, 1951.
+  USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
+  USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: NBAST
+  DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
+  DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: POEFM
+  TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+  DOUBLE PRECISION,INTENT(IN) :: TRSHLD
+  INTEGER,INTENT(IN) :: MAXITR
+
+  INTEGER :: ITER,LOON,INFO,I,J,IJ
+  DOUBLE PRECISION :: ETOT,ETOT1
+  DOUBLE COMPLEX,DIMENSION(:),ALLOCATABLE :: PTEFM,PFM,PDM,PDM1
+  LOGICAL :: NUMCONV,TEST
+  DOUBLE COMPLEX,DIMENSION(3,NBAST*(NBAST+1)/2) :: PJ
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PDMSTOCK
+  DOUBLE COMPLEX,DIMENSION(NBAST,NBAST) :: DIFF,TMP,IS,ISRS
+  DOUBLE COMPLEX,DIMENSION(3,NBAST,NBAST) :: CJD
+  DOUBLE COMPLEX :: OVERLAP(6),COEF(3),EPS
+  INTEGER,DIMENSION(2) :: NBAS
+  INTEGER :: COMPTEUR
+  
+  DOUBLE COMPLEX,DIMENSION(NBAST,NBAST) :: J1,J2,J3
+  DOUBLE COMPLEX,DIMENSION(3) :: T
+
+  EPS=(1.D0,0.D0)
+  TEST=.FALSE.
+  NBAS=(/NBAST/2,NBAST/2/)
+  DO I=1,3
+     CALL BUILDTAMCM(PJ(I,:),PHI,NBAST,NBAS,I)
+  END DO
+  IS=UNPACK(PIS,NBAST)
+  ISRS=UNPACK(PISRS,NBAST)
+! on teste les matrices des operateurs de moment angulaire total
+  J1=MATMUL(IS,UNPACK(PJ(1,:),NBAST))
+  J2=MATMUL(IS,UNPACK(PJ(2,:),NBAST))
+  J3=MATMUL(IS,UNPACK(PJ(3,:),NBAST))
+
+  TMP=MATMUL(J2,J3)-MATMUL(J3,J2)-DCMPLX(0.D0,1.D0)*J1
+  DO I=1,NBAST ; DO J=1,NBAST ; write(41,*)TMP(I,J),I,J ; END DO ; END DO
+  TMP=MATMUL(J3,J1)-MATMUL(J1,J3)-DCMPLX(0.D0,1.D0)*J2
+  DO I=1,NBAST ; DO J=1,NBAST ; write(42,*)TMP(I,J),I,J ; END DO ; END DO
+  TMP=MATMUL(J1,J2)-MATMUL(J2,J1)-DCMPLX(0.D0,1.D0)*J3
+  DO I=1,NBAST ; DO J=1,NBAST ; write(43,*)TMP(I,J),I,J ; END DO ; END DO 
+
+! INITIALIZATION AND PRELIMINARIES
+  ALLOCATE(PDM(1:NBAST*(NBAST+1)/2),PDM1(1:NBAST*(NBAST+1)/2))
+  ALLOCATE(PTEFM(1:NBAST*(NBAST+1)/2),PFM(1:NBAST*(NBAST+1)/2))
+
+  ITER=0
+  PDM=(0.D0,0.D0)
+  PTEFM=(0.D0,0.D0)
+  ETOT1=0.D0
+
+! LOOP
+1 CONTINUE
+  ITER=ITER+1
+  WRITE(*,'(a)')' '
+  WRITE(*,'(a,i3)')'# ITER = ',ITER
+
+! Assembly and diagonalization of the Fock matrix
+  PFM=POEFM+PTEFM!-EPS*PJ(2,:)
+  CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
+  IF (INFO/=0) GO TO 4
+! Assembly of the density matrix according to the aufbau principle
+  CALL CHECKORB(EIG,NBAST,LOON)
+  PDM1=PDM
+  CALL FORMDM(PDM,EIGVEC,NBAST,LOON,LOON+NBE-1)
+! test
+  DO I=1,3 ; T(I)=TRACEOFPRODUCT(PJ(I,:),PDM,NBAST) ; END DO
+  WRITE(33,*)T
+  WRITE(34,*)REAL(T)
+! Computation of the energy associated to the density matrix
+  CALL BUILDTEFM(PTEFM,NBAST,PHI,PDM)
+!  ETOT=ENERGY(POEFM-EPS*PJ(2,:),PTEFM,PDM,NBAST)
+  ETOT=ENERGY(POEFM,PTEFM,PDM,NBAST)
+  WRITE(*,*)'E(D_n)=',ETOT
+! Numerical convergence check
+!  CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM-EPS*PJ(2,:),NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
+  CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
+  IF (ABS(ETOT-ETOT1)<1.D-7) THEN
+     IF (.NOT.TEST) THEN
+        DO I=1,3
+           CJD(I,:,:)=MATMUL(ISRS,MATMUL(COMMUTATOR(PIS,PJ(I,:),PDM,NBAST),ISRS))
+           WRITE(*,*)NORM(CJD(I,:,:),NBAST,'F')
+        END DO
+        IJ=0 
+        DO J=1,3
+           DO I=1,J
+              IJ=IJ+1
+              OVERLAP(IJ)=FINNERPRODUCT(CJD(J,:,:),CJD(I,:,:),NBAST)
+           END DO
+        END DO
+        PDMSTOCK=PDM
+        TEST=.TRUE.
+        COMPTEUR=0
+     ELSE
+        COMPTEUR=COMPTEUR+1
+        write(*,*)'compteur=',COMPTEUR
+     END IF
+  END IF
+  IF (TEST.AND.(COMPTEUR==20)) THEN
+     DIFF=MATMUL(ISRS,MATMUL(UNPACK(PDM-PDMSTOCK,NBAST),ISRS))
+     DO I=1,3
+        COEF(I)=FINNERPRODUCT(DIFF,CJD(I,:,:),NBAST)
+     END DO
+     CALL ZPPSV('U',3,1,OVERLAP,COEF,3,INFO)
+     IF (INFO/=0) WRITE(*,*)'Problem : INFO=',INFO
+     TMP=(0.D0,0.D0)
+     DO I=1,3
+        TMP=TMP+COEF(I)*CJD(I,:,:)
+     END DO
+     WRITE(*,*)NORM(DIFF,NBAST,'F'),NORM(TMP,NBAST,'F')
+     WRITE(*,*)'\|D_{n+20}-D_n-\sum a_i[J_i,D_n]\|/\|D_{n+20}-D_n\|=',NORM(DIFF-TMP,NBAST,'F')/NORM(DIFF,NBAST,'F')
+     WRITE(*,*)FINNERPRODUCT(TMP,DIFF-TMP,NBAST)
+     TEST=.FALSE. ; COMPTEUR=0
+  END IF
+  IF ((.NOT.NUMCONV).AND.(ITER==MAXITR)) THEN
+! Maximum number of iterations reached without convergence
+     GO TO 2
+  ELSE IF (NUMCONV) THEN
+! Convergence reached
+     GO TO 3
+  ELSE
+! Convergence not reached, increment
+     ETOT1=ETOT
+     GO TO 1
+  END IF
+
+! MESSAGES
+2 WRITE(*,*)'Subroutine ROOTHAAN: no convergence after',ITER,'iterations.'
+  OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
+  DO I=1,NBAST
+     WRITE(9,'(i4,e22.14)')I,EIG(I)
+  END DO
+  CLOSE(9)
+  GO TO 5
+3 WRITE(*,*)'Subroutine ROOTHAAN: convergence after',ITER,'iterations.'
+  OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
+  DO I=1,NBAST
+     WRITE(9,'(i4,e22.14)')I,EIG(I)
+  END DO
+  CLOSE(9)
+  GO TO 5
+4 WRITE(*,*)'(called from subroutine ROOTHAAN)'
+5 DEALLOCATE(PDM,PDM1,PTEFM,PFM)
+  RETURN
+END SUBROUTINE

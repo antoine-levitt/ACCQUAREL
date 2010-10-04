@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+<!-- 
+    This is the configuration file for the A.S.P.I.C plate forme 
+
+For the moment the following informations can be found in this file :
+-->
+<AspicConfiguration>
+    <!-- 
+    The types of data bases : Local / External ?
+    
+    This option is used to set the databases that should be used for the gaussian basis, the shell types and the elements.
+    If this options is set to true, then all informations should be found in the local machine that is running A.S.P.IC. If this 
+    option is set to false then the informations for the components are fetched using an http URI.
+    -->
+    <DataBasesType> Local </DataBasesType>
+
+    <!-- 
+      The URI of the external data base server that should be used : "http://..../A.S.P.I.C"
+    
+        This option is only in use if you are using an external server to fetch data. The value of
+    the tag should contain the base URI of the A.S.I.C repository. If the configuration does not uses
+    a local configuration this value shall replace the $(ASPICROOT) value.
+    -->
+    <DataBaseServerURI> http://cermlics.enpc.fr/~lodier/A.S.P.I.C</DataBaseServerURI>
+    
+    <!-- 
+        Configuration of the chemical elements data base :
+    This part of the XML document is used to tell ASPIC where the chemical elements data
+    base can be found ad which syntax shall be in use.
+    -->
+    <ChemicalElementsDataBase>
+        <!--
+            relative path (from the ASPICROOT) to the chemical elements data base.
+        -->
+        <ChemicalElementsDataBasePath>
+            data/chemics/chemicalElements.xml
+        </ChemicalElementsDataBasePath>
+      
+        <!--
+        relative path (from the ASPICROOT) to the chemical elements data base schema.
+        -->
+        <ChemicalElementsDataBaseSchemaPath>
+            data/chemics/chemicalElements.xml
+        </ChemicalElementsDataBaseSchemaPath>
+    </ChemicalElementsDataBase>
+
+    <!-- 
+        Configuration of the shell types data base :
+    This part of the XML document is used to tell A.S.P.I.C where the chemical Elements data
+    base can be found ad which syntax shall be in use.
+    -->
+    <ShellTypesDataBase>
+        
+        <!--
+            relative path (from the ASPICROOT) to the shell types data base.
+        -->
+        <ShellTypesDataBasePath>
+            data/chemics/shellTypes.xml
+        </ShellTypesDataBasePath>
+            
+    </ShellTypesDataBase>
+    
+    <!-- 
+        Configuration of the shell types data base :
+    This part of the XML document is used to tell A.S.P.I.C where the gaussian  basis data
+    base can be found ad which syntax shall be in use. This also tells where the list of the
+    available basis can be found.
+    -->
+    <Basis>   
+        <!-- 
+            This tells where the basis key list can be found.
+        -->
+        <BasisKeyList>
+            <!-- 
+                This tells where the XML document containing the basis key list can be found.
+            -->
+            <BasisKeyListPath>
+                data/chemics/xmlBasisKeyList.xml
+            </BasisKeyListPath>
+
+        </BasisKeyList>
+        
+        <!-- 
+            This tells where the gaussian basis are stored.
+        -->
+        <BasisDataBase>
+            
+            <!-- 
+                This tells which directory contains all the XML documents for the basis.
+            -->
+            <BasisDataBasePath>
+                data/chemics/gaussianBasis
+            </BasisDataBasePath>
+            
+        </BasisDataBase>
+          
+    </Basis>
+
+</AspicConfiguration>

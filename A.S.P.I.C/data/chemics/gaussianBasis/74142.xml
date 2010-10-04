@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<GaussianBasis xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<BasisElement ElementKey="H">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 33.865</Exponent>
+						<Coefficient> 0.00876325</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 5.09479</Exponent>
+						<Coefficient> 0.0654284</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1.15879</Exponent>
+						<Coefficient> 0.292854</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.32584</Exponent>
+						<Coefficient> 0.727205</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.102741</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="B">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 6240.15</Exponent>
+						<Coefficient> 0.000468587</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 984.952</Exponent>
+						<Coefficient> 0.0033456</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 224.079</Exponent>
+						<Coefficient> 0.0180357</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 60.5269</Exponent>
+						<Coefficient> 0.0759447</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 18.5668</Exponent>
+						<Coefficient> 0.233474</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 6.13154</Exponent>
+						<Coefficient> 0.464183</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 2.07926</Exponent>
+						<Coefficient> 0.354245</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 8.9748</Exponent>
+						<Coefficient> -0.0297683</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 2.55795</Exponent>
+						<Coefficient> -0.157007</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.570397</Exponent>
+						<Coefficient> 0.159267</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.256588</Exponent>
+						<Coefficient> 0.924227</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.0902026</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 16.1202</Exponent>
+						<Coefficient> 0.0173904</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 3.73735</Exponent>
+						<Coefficient> 0.0989759</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1.18529</Exponent>
+						<Coefficient> 0.32414</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.446499</Exponent>
+						<Coefficient> 0.681288</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.171986</Exponent>
+						<Coefficient> 0.688125</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.0635494</Exponent>
+						<Coefficient> 0.376502</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="C">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 9411.83</Exponent>
+						<Coefficient> 0.000453023</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1386.8</Exponent>
+						<Coefficient> 0.0036031</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 309.008</Exponent>
+						<Coefficient> 0.0190942</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 84.882</Exponent>
+						<Coefficient> 0.0782798</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 26.3296</Exponent>
+						<Coefficient> 0.239021</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 8.78089</Exponent>
+						<Coefficient> 0.467265</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 3.01202</Exponent>
+						<Coefficient> 0.341166</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 13.2482</Exponent>
+						<Coefficient> -0.0268201</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 3.91967</Exponent>
+						<Coefficient> -0.126813</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.685984</Exponent>
+						<Coefficient> 0.347911</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.299848</Exponent>
+						<Coefficient> 0.734302</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.114953</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 26.5039</Exponent>
+						<Coefficient> 0.0156885</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 6.21704</Exponent>
+						<Coefficient> 0.0936082</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1.93758</Exponent>
+						<Coefficient> 0.328304</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.69802</Exponent>
+						<Coefficient> 0.686587</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.260611</Exponent>
+						<Coefficient> 0.712087</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.0943113</Exponent>
+						<Coefficient> 0.352735</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="N">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 11193.2</Exponent>
+						<Coefficient> 0.000533699</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1856.22</Exponent>
+						<Coefficient> 0.00342566</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 447.306</Exponent>
+						<Coefficient> 0.0175487</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 121.9</Exponent>
+						<Coefficient> 0.0759224</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 36.8486</Exponent>
+						<Coefficient> 0.240688</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 12.1256</Exponent>
+						<Coefficient> 0.472218</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 4.15336</Exponent>
+						<Coefficient> 0.337869</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 19.6956</Exponent>
+						<Coefficient> -0.024534</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 5.76414</Exponent>
+						<Coefficient> -0.121005</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.945191</Exponent>
+						<Coefficient> 0.37815</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.400153</Exponent>
+						<Coefficient> 0.703146</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.151479</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 41.8758</Exponent>
+						<Coefficient> 0.0143934</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 9.94519</Exponent>
+						<Coefficient> 0.0887004</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 3.14105</Exponent>
+						<Coefficient> 0.317064</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1.12387</Exponent>
+						<Coefficient> 0.70028</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.407771</Exponent>
+						<Coefficient> 0.704257</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.141478</Exponent>
+						<Coefficient> 0.366734</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="O">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 11193.2</Exponent>
+						<Coefficient> 0.000533699</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1856.22</Exponent>
+						<Coefficient> 0.00342566</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 447.306</Exponent>
+						<Coefficient> 0.0175487</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 121.9</Exponent>
+						<Coefficient> 0.0759224</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 36.8486</Exponent>
+						<Coefficient> 0.240688</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 12.1256</Exponent>
+						<Coefficient> 0.472218</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 4.15336</Exponent>
+						<Coefficient> 0.337869</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 19.6956</Exponent>
+						<Coefficient> -0.024534</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 5.76414</Exponent>
+						<Coefficient> -0.121005</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.945191</Exponent>
+						<Coefficient> 0.37815</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.400153</Exponent>
+						<Coefficient> 0.703146</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.151479</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 41.8758</Exponent>
+						<Coefficient> 0.0143934</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 9.94519</Exponent>
+						<Coefficient> 0.0887004</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 3.14105</Exponent>
+						<Coefficient> 0.317064</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1.12387</Exponent>
+						<Coefficient> 0.70028</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.407771</Exponent>
+						<Coefficient> 0.704257</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.141478</Exponent>
+						<Coefficient> 0.366734</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+	<BasisElement ElementKey="F">
+		<ShellsList>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 19656.5</Exponent>
+						<Coefficient> 0.000501967</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 3127.42</Exponent>
+						<Coefficient> 0.00348072</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 729.585</Exponent>
+						<Coefficient> 0.0181366</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 200.175</Exponent>
+						<Coefficient> 0.0764684</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 61.4833</Exponent>
+						<Coefficient> 0.239807</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 20.4428</Exponent>
+						<Coefficient> 0.472487</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 7.01988</Exponent>
+						<Coefficient> 0.336351</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 33.0556</Exponent>
+						<Coefficient> -0.0287857</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 9.92341</Exponent>
+						<Coefficient> -0.129476</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1.82496</Exponent>
+						<Coefficient> 0.3363</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.791195</Exponent>
+						<Coefficient> 0.748482</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>s</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.292716</Exponent>
+						<Coefficient> 1</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 65.5835</Exponent>
+						<Coefficient> 0.0154625</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 15.3399</Exponent>
+						<Coefficient> 0.100286</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 4.77338</Exponent>
+						<Coefficient> 0.347788</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 1.66028</Exponent>
+						<Coefficient> 0.669017</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+			<Shell>
+				<ShellTypeKey>p</ShellTypeKey>
+				<ContractionsList>
+					<Contraction>
+						<Exponent> 0.581406</Exponent>
+						<Coefficient> 0.721806</Coefficient>
+					</Contraction>
+					<Contraction>
+						<Exponent> 0.195411</Exponent>
+						<Coefficient> 0.351181</Coefficient>
+					</Contraction>
+				</ContractionsList>
+			</Shell>
+		</ShellsList>
+	</BasisElement>
+</GaussianBasis>
