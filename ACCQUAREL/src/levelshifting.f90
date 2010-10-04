@@ -1,6 +1,6 @@
 SUBROUTINE LEVELSHIFTING_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! Level-shifting algorithm (relativistic case)
-! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
+  ! Level-shifting algorithm (relativistic case)
+  ! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE setup_tools
   IMPLICIT NONE
@@ -18,8 +18,8 @@ SUBROUTINE LEVELSHIFTING_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,R
   DOUBLE COMPLEX,DIMENSION(:),ALLOCATABLE :: PTEFM,PFM,PDM,PDM1
   LOGICAL :: NUMCONV
 
-! INITIALIZATION AND PRELIMINARIES
-! Reading of the shift parameter
+  ! INITIALIZATION AND PRELIMINARIES
+  ! Reading of the shift parameter
   OPEN(100,FILE='setup',STATUS='OLD',ACTION='READ')
   CALL LOOKFOR(100,'LEVEL-SHIFTING ALGORITHM PARAMETERS',INFO)
   READ(100,'(/,f16.8)')SHIFT
@@ -37,39 +37,39 @@ SUBROUTINE LEVELSHIFTING_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,R
   OPEN(17,FILE='plots/shftcrit1.txt',STATUS='unknown',ACTION='write')
   OPEN(18,FILE='plots/shftcrit2.txt',STATUS='unknown',ACTION='write')
 
-! LOOP
+  ! LOOP
 1 CONTINUE
   ITER=ITER+1
   WRITE(*,'(a)')' '
   WRITE(*,'(a,i3)')'# ITER = ',ITER
 
-! Assembly and diagonalization of the Fock matrix
+  ! Assembly and diagonalization of the Fock matrix
   PFM=POEFM+PTEFM-SHIFT*ABA(PS,PDM,NBAST)
   CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
   IF (INFO/=0) GO TO 4
-! Assembly of the density matrix according to the aufbau principle
+  ! Assembly of the density matrix according to the aufbau principle
   CALL CHECKORB(EIG,NBAST,LOON)
   PDM1=PDM
   CALL FORMDM(PDM,EIGVEC,NBAST,LOON,LOON+NBE-1)
-! Computation of the energy associated to the density matrix
+  ! Computation of the energy associated to the density matrix
   CALL BUILDTEFM(PTEFM,NBAST,PHI,PDM)
   ETOT=ENERGY(POEFM,PTEFM,PDM,NBAST)
   WRITE(*,*)'E(D_n)=',ETOT
-! Numerical convergence check
+  ! Numerical convergence check
   CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
   IF (NUMCONV) THEN
-! Convergence reached
+     ! Convergence reached
      GO TO 2
   ELSE IF (ITER==MAXITR) THEN
-! Maximum number of iterations reached without convergence
+     ! Maximum number of iterations reached without convergence
      GO TO 3
   ELSE
-! Convergence not reached, increment
+     ! Convergence not reached, increment
      ETOT1=ETOT
      GO TO 1
   END IF
 
-! MESSAGES
+  ! MESSAGES
 2 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine LEVELSHIFTING: convergence after',ITER,'iteration(s).'
   OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
   DO I=1,NBAST
@@ -87,11 +87,11 @@ SUBROUTINE LEVELSHIFTING_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,R
 4 WRITE(*,*)'(called from subroutine LEVELSHIFTING)'
 5 DEALLOCATE(PDM,PDM1,PTEFM,PFM)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE
+END SUBROUTINE LEVELSHIFTING_relativistic
 
 SUBROUTINE LEVELSHIFTING_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! Level-shifting algorithm (restricted closed-shell Hartree-Fock formalism)
-! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
+  ! Level-shifting algorithm (restricted closed-shell Hartree-Fock formalism)
+  ! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE setup_tools
   IMPLICIT NONE
@@ -109,8 +109,8 @@ SUBROUTINE LEVELSHIFTING_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: PTEFM,PFM,PDM,PDM1
   LOGICAL :: NUMCONV
 
-! INITIALIZATION AND PRELIMINARIES
-! Reading of the shift parameter
+  ! INITIALIZATION AND PRELIMINARIES
+  ! Reading of the shift parameter
   OPEN(100,FILE='setup',STATUS='OLD',ACTION='READ')
   CALL LOOKFOR(100,'LEVEL-SHIFTING ALGORITHM PARAMETERS',INFO)
   READ(100,'(/,f16.8)')SHIFT
@@ -128,38 +128,38 @@ SUBROUTINE LEVELSHIFTING_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   OPEN(17,FILE='plots/shftcrit1.txt',STATUS='unknown',ACTION='write')
   OPEN(18,FILE='plots/shftcrit2.txt',STATUS='unknown',ACTION='write')
 
-! LOOP
+  ! LOOP
 1 CONTINUE
   ITER=ITER+1
   WRITE(*,*)' '
   WRITE(*,*)'# ITER =',ITER
 
-! Assembly and diagonalization of the Fock matrix
+  ! Assembly and diagonalization of the Fock matrix
   PFM=POEFM+PTEFM-SHIFT*ABA(PS,PDM,NBAST)
   CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
   IF (INFO/=0) GO TO 4
-! Assembly of the density matrix according to the aufbau principle
+  ! Assembly of the density matrix according to the aufbau principle
   PDM1=PDM
   CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE/2)
-! Computation of the energy associated to the density matrix
+  ! Computation of the energy associated to the density matrix
   CALL BUILDTEFM(PTEFM,NBAST,PHI,PDM)
   ETOT=ENERGY(POEFM,PTEFM,PDM,NBAST)
   WRITE(*,*)'E(D_n)=',ETOT
-! Numerical convergence check
+  ! Numerical convergence check
   CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
   IF (NUMCONV) THEN
-! Convergence reached
+     ! Convergence reached
      GO TO 2
   ELSE IF (ITER==MAXITR) THEN
-! Maximum number of iterations reached without convergence
+     ! Maximum number of iterations reached without convergence
      GO TO 3
   ELSE
-! Convergence not reached, increment
+     ! Convergence not reached, increment
      ETOT1=ETOT
      GO TO 1
   END IF
 
-! MESSAGES
+  ! MESSAGES
 2 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine LEVELSHIFTING: convergence after',ITER,'iteration(s).'
   OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
   DO I=1,NBAST
@@ -177,4 +177,4 @@ SUBROUTINE LEVELSHIFTING_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 4 WRITE(*,*)'(called from subroutine LEVELSHIFTING)'
 5 DEALLOCATE(PDM,PDM1,PTEFM,PFM)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE
+END SUBROUTINE LEVELSHIFTING_RHF

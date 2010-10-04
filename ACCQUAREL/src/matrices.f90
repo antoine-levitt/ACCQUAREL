@@ -1,5 +1,5 @@
 SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
-! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
+  ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON,HOON
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
@@ -11,10 +11,10 @@ SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
   DO I=LOON,HOON
      CALL ZHPR('U',NBAST,1.D0,EIGVEC(:,I),1,PDM)
   END DO
-END SUBROUTINE
+END SUBROUTINE FORMDM_relativistic
 
 SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
-! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
+  ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON,HOON
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
@@ -26,10 +26,10 @@ SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
   DO I=LOON,HOON
      CALL DSPR('U',NBAST,1.D0,EIGVEC(:,I),1,PDM)
   END DO
-END SUBROUTINE
+END SUBROUTINE FORMDM_nonrelativistic
 
 SUBROUTINE FORMPROJ(PPROJM,EIGVEC,NBAST,LOON)
-! Assembly of the matrix of the projector on the "positive" space (i.e., the electronic states) associated to a Dirac-Fock Hamiltonian (only the upper triangular part of the matrix is stored in packed format).
+  ! Assembly of the matrix of the projector on the "positive" space (i.e., the electronic states) associated to a Dirac-Fock Hamiltonian (only the upper triangular part of the matrix is stored in packed format).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PPROJM
@@ -41,10 +41,10 @@ SUBROUTINE FORMPROJ(PPROJM,EIGVEC,NBAST,LOON)
   DO I=0,NBAST-LOON
      CALL ZHPR('U',NBAST,1.D0,EIGVEC(:,LOON+I),1,PPROJM)
   END DO
-END SUBROUTINE
+END SUBROUTINE FORMPROJ
 
 SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
-! Computation and assembly of the overlap matrix between basis functions, i.e., the Gram matrix of the basis with respect to the $L^2(\mathbb{R}^3,\mathbb{C}^4)$ inner product (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the overlap matrix between basis functions, i.e., the Gram matrix of the basis with respect to the $L^2(\mathbb{R}^3,\mathbb{C}^4)$ inner product (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -63,7 +63,7 @@ SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
                  VALUE=VALUE+PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))         &
- &                           *OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
+                      &                           *OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
               END DO
            END DO
         END DO
@@ -77,17 +77,17 @@ SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
                  VALUE=VALUE+PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))         &
- &                           *OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
+                      &                           *OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
               END DO
            END DO
         END DO
         POM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDOM_relativistic
 
 SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
-! Computation and assembly of the overlap matrix between basis functions, i.e. the Gram matrix of the basis with respacet to the $L^2(\mathbb{R}^3)$ inner product (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the overlap matrix between basis functions, i.e. the Gram matrix of the basis with respacet to the $L^2(\mathbb{R}^3)$ inner product (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -101,10 +101,10 @@ SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
         POM(I+(J-1)*J/2)=OVERLAPVALUE(PHI(I),PHI(J))
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDOM_nonrelativistic
 
 SUBROUTINE BUILDKPFM_nonrelativistic(PKPFM,PHI,NBAST)
-! Computation and assembly of the kinetic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the kinetic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -119,10 +119,10 @@ SUBROUTINE BUILDKPFM_nonrelativistic(PKPFM,PHI,NBAST)
         PKPFM(I+(J-1)*J/2)=KINETICVALUE(PHI(I),PHI(J))/2.D0
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDKPFM_nonrelativistic
 
 SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
-! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed form)
+  ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed form)
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -145,7 +145,7 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
               DO M=1,PHI(J)%nbrofcontractions(K)
                  DO N=1,NBN
                     VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                            &
- &                              *Z(N)*POTENTIALVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),CENTER(:,N))
+                         &                              *Z(N)*POTENTIALVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),CENTER(:,N))
                  END DO
               END DO
            END DO
@@ -159,28 +159,28 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         DO L=1,PHI(I)%nbrofcontractions(1)
            DO M=1,PHI(J)%nbrofcontractions(1)
               VALUE=VALUE-AC*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(1,L))                   &
- &                        *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(1,L),3))
+                   &                        *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(1,L),3))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(1)
            DO M=1,PHI(J)%nbrofcontractions(2)
               VALUE=VALUE-AC*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))               &
- &                        *DCMPLX(DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),2),  &
- &                                DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),1))
+                   &                        *DCMPLX(DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),2),  &
+                   &                                DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),1))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(2)
            DO M=1,PHI(J)%nbrofcontractions(1)
               VALUE=VALUE-AC*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
- &                        *DCMPLX(-DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),2),  &
- &                                DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),1))
+                   &                        *DCMPLX(-DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),2),  &
+                   &                                DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),1))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(2)
            DO M=1,PHI(J)%nbrofcontractions(2)
               VALUE=VALUE+AC*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(2,L))                   &
- &                        *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(2,L),3))
-           END DO 
+                   &                        *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(2,L),3))
+           END DO
         END DO
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
@@ -189,7 +189,7 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
      DO I=NBAS(1)+1,J
         VALUE=(0.D0,0.D0)
         DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K) 
+           DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
                  TMP=2.D0*AC*AC*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
                  DO N=1,NBN
@@ -202,10 +202,10 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDOEFM_relativistic
 
 SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
-! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
   USE data_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -225,10 +225,10 @@ SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDOEFM_nonrelativistic
 
 SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
-! Computation and assembly of the bielectronic part of the Fock matrix associated to a given density matrix using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the bielectronic part of the Fock matrix associated to a given density matrix using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -255,7 +255,7 @@ SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
-! the value of the bielectronic integral is computed "on the fly"
+        ! the value of the bielectronic integral is computed "on the fly"
         IF (USEDISK) THEN
            READ(LUNIT)I,J,K,L
         ELSE
@@ -264,7 +264,7 @@ SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
         INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L))
      ELSE
         IF (SEMIDIRECT) THEN
-! the value of the bielectronic integral is computed "on the fly", but using the precomputed values of the involved CGTO bielectronic integrals
+           ! the value of the bielectronic integral is computed "on the fly", but using the precomputed values of the involved CGTO bielectronic integrals
            IF (USEDISK) THEN
               READ(LUNIT)I,J,K,L,CLASS
            ELSE
@@ -274,7 +274,7 @@ SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
            INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L),CLASS)
         ELSE
            IF (USEDISK) THEN
-! the value of the bielectronic integral is read on disk
+              ! the value of the bielectronic integral is read on disk
               READ(BIUNIT)I,J,K,L,INTGRL
            ELSE
               I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
@@ -282,25 +282,25 @@ SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
            END IF
         END IF
      END IF
-!     IF ((I==J).AND.(I==K).AND.(I==L)) THEN
-!       NO CONTRIBUTION
-!     ELSE IF ((I==J).AND.(I/=K).AND.(I==L)) THEN
-!        TEFM(I,I)=TEFM(I,I)+INTGRL*(DM(K,I)-DM(I,K))
-!     ELSE IF ((I==J).AND.(I==K).AND.(I/=L)) THEN
-!        TEFM(I,I)=TEFM(I,I)+INTGRL*(DM(I,L)-DM(L,I))
-!     ELSE IF ((I/=J).AND.(I==K).AND.(I==L)) THEN
-!        TEFM(I,I)=TEFM(I,I)+INTGRL*(DM(I,J)-DM(J,I))
-!     ELSE
+     !     IF ((I==J).AND.(I==K).AND.(I==L)) THEN
+     !       NO CONTRIBUTION
+     !     ELSE IF ((I==J).AND.(I/=K).AND.(I==L)) THEN
+     !        TEFM(I,I)=TEFM(I,I)+INTGRL*(DM(K,I)-DM(I,K))
+     !     ELSE IF ((I==J).AND.(I==K).AND.(I/=L)) THEN
+     !        TEFM(I,I)=TEFM(I,I)+INTGRL*(DM(I,L)-DM(L,I))
+     !     ELSE IF ((I/=J).AND.(I==K).AND.(I==L)) THEN
+     !        TEFM(I,I)=TEFM(I,I)+INTGRL*(DM(I,J)-DM(J,I))
+     !     ELSE
      IF ((I/=J).AND.(I==K).AND.(J==L)) THEN
         TEFM(I,J)=TEFM(I,J)+INTGRL*(DM(I,J)-DM(J,I))
-!     ELSE IF ((I/=J).AND.(J==K).AND.(J==L)) THEN
-!        TEFM(J,J)=TEFM(J,J)+INTGRL*(DM(I,J)-DM(J,I))
-!     ELSE IF ((I/=J).AND.(I==K).AND.(I/=L).AND.(J/=L)) THEN
-!        TEFM(I,J)=TEFM(I,J)+INTGRL*(DM(I,L)-DM(L,I))
-!        TEFM(I,L)=TEFM(I,L)+INTGRL*(DM(I,J)-DM(J,I))
-!     ELSE IF ((I/=J).AND.(I/=K).AND.(J/=K).AND.(J==L)) THEN
-!        TEFM(I,J)=TEFM(I,J)+INTGRL*(DM(K,J)-DM(J,K))
-!        TEFM(K,J)=TEFM(K,J)+INTGRL*(DM(I,J)-DM(J,I))
+        !     ELSE IF ((I/=J).AND.(J==K).AND.(J==L)) THEN
+        !        TEFM(J,J)=TEFM(J,J)+INTGRL*(DM(I,J)-DM(J,I))
+        !     ELSE IF ((I/=J).AND.(I==K).AND.(I/=L).AND.(J/=L)) THEN
+        !        TEFM(I,J)=TEFM(I,J)+INTGRL*(DM(I,L)-DM(L,I))
+        !        TEFM(I,L)=TEFM(I,L)+INTGRL*(DM(I,J)-DM(J,I))
+        !     ELSE IF ((I/=J).AND.(I/=K).AND.(J/=K).AND.(J==L)) THEN
+        !        TEFM(I,J)=TEFM(I,J)+INTGRL*(DM(K,J)-DM(J,K))
+        !        TEFM(K,J)=TEFM(K,J)+INTGRL*(DM(I,J)-DM(J,I))
      ELSE
         TEFM(I,J)=TEFM(I,J)+INTGRL*DM(K,L)
         TEFM(I,L)=TEFM(I,L)-INTGRL*DM(J,K)
@@ -317,11 +317,11 @@ SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
         PTEFM(N)=TEFM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDTEFM_relativistic
 
 SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
-! Computation and assembly of the two-electron part of the Fock matrix associated to a given density matrix in the restricted closed-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-! Note: G(D)=2J(D)-K(D), with J(D) the Coulomb term and K(D) the exchange term.
+  ! Computation and assembly of the two-electron part of the Fock matrix associated to a given density matrix in the restricted closed-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! Note: G(D)=2J(D)-K(D), with J(D) the Coulomb term and K(D) the exchange term.
   USE scf_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -345,23 +345,23 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
   IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
-! the values of the bielectronic integrals are computed "on the fly"
+        ! the values of the bielectronic integrals are computed "on the fly"
         I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
         INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L))
      ELSE
         IF (USEDISK) THEN
-! the list and values of the bielectronic integrals are read on disk
+           ! the list and values of the bielectronic integrals are read on disk
            READ(BIUNIT)I,J,K,L,INTGRL
         ELSE
-! the list and values of the bielectronic integrals are read in memory
+           ! the list and values of the bielectronic integrals are read in memory
            I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
            INTGRL=RBIVALUES(N)
         END IF
      END IF
-! 1 value for the 4 indices
+     ! 1 value for the 4 indices
      IF ((I==J).AND.(J==K).AND.(K==L)) THEN
         TEFM(I,I)=TEFM(I,I)+INTGRL*DM(I,I)
-! 2 distinct values for the 4 indices
+        ! 2 distinct values for the 4 indices
      ELSE IF ((I>J).AND.(J==K).AND.(K==L)) THEN
         TEFM(I,J)=TEFM(I,J)+INTGRL*DM(J,J)
         TEFM(J,I)=TEFM(J,I)+INTGRL*DM(J,J)
@@ -382,7 +382,7 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
         TEFM(J,I)=TEFM(J,I)+INTGRL*DM(I,J)
         TEFM(I,I)=TEFM(I,I)-INTGRL*DM(J,J)
         TEFM(J,J)=TEFM(J,J)-INTGRL*DM(I,I)
-! 3 distinct values for the 4 indices
+        ! 3 distinct values for the 4 indices
      ELSE IF ((I==K).AND.(K>J).AND.(J>L)) THEN
         TEFM(I,J)=TEFM(I,J)+2.D0*INTGRL*(DM(I,L)+DM(L,I))
         TEFM(J,I)=TEFM(J,I)+2.D0*INTGRL*(DM(I,L)+DM(L,I))
@@ -416,7 +416,7 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
         TEFM(K,J)=TEFM(K,J)-INTGRL*DM(J,I)
         TEFM(J,I)=TEFM(J,I)-INTGRL*DM(K,J)
         TEFM(K,I)=TEFM(K,I)-INTGRL*DM(J,J)
-        TEFM(J,K)=TEFM(J,K)-INTGRL*DM(I,J) 
+        TEFM(J,K)=TEFM(J,K)-INTGRL*DM(I,J)
         TEFM(I,J)=TEFM(I,J)-INTGRL*DM(J,K)
         TEFM(I,K)=TEFM(I,K)-INTGRL*DM(J,J)
      ELSE IF ((I>J).AND.(I>K).AND.(K==L)) THEN
@@ -435,10 +435,10 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
         TEFM(I,L)=TEFM(I,L)-INTGRL*DM(I,K)
         TEFM(K,I)=TEFM(K,I)-INTGRL*DM(L,I)
         TEFM(L,I)=TEFM(L,I)-INTGRL*DM(K,I)
-! 4 distinct values for the 4 indices
+        ! 4 distinct values for the 4 indices
      ELSE IF (    ((I>J).AND.(J>K).AND.(K>L)) &
-              .OR.((I>K).AND.(K>J).AND.(J>L)) &
-              .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
+          .OR.((I>K).AND.(K>J).AND.(J>L)) &
+          .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
         TEFM(I,J)=TEFM(I,J)+2.D0*INTGRL*(DM(K,L)+DM(L,K))
         TEFM(J,I)=TEFM(J,I)+2.D0*INTGRL*(DM(K,L)+DM(L,K))
         TEFM(K,L)=TEFM(K,L)+2.D0*INTGRL*(DM(I,J)+DM(J,I))
@@ -461,11 +461,11 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
         PTEFM(N)=TEFM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDTEFM_RHF
 
 SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
-! Computation and assembly of the two-electron part of one of the two Fock matrices in the unrestricted open-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-! Note: G(D_a)=J(D_a)-K(D_a)+J(D_b), with J(D_a) the Coulomb term and K(D_a) the exchange term associated to D_a, and J(D_b) the Coulomb term associated to D_b.
+  ! Computation and assembly of the two-electron part of one of the two Fock matrices in the unrestricted open-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! Note: G(D_a)=J(D_a)-K(D_a)+J(D_b), with J(D_a) the Coulomb term and K(D_a) the exchange term associated to D_a, and J(D_b) the Coulomb term associated to D_b.
   USE scf_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -490,23 +490,23 @@ SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
   IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
-! the values of the bielectronic integrals are computed "on the fly"
+        ! the values of the bielectronic integrals are computed "on the fly"
         I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
         INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L))
      ELSE
         IF (USEDISK) THEN
-! the list and values of the bielectronic integrals are read on disk
+           ! the list and values of the bielectronic integrals are read on disk
            READ(BIUNIT)I,J,K,L,INTGRL
         ELSE
-! the list and values of the bielectronic integrals are read in memory
+           ! the list and values of the bielectronic integrals are read in memory
            I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
            INTGRL=RBIVALUES(N)
         END IF
      END IF
-! 1 value for the 4 indices
+     ! 1 value for the 4 indices
      IF ((I==J).AND.(J==K).AND.(K==L)) THEN
         TEFM(I,I)=TEFM(I,I)+INTGRL*DMB(I,I)
-! 2 distinct values for the 4 indices C
+        ! 2 distinct values for the 4 indices C
      ELSE IF ((I>J).AND.(J==K).AND.(K==L)) THEN
         TEFM(I,J)=TEFM(I,J)+INTGRL*DMB(J,J)
         TEFM(J,I)=TEFM(J,I)+INTGRL*DMB(J,J)
@@ -527,7 +527,7 @@ SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
         TEFM(J,I)=TEFM(J,I)+INTGRL*DMA(I,J)
         TEFM(I,I)=TEFM(I,I)-INTGRL*DMA(J,J)
         TEFM(J,J)=TEFM(J,J)-INTGRL*DMA(I,I)
-! 3 distinct values for the 4 indices
+        ! 3 distinct values for the 4 indices
      ELSE IF ((I==K).AND.(K>J).AND.(J>L)) THEN
         TEFM(I,J)=TEFM(I,J)+INTGRL*(DM(I,L)+DM(L,I))
         TEFM(J,I)=TEFM(J,I)+INTGRL*(DM(I,L)+DM(L,I))
@@ -580,10 +580,10 @@ SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
         TEFM(I,L)=TEFM(I,L)-INTGRL*DMA(I,K)
         TEFM(K,I)=TEFM(K,I)-INTGRL*DMA(L,I)
         TEFM(L,I)=TEFM(L,I)-INTGRL*DMA(K,I)
-! 4 distinct values for the 4 indices
+        ! 4 distinct values for the 4 indices
      ELSE IF (    ((I>J).AND.(J>K).AND.(K>L)) &
-              .OR.((I>K).AND.(K>J).AND.(J>L)) &
-              .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
+          .OR.((I>K).AND.(K>J).AND.(J>L)) &
+          .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
         TEFM(I,J)=TEFM(I,J)+INTGRL*(DM(K,L)+DM(L,K))
         TEFM(J,I)=TEFM(J,I)+INTGRL*(DM(K,L)+DM(L,K))
         TEFM(K,L)=TEFM(K,L)+INTGRL*(DM(I,J)+DM(J,I))
@@ -606,10 +606,10 @@ SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
         PTEFM(N)=TEFM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDTEFM_UHF
 
 SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
-! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -636,7 +636,7 @@ SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
-! the value of the bielectronic integral is computed "on the fly"
+        ! the value of the bielectronic integral is computed "on the fly"
         IF (USEDISK) THEN
            READ(LUNIT)I,J,K,L
         ELSE
@@ -645,7 +645,7 @@ SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
         INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L))
      ELSE
         IF (SEMIDIRECT) THEN
-! the value of the bielectronic integral is computed "on the fly", but using the precomputed values of the involved CGTO bielectronic integrals
+           ! the value of the bielectronic integral is computed "on the fly", but using the precomputed values of the involved CGTO bielectronic integrals
            IF (USEDISK) THEN
               READ(LUNIT)I,J,K,L,CLASS
            ELSE
@@ -655,7 +655,7 @@ SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
            INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L),CLASS)
         ELSE
            IF (USEDISK) THEN
-! the value of the bielectronic integral is read on disk
+              ! the value of the bielectronic integral is read on disk
               READ(BIUNIT)I,J,K,L,INTGRL
            ELSE
               I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
@@ -679,10 +679,10 @@ SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
         PCM(N)=CM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDCOULOMB_relativistic
 
 SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
-! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -706,23 +706,23 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
   IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
-! the values of the bielectronic integrals are computed "on the fly"
+        ! the values of the bielectronic integrals are computed "on the fly"
         I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
         INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L))
      ELSE
         IF (USEDISK) THEN
-! the list and values of the bielectronic integrals are read on disk
+           ! the list and values of the bielectronic integrals are read on disk
            READ(BIUNIT)I,J,K,L,INTGRL
         ELSE
-! the list and values of the bielectronic integrals are read in memory
+           ! the list and values of the bielectronic integrals are read in memory
            I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
            INTGRL=RBIVALUES(N)
         END IF
      END IF
-! 1 value for the 4 indices
+     ! 1 value for the 4 indices
      IF ((I==J).AND.(J==K).AND.(K==L)) THEN
         CM(I,I)=CM(I,I)+INTGRL*DM(I,I)
-! 2 distinct values for the 4 indices
+        ! 2 distinct values for the 4 indices
      ELSE IF ((I>J).AND.(J==K).AND.(K==L)) THEN
         CM(I,J)=CM(I,J)+INTGRL*DM(J,J)
         CM(J,I)=CM(J,I)+INTGRL*DM(J,J)
@@ -737,7 +737,7 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
      ELSE IF ((I==K).AND.(K>J).AND.(J==L)) THEN
         CM(I,J)=CM(I,J)+INTGRL*(DM(I,J)+DM(J,I))
         CM(J,I)=CM(J,I)+INTGRL*(DM(J,I)+DM(I,J))
-! 3 distinct values for the 4 indices
+        ! 3 distinct values for the 4 indices
      ELSE IF ((I==K).AND.(K>J).AND.(J>L)) THEN
         CM(I,J)=CM(I,J)+INTGRL*(DM(I,L)+DM(L,I))
         CM(J,I)=CM(J,I)+INTGRL*(DM(I,L)+DM(L,I))
@@ -761,10 +761,10 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
         CM(K,L)=CM(K,L)+INTGRL*DM(I,I)
         CM(L,K)=CM(L,K)+INTGRL*DM(I,I)
         CM(I,I)=CM(I,I)+INTGRL*(DM(K,L)+DM(L,K))
-! 4 distinct values for the 4 indices
+        ! 4 distinct values for the 4 indices
      ELSE IF (    ((I>J).AND.(J>K).AND.(K>L)) &
-              .OR.((I>K).AND.(K>J).AND.(J>L)) &
-              .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
+          .OR.((I>K).AND.(K>J).AND.(J>L)) &
+          .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
         CM(I,J)=CM(I,J)+INTGRL*(DM(K,L)+DM(L,K))
         CM(J,I)=CM(J,I)+INTGRL*(DM(K,L)+DM(L,K))
         CM(K,L)=CM(K,L)+INTGRL*(DM(I,J)+DM(J,I))
@@ -779,10 +779,10 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
         PCM(N)=CM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDCOULOMB_nonrelativistic
 
 SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
-! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -809,7 +809,7 @@ SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
-! the value of the bielectronic integral is computed "on the fly"
+        ! the value of the bielectronic integral is computed "on the fly"
         IF (USEDISK) THEN
            READ(LUNIT)I,J,K,L
         ELSE
@@ -818,7 +818,7 @@ SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
         INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L))
      ELSE
         IF (SEMIDIRECT) THEN
-! the value of the bielectronic integral is computed "on the fly", but using the precomputed values of the involved CGTO bielectronic integrals
+           ! the value of the bielectronic integral is computed "on the fly", but using the precomputed values of the involved CGTO bielectronic integrals
            IF (USEDISK) THEN
               READ(LUNIT)I,J,K,L,CLASS
            ELSE
@@ -828,7 +828,7 @@ SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
            INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L),CLASS)
         ELSE
            IF (USEDISK) THEN
-! the value of the bielectronic integral is read on disk
+              ! the value of the bielectronic integral is read on disk
               READ(BIUNIT)I,J,K,L,INTGRL
            ELSE
               I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
@@ -852,10 +852,10 @@ SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
         PEM(N)=EM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDEXCHANGE_relativistic
 
 SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
-! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -879,23 +879,23 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
   IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
-! the values of the bielectronic integrals are computed "on the fly"
+        ! the values of the bielectronic integrals are computed "on the fly"
         I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
         INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L))
      ELSE
         IF (USEDISK) THEN
-! the list and values of the bielectronic integrals are read on disk
+           ! the list and values of the bielectronic integrals are read on disk
            READ(BIUNIT)I,J,K,L,INTGRL
         ELSE
-! the list and values of the bielectronic integrals are read in memory
+           ! the list and values of the bielectronic integrals are read in memory
            I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
            INTGRL=RBIVALUES(N)
         END IF
      END IF
-! 1 value for the 4 indices
+     ! 1 value for the 4 indices
      IF ((I==J).AND.(J==K).AND.(K==L)) THEN
         EM(I,I)=EM(I,I)+INTGRL*DM(I,I)
-! 2 distinct values for the 4 indices
+        ! 2 distinct values for the 4 indices
      ELSE IF ((I>J).AND.(J==K).AND.(K==L)) THEN
         EM(I,J)=EM(I,J)+INTGRL*DM(J,J)
         EM(J,I)=EM(J,I)+INTGRL*DM(J,J)
@@ -912,7 +912,7 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
         EM(J,J)=EM(J,J)+INTGRL*DM(I,I)
         EM(I,J)=EM(I,J)+INTGRL*DM(J,I)
         EM(J,I)=EM(J,I)+INTGRL*DM(I,J)
-! 3 distinct values for the 4 indices
+        ! 3 distinct values for the 4 indices
      ELSE IF ((I==K).AND.(K>J).AND.(J>L)) THEN
         EM(I,I)=EM(I,I)+INTGRL*(DM(J,L)+DM(L,J))
         EM(L,I)=EM(L,I)+INTGRL*DM(I,J)
@@ -947,10 +947,10 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
         EM(I,L)=EM(I,L)+INTGRL*DM(I,K)
         EM(K,I)=EM(K,I)+INTGRL*DM(L,I)
         EM(L,I)=EM(L,I)+INTGRL*DM(K,I)
-! 4 distinct values for the 4 indices
+        ! 4 distinct values for the 4 indices
      ELSE IF (    ((I>J).AND.(J>K).AND.(K>L)) &
-              .OR.((I>K).AND.(K>J).AND.(J>L)) &
-              .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
+          .OR.((I>K).AND.(K>J).AND.(J>L)) &
+          .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
         EM(K,I)=EM(K,I)+INTGRL*DM(L,J)
         EM(L,I)=EM(L,I)+INTGRL*DM(K,J)
         EM(K,J)=EM(K,J)+INTGRL*DM(L,I)
@@ -969,10 +969,10 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
         PEM(N)=EM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDEXCHANGE_nonrelativistic
 
 SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
-! Computation and assembly of the matrix associated to one of the three components of the total angular momentum operator J (only the upper triangular part of the matrix is stored in packed format).
+  ! Computation and assembly of the matrix associated to one of the three components of the total angular momentum operator J (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
@@ -987,268 +987,268 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
   PTAMCM=(0.D0,0.D0)
   SELECT CASE (COMPONENT)
   CASE (1)
-  DO J=1,NBAS(1)
-     DO I=1,J
-        VALUE=(0.D0,0.D0)
-        DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K)
-              DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,2)  &
- &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,3))
+     DO J=1,NBAS(1)
+        DO I=1,J
+           VALUE=(0.D0,0.D0)
+           DO K=1,2
+              DO L=1,PHI(I)%nbrofcontractions(K)
+                 DO M=1,PHI(J)%nbrofcontractions(K)
+                    VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
+                         &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,2)  &
+                         &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,3))
+                 END DO
               END DO
            END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
- &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
- &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))
-           END DO
-        END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
-     END DO
-  END DO
-  DO J=NBAS(1)+1,SUM(NBAS)
-     DO I=NBAS(1)+1,J
-        VALUE=(0.D0,0.D0)
-        DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K)
-              DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,2)  &
- &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,3))
+           DO L=1,PHI(I)%nbrofcontractions(1)
+              DO M=1,PHI(J)%nbrofcontractions(2)
+                 VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
+                      &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
               END DO
            END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
- &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
+           DO L=1,PHI(I)%nbrofcontractions(2)
+              DO M=1,PHI(J)%nbrofcontractions(1)
+                 VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
+                      &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))
+              END DO
            END DO
+           PTAMCM(I+(J-1)*J/2)=VALUE
         END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
- &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))   
-           END DO
-        END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
      END DO
-  END DO
+     DO J=NBAS(1)+1,SUM(NBAS)
+        DO I=NBAS(1)+1,J
+           VALUE=(0.D0,0.D0)
+           DO K=1,2
+              DO L=1,PHI(I)%nbrofcontractions(K)
+                 DO M=1,PHI(J)%nbrofcontractions(K)
+                    VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
+                         &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,2)  &
+                         &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,3))
+                 END DO
+              END DO
+           END DO
+           DO L=1,PHI(I)%nbrofcontractions(1)
+              DO M=1,PHI(J)%nbrofcontractions(2)
+                 VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
+                      &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
+              END DO
+           END DO
+           DO L=1,PHI(I)%nbrofcontractions(2)
+              DO M=1,PHI(J)%nbrofcontractions(1)
+                 VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
+                      &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))
+              END DO
+           END DO
+           PTAMCM(I+(J-1)*J/2)=VALUE
+        END DO
+     END DO
   CASE (2)
-  DO J=1,NBAS(1)
-     DO I=1,J
-        VALUE=(0.D0,0.D0)
-        DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K)
-              DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,3)  &
- &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,1))
+     DO J=1,NBAS(1)
+        DO I=1,J
+           VALUE=(0.D0,0.D0)
+           DO K=1,2
+              DO L=1,PHI(I)%nbrofcontractions(K)
+                 DO M=1,PHI(J)%nbrofcontractions(K)
+                    VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
+                         &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,3)  &
+                         &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,1))
+                 END DO
               END DO
            END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
- &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
- &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
-           END DO
-        END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
-     END DO
-  END DO
-  DO J=NBAS(1)+1,SUM(NBAS)
-     DO I=NBAS(1)+1,J
-        VALUE=(0.D0,0.D0)
-        DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K)
-              DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,3)  &
- &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,1))
+           DO L=1,PHI(I)%nbrofcontractions(1)
+              DO M=1,PHI(J)%nbrofcontractions(2)
+                 VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
+                      &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
               END DO
            END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
- &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
+           DO L=1,PHI(I)%nbrofcontractions(2)
+              DO M=1,PHI(J)%nbrofcontractions(1)
+                 VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
+                      &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
+              END DO
            END DO
+           PTAMCM(I+(J-1)*J/2)=VALUE
         END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
- &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
-           END DO
-        END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
      END DO
-  END DO
+     DO J=NBAS(1)+1,SUM(NBAS)
+        DO I=NBAS(1)+1,J
+           VALUE=(0.D0,0.D0)
+           DO K=1,2
+              DO L=1,PHI(I)%nbrofcontractions(K)
+                 DO M=1,PHI(J)%nbrofcontractions(K)
+                    VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
+                         &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,3)  &
+                         &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,1))
+                 END DO
+              END DO
+           END DO
+           DO L=1,PHI(I)%nbrofcontractions(1)
+              DO M=1,PHI(J)%nbrofcontractions(2)
+                 VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
+                      &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
+              END DO
+           END DO
+           DO L=1,PHI(I)%nbrofcontractions(2)
+              DO M=1,PHI(J)%nbrofcontractions(1)
+                 VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
+                      &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
+              END DO
+           END DO
+           PTAMCM(I+(J-1)*J/2)=VALUE
+        END DO
+     END DO
   CASE (3)
-  DO J=1,NBAS(1)
-     DO I=1,J
-        VALUE=(0.D0,0.D0)
-        DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K)
-              DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                                 &
- &                           *DCMPLX(.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L)), &
- &                                   XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)               &
- &                                   -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,2))
+     DO J=1,NBAS(1)
+        DO I=1,J
+           VALUE=(0.D0,0.D0)
+           DO K=1,2
+              DO L=1,PHI(I)%nbrofcontractions(K)
+                 DO M=1,PHI(J)%nbrofcontractions(K)
+                    VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                                 &
+                         &                           *DCMPLX(.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L)), &
+                         &                                   XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)               &
+                         &                                   -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,2))
+                 END DO
               END DO
            END DO
+           PTAMCM(I+(J-1)*J/2)=VALUE
         END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
      END DO
-  END DO
-  DO J=NBAS(1)+1,SUM(NBAS)
-     DO I=NBAS(1)+1,J
-        VALUE=(0.D0,0.D0)
-        DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K)
-              DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                                 &
- &                           *DCMPLX(.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L)), &
- &                                   XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)               &
- &                                   -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,2))
+     DO J=NBAS(1)+1,SUM(NBAS)
+        DO I=NBAS(1)+1,J
+           VALUE=(0.D0,0.D0)
+           DO K=1,2
+              DO L=1,PHI(I)%nbrofcontractions(K)
+                 DO M=1,PHI(J)%nbrofcontractions(K)
+                    VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                                 &
+                         &                           *DCMPLX(.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L)), &
+                         &                                   XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)               &
+                         &                                   -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,2))
+                 END DO
               END DO
            END DO
+           PTAMCM(I+(J-1)*J/2)=VALUE
         END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
      END DO
-  END DO
   END SELECT
-END SUBROUTINE
+END SUBROUTINE BUILDTAMCM
 
 MODULE matrices
-INTERFACE FORMDM
-  SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
-    INTEGER,INTENT(IN) :: NBAST,LOON,HOON
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
-    DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
-  END SUBROUTINE
+  INTERFACE FORMDM
+     SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
+       INTEGER,INTENT(IN) :: NBAST,LOON,HOON
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
+       DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
+     END SUBROUTINE FORMDM_relativistic
 
-  SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
-    INTEGER,INTENT(IN) :: NBAST,LOON,HOON
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
-    DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
-  END SUBROUTINE
-END INTERFACE
+     SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
+       INTEGER,INTENT(IN) :: NBAST,LOON,HOON
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
+       DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
+     END SUBROUTINE FORMDM_nonrelativistic
+  END INTERFACE FORMDM
 
-INTERFACE BUILDOM
-  SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
-    TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
-    INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
-  END SUBROUTINE
+  INTERFACE BUILDOM
+     SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
+       TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+       INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
+     END SUBROUTINE BUILDOM_relativistic
 
-  SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
-    TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-  END SUBROUTINE
-END INTERFACE
+     SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
+       TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+     END SUBROUTINE BUILDOM_nonrelativistic
+  END INTERFACE BUILDOM
 
-INTERFACE BUILDKPFM
-  SUBROUTINE BUILDKPFM_nonrelativistic(PKPFM,PHI,NBAST)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PKPFM
-    TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-  END SUBROUTINE
-END INTERFACE
+  INTERFACE BUILDKPFM
+     SUBROUTINE BUILDKPFM_nonrelativistic(PKPFM,PHI,NBAST)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PKPFM
+       TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+     END SUBROUTINE BUILDKPFM_nonrelativistic
+  END INTERFACE BUILDKPFM
 
-INTERFACE BUILDOEFM
-  SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
-    TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
-    INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
-  END SUBROUTINE
+  INTERFACE BUILDOEFM
+     SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
+       TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+       INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
+     END SUBROUTINE BUILDOEFM_relativistic
 
-  SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
-    TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-  END SUBROUTINE
-END INTERFACE
+     SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
+       TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+     END SUBROUTINE BUILDOEFM_nonrelativistic
+  END INTERFACE BUILDOEFM
 
-INTERFACE BUILDTEFM
-  SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
-    TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
-  END SUBROUTINE
+  INTERFACE BUILDTEFM
+     SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
+       TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
+     END SUBROUTINE BUILDTEFM_relativistic
 
-  SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
-    TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
-  END SUBROUTINE
+     SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
+       TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
+     END SUBROUTINE BUILDTEFM_RHF
 
-  SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
-    TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDMA,PDMB
-  END SUBROUTINE
-END INTERFACE
+     SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
+       TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDMA,PDMB
+     END SUBROUTINE BUILDTEFM_UHF
+  END INTERFACE BUILDTEFM
 
-INTERFACE BUILDCOULOMB
-  SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
-    TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
-  END SUBROUTINE
+  INTERFACE BUILDCOULOMB
+     SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
+       TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
+     END SUBROUTINE BUILDCOULOMB_relativistic
 
-  SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
-    TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
-  END SUBROUTINE
-END INTERFACE
+     SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
+       TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
+     END SUBROUTINE BUILDCOULOMB_nonrelativistic
+  END INTERFACE BUILDCOULOMB
 
-INTERFACE BUILDEXCHANGE
-  SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
-    TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
-    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
-  END SUBROUTINE
+  INTERFACE BUILDEXCHANGE
+     SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
+       TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+       DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
+     END SUBROUTINE BUILDEXCHANGE_relativistic
 
-  SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
-    USE basis_parameters
-    INTEGER,INTENT(IN) :: NBAST
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
-    TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
-  END SUBROUTINE
-END INTERFACE
-END MODULE
+     SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
+       USE basis_parameters
+       INTEGER,INTENT(IN) :: NBAST
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
+       TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+       DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
+     END SUBROUTINE BUILDEXCHANGE_nonrelativistic
+  END INTERFACE BUILDEXCHANGE
+END MODULE matrices

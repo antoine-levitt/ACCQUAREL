@@ -1,6 +1,6 @@
 SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! DIIS (Direct Inversion in the Iterative Subspace) algorithm (relativistic case)
-! Reference: P. Pulay, Convergence acceleration of iterative sequences. The case of SCF iteration, Chem. Phys. Lett., 73(2), 393-398, 1980.
+  ! DIIS (Direct Inversion in the Iterative Subspace) algorithm (relativistic case)
+  ! Reference: P. Pulay, Convergence acceleration of iterative sequences. The case of SCF iteration, Chem. Phys. Lett., 73(2), 393-398, 1980.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE setup_tools
   IMPLICIT NONE
@@ -22,8 +22,8 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   DOUBLE COMPLEX,DIMENSION(:,:,:),ALLOCATABLE :: ERRSET
   LOGICAL :: NUMCONV
 
-! INITIALIZATIONS AND PRELIMINARIES
-! Reading of the maximum dimension of the density matrix simplex
+  ! INITIALIZATIONS AND PRELIMINARIES
+  ! Reading of the maximum dimension of the density matrix simplex
   OPEN(100,FILE='setup',STATUS='OLD',ACTION='READ')
   CALL LOOKFOR(100,'DIIS ALGORITHM PARAMETERS',INFO)
   READ(100,'(/,i2)')MXSET
@@ -49,42 +49,42 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   OPEN(17,FILE='plots/diiscrit1.txt',STATUS='unknown',ACTION='write')
   OPEN(18,FILE='plots/diiscrit2.txt',STATUS='unknown',ACTION='write')
 
-! LOOP
+  ! LOOP
 1 CONTINUE
   ITER=ITER+1
   WRITE(*,*)' '
   WRITE(*,*)'# ITER =',ITER
 
-! Assembly and diagonalization of the Fock matrix
+  ! Assembly and diagonalization of the Fock matrix
   CALL BUILDTEFM(PTEFM,NBAST,PHI,PTDM)
   PFM=POEFM+PTEFM
   CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
   IF (INFO/=0) GO TO 5
-! Assembly of the density matrix according to the aufbau principle
+  ! Assembly of the density matrix according to the aufbau principle
   CALL CHECKORB(EIG,NBAST,LOON)
   CALL FORMDM(PDM,EIGVEC,NBAST,LOON,LOON+NBE-1)
-! Computation of the total energy
+  ! Computation of the total energy
   CALL BUILDTEFM(PTEFM,NBAST,PHI,PDM)
   ETOT=ENERGY(POEFM,PTEFM,PDM,NBAST)
   WRITE(*,*)'E(D_n)=',ETOT
-! Numerical convergence check
+  ! Numerical convergence check
   IF (ITER==1) THEN
      CALL CHECKNUMCONV(PDM,PDMSET(1,:),POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
   ELSE
      CALL CHECKNUMCONV(PDM,PDMSET(MSET,:),POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
   END IF
   IF (NUMCONV) THEN
-! Convergence reached
+     ! Convergence reached
      GO TO 2
   ELSE IF (ITER==MAXITR) THEN
-! Maximum number of iterations reached without convergence
+     ! Maximum number of iterations reached without convergence
      GO TO 3
   ELSE
-! Convergence not reached, increment
+     ! Convergence not reached, increment
      ETOT1=ETOT
-! Storage of the current density matrix, computation and storage of a new DIIS error vector
+     ! Storage of the current density matrix, computation and storage of a new DIIS error vector
      IF (MSET==MXSET) THEN
-! we have reached the maximum allowed dimension for the simplex
+        ! we have reached the maximum allowed dimension for the simplex
         PDMSET=EOSHIFT(PDMSET,SHIFT=1) ! elimination of the oldest stored density matrix
         ERRSET=EOSHIFT(ERRSET,SHIFT=1) ! elimination of the oldest stored error vector
      ELSE
@@ -95,10 +95,10 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      IF (ITER==1) THEN
         PTDM=PDM
      ELSE
-! TO DO: check LINEAR DEPENDENCE???
+        ! TO DO: check LINEAR DEPENDENCE???
         WRITE(*,*)'Dimension of the density matrix simplex =',MSET
-! Computation of the new pseudo-density matrix
-! assembly and solving of the linear system associated to the DIIS equations
+        ! Computation of the new pseudo-density matrix
+        ! assembly and solving of the linear system associated to the DIIS equations
         MM=(MSET+1)*(MSET+2)/2
         ALLOCATE(PBM(1:MM))
         PBM=(0.D0,0.D0) ; PBM(MM-MSET:MM-1)=(-1.D0,0.D0)
@@ -106,7 +106,7 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         DO J=1,MSET
            DO I=1,J
               IJ=IJ+1 ; PBM(IJ)=&
-             &FINNERPRODUCT(MATMUL(ISRS,MATMUL(ERRSET(J,:,:),ISRS)),MATMUL(ISRS,MATMUL(ERRSET(I,:,:),ISRS)),NBAST)
+                   &FINNERPRODUCT(MATMUL(ISRS,MATMUL(ERRSET(J,:,:),ISRS)),MATMUL(ISRS,MATMUL(ERRSET(I,:,:),ISRS)),NBAST)
            END DO
         END DO
         ALLOCATE(DIISV(1:MSET+1))
@@ -115,7 +115,7 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         CALL ZHPSV('U',MSET+1,1,PBM,IPIV,DIISV,MSET+1,INFO)
         DEALLOCATE(IPIV,PBM)
         IF (INFO/=0) GO TO 4
-! assembly of the pseudo-density matrix
+        ! assembly of the pseudo-density matrix
         PTDM=(0.D0,0.D0)
         DO I=1,MSET
            PTDM=PTDM+DIISV(I)*PDMSET(I,:)
@@ -124,7 +124,7 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      END IF
      GO TO 1
   END IF
-! MESSAGES
+  ! MESSAGES
 2 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine DIIS: convergence after',ITER,'iteration(s).'
   OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
   DO I=1,NBAST
@@ -143,17 +143,17 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      WRITE(*,*)'Subroutine ZHPSV: the',-INFO,'-th argument had an illegal value'
   ELSE
      WRITE(*,*)'Subroutine ZHPSV: the factorization has been completed, but the block diagonal matrix is &
-    &exactly singular, so the solution could not be computed'
+          &exactly singular, so the solution could not be computed'
   END IF
   GO TO 5
 5 WRITE(*,*)'(called from subroutine DIIS)'
 6 DEALLOCATE(PDM,PTDM,PDMSET,PTEFM,PFM,TMP,ISRS,ERRSET)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE
+END SUBROUTINE DIIS_relativistic
 
 SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! DIIS (Direct Inversion in the Iterative Subspace) algorithm (restricted closed-shell Hartree-Fock formalism)
-! Reference: P. Pulay, Convergence acceleration of iterative sequences. The case of SCF iteration, Chem. Phys. Lett., 73(2), 393-398, 1980.
+  ! DIIS (Direct Inversion in the Iterative Subspace) algorithm (restricted closed-shell Hartree-Fock formalism)
+  ! Reference: P. Pulay, Convergence acceleration of iterative sequences. The case of SCF iteration, Chem. Phys. Lett., 73(2), 393-398, 1980.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE setup_tools
   IMPLICIT NONE
@@ -174,8 +174,8 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   DOUBLE PRECISION,DIMENSION(:,:),ALLOCATABLE :: ERRSET,PDMSET,TMP
   LOGICAL :: NUMCONV
 
-! INITIALIZATIONS AND PRELIMINARIES
-! Reading of the maximum dimension of the density matrix simplex
+  ! INITIALIZATIONS AND PRELIMINARIES
+  ! Reading of the maximum dimension of the density matrix simplex
   OPEN(100,FILE='setup',STATUS='OLD',ACTION='READ')
   CALL LOOKFOR(100,'DIIS ALGORITHM PARAMETERS',INFO)
   READ(100,'(/,i2)')MXSET
@@ -193,41 +193,41 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   OPEN(17,FILE='plots/diiscrit1.txt',STATUS='unknown',ACTION='write')
   OPEN(18,FILE='plots/diiscrit2.txt',STATUS='unknown',ACTION='write')
 
-! LOOP
+  ! LOOP
 1 CONTINUE
   ITER=ITER+1
   WRITE(*,*)' '
   WRITE(*,*)'# ITER =',ITER
 
-! Assembly and diagonalization of the Fock matrix
+  ! Assembly and diagonalization of the Fock matrix
   CALL BUILDTEFM(PTEFM,NBAST,PHI,PTDM)
   PFM=POEFM+PTEFM
   CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
   IF (INFO/=0) GO TO 5
-! Assembly of the density matrix according to the aufbau principle
+  ! Assembly of the density matrix according to the aufbau principle
   CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE/2)
-! Computation of the total energy
+  ! Computation of the total energy
   CALL BUILDTEFM(PTEFM,NBAST,PHI,PDM)
   ETOT=ENERGY(POEFM,PTEFM,PDM,NBAST)
   WRITE(*,*)'Total energy =',ETOT
-! Numerical convergence check
+  ! Numerical convergence check
   IF (ITER==1) THEN
      CALL CHECKNUMCONV(PDM,PDMSET(1,:),POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
   ELSE
      CALL CHECKNUMCONV(PDM,PDMSET(MSET,:),POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
   END IF
   IF (NUMCONV) THEN
-! Convergence reached
+     ! Convergence reached
      GO TO 2
   ELSE IF (ITER==MAXITR) THEN
-! Maximum number of iterations reached without convergence
+     ! Maximum number of iterations reached without convergence
      GO TO 3
   ELSE
-! Convergence not reached, increment
+     ! Convergence not reached, increment
      ETOT1=ETOT
-! Storage of the current density matrix, computation and storage of a new DIIS error vector
+     ! Storage of the current density matrix, computation and storage of a new DIIS error vector
      IF (MSET==MXSET) THEN
-! we have reached the maximum allowed dimension for the simplex
+        ! we have reached the maximum allowed dimension for the simplex
         PDMSET=EOSHIFT(PDMSET,SHIFT=1) ! elimination of the oldest stored density matrix
         ERRSET=EOSHIFT(ERRSET,SHIFT=1) ! elimination of the oldest stored error vector
      ELSE
@@ -245,10 +245,10 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      IF (ITER==1) THEN
         PTDM=PDM
      ELSE
-! TO DO: check LINEAR DEPENDENCE by computing a Gram determinant??
+        ! TO DO: check LINEAR DEPENDENCE by computing a Gram determinant??
         WRITE(*,*)'Dimension of the density matrix simplex =',MSET
-! Computation of the new pseudo-density matrix
-! assembly and solving of the linear system associated to the DIIS equations
+        ! Computation of the new pseudo-density matrix
+        ! assembly and solving of the linear system associated to the DIIS equations
         MM=(MSET+1)*(MSET+2)/2
         ALLOCATE(PBM(1:MM))
         PBM=0.D0 ; PBM(MM-MSET:MM-1)=-1.D0
@@ -264,7 +264,7 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         CALL DSPSV('U',MSET+1,1,PBM,IPIV,DIISV,MSET+1,INFO)
         DEALLOCATE(IPIV,PBM)
         IF (INFO/=0) GO TO 4
-! assembly of the pseudo-density matrix
+        ! assembly of the pseudo-density matrix
         PTDM=0.D0
         DO I=1,MSET
            PTDM=PTDM+DIISV(I)*PDMSET(I,:)
@@ -273,7 +273,7 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      END IF
      GO TO 1
   END IF
-! MESSAGES
+  ! MESSAGES
 2 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine DIIS: convergence after',ITER,'iteration(s).'
   OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
   DO I=1,NBAST
@@ -292,10 +292,10 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      WRITE(*,*)'Subroutine ZHPSV: the',-INFO,'-th argument had an illegal value'
   ELSE
      WRITE(*,*)'Subroutine ZHPSV: the factorization has been completed, but the block diagonal matrix is &
-    &exactly singular, so the solution could not be computed'
+          &exactly singular, so the solution could not be computed'
   END IF
   GO TO 5
 5 WRITE(*,*)'(called from subroutine DIIS)'
 6 DEALLOCATE(PDM,PTDM,PDMSET,PTEFM,PFM,TMP,ERRSET)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE
+END SUBROUTINE DIIS_RHF
