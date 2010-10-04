@@ -1,5 +1,5 @@
 PROGRAM ACCQUAREL
-  USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters
+  USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters ; USE setup_tools
   IMPLICIT NONE
   DOUBLE PRECISION :: STARTTIME,ENDTIME
 
@@ -7,6 +7,8 @@ PROGRAM ACCQUAREL
 
   WRITE(*,*)' *** ACCQUAREL using A.S.P.I.C. *** '
   !$ WRITE(*,*)' (parallel version compiled by an OpenMP-compliant implementation)'
+  ! Setup init
+  CALL SETUP_TOOLS_INIT
 ! Case setup
   CALL SETUP_CASE
 ! Approximation setup
