@@ -2,6 +2,7 @@
 #F95 = g95
 F95 = gfortran
 #F95 = ifort
+ASPICROOT=../../A.S.P.I.C
 
 ifeq ($(F95),g95)
    F95FLAGS = -c -O3 -fmod=$(MODDIR)
