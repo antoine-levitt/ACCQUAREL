@@ -121,12 +121,13 @@ FUNCTION POINTVALUE(PHI, X) RESULT(VALUE)
 ! Function that computes the value of PHI at point X
   USE iso_c_binding ; USE basis_parameters
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI
-  REAL(KIND=C_DOUBLE),DIMENSION(3), INTENT(IN) :: X
+  DOUBLE PRECISION,DIMENSION(3), INTENT(IN) :: X
   REAL(KIND=C_DOUBLE) :: VALUE, MONOMIAL
   INTEGER :: I,D
 
   VALUE = PRODUCT((X - PHI%center)**PHI%monomialdegree) &
-       & * DOT_PRODUCT(PHI%coefficients, EXP(-PHI%exponents * SUM((X - PHI%center)**2)))
+       & * DOT_PRODUCT(PHI%coefficients(1:PHI%nbrofexponents), EXP(-PHI%exponents(1:PHI%nbrofexponents) * SUM((X - PHI%center)**2)))
+
 END FUNCTION POINTVALUE
   
 FUNCTION OVERLAPVALUE(PHI_A,PHI_B) RESULT (VALUE)
