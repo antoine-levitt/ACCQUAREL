@@ -13,14 +13,14 @@ y = x;
 z = x;
 [X, Y, Z] = meshgrid(x, y, z); % generates the internal mesh
 
-dshaped = reshape(d, N, N, N); % dshaped is a 3D matrix
-
+D = reshape(d, N, N, N); % D is a 3D matrix
 clf
-ms = [M/1.1 M/2 M/4 M/10 M/20 M/50 M/100]; % which isosurfaces to plot
-hs = arrayfun(@(m) patch(isosurface(X, Y, Z, dshaped, m, dshaped)), ms); % plot each isosurface
-isonormals(X,Y,Z,dshaped,dshaped);
+%slice(X, Y, Z, (D), 0, 0, 0); % to plot slices of the volume
+ms = [M/1.1 M/2 M/5 M/10 M/20 M/50 M/100 M/200 M/400]; % which isosurfaces to plot
+hs = arrayfun(@(m) patch(isosurface(X, Y, Z, D, m, log(D))), ms); % plot each isosurface
+isonormals(X,Y,Z,D,D);
 shading flat % shading faceted for the mesh
-set(hs, 'FaceAlpha', .5);
+set(hs, 'FaceAlpha', .4);
 axis equal
 axis off
 
