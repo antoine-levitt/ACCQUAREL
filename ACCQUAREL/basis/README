@@ -1,0 +1,50 @@
+The GTO basis sets provided in this directory are distriuted with DIRAC (http://dirac.chem.sdu.dk/). Here is some information excerpted from the wikipedia page "Basis set (chemistry)".
+
+MINIMAL BASIS SETS
+
+The most common minimal basis set is STO-nG, where n is an integer. This n value represents the number of Gaussian primitive functions comprising a single basis function. In these basis sets, the same number of Gaussian primitives comprise core and valence orbitals. Minimal basis sets typically give rough results that are insufficient for research-quality publication, but are much cheaper than their larger counterparts. Commonly used minimal basis sets of this type are:
+
+    * STO-3G
+    * STO-4G
+    * STO-6G
+    * STO-3G* - Polarized version of STO-3G
+
+SPLIT-VALENCE BASIS SETS
+
+During most molecular bonding, it is the valence electrons which principally take part in the bonding. In recognition of this fact, it is common to represent valence orbitals by more than one basis function (each of which can in turn be composed of a fixed linear combination of primitive Gaussian functions). Basis sets in which there are multiple basis functions corresponding to each valence atomic orbital are called valence double, triple, quadruple-zeta, and so on, basis sets. Since the different orbitals of the split have different spatial extents, the combination allows the electron density to adjust its spatial extent appropriate to the particular molecular environment. Minimum basis sets are fixed and are unable to adjust to different molecular environments.
+
+Pople basis sets
+
+The notation for the split-valence basis sets arising from the group of John Pople is typically X-YZg. In this case, X represents the number of primitive Gaussians comprising each core atomic orbital basis function. The Y and Z indicate that the valence orbitals are composed of two basis functions each, the first one composed of a linear combination of Y primitive Gaussian functions, the other composed of a linear combination of Z primitive Gaussian functions. In this case, the presence of two numbers after the hyphens implies that this basis set is a split-valence double-zeta basis set. Split-valence triple- and quadruple-zeta basis sets are also used, denoted as X-YZWg, X-YZWVg, etc. Here is a list of commonly used split-valence basis sets of this type:
+
+    * 3-21G
+    * 3-21G* - Polarized
+    * 3-21+G - Diffuse functions
+    * 3-21+G* - With polarization and diffuse functions
+    * 4-21G
+    * 4-31G
+    * 6-21G
+    * 6-31G
+    * 6-31G*
+    * 6-31+G*
+    * 6-31G(3df,3pd)
+    * 6-311G
+    * 6-311G*
+    * 6-311+G*
+
+The 6-31G* basis set (defined for the atoms H through Zn) is a valence double-zeta polarized basis set that adds to the 6-31G set six d-type Cartesian-Gaussian polarization functions on each of the atoms Li through Ca and ten f-type Cartesian Gaussian polarization functions on each of the atoms Sc through Zn.
+
+Correlation-consistent basis sets
+
+Some of the most widely used basis sets are those developed by Dunning and coworkers, since they are designed to converge systematically to the complete-basis-set (CBS) limit using extrapolation techniques. For first- and second-row atoms, the basis sets are cc-pVNZ where N=D,T,Q,5,6,... (D=double, T=triples, etc.). The 'cc-p', stands for 'correlation-consistent polarized' and the 'V' indicates they are valence-only basis sets. They include successively larger shells of polarization (correlating) functions (d, f, g, etc.). More recently these 'correlation-consistent polarized' basis sets have become widely used and are the current state of the art for correlated or post-Hartree-Fock calculations. Examples of these are:
+
+    * cc-pVDZ - Double-zeta
+    * cc-pVTZ - Triple-zeta
+    * cc-pVQZ - Quadruple-zeta
+    * cc-pV5Z - Quintuple-zeta, etc.
+    * aug-cc-pVDZ, etc. - Augmented versions of the preceding basis sets with added diffuse functions
+
+For third-row atoms, additional functions are necessary; these are the cc-pV(N+d)Z basis sets. Even larger atoms require the cc-pVNZ-PP and cc-pVNZ-DK families of basis sets, where PP and DK stand for pseudopotential and Douglas-Kroll, respectively.
+
+These basis sets can be augmented with core functions for geometric and nuclear property calculations, and with diffuse functions for electronic excited-state calculations, electric field property calculations, and long-range interactions, such as Van der Waals forces. A recipe for constructing additional augmented functions exists; as many as five augmented functions have been used in second hyperpolarizability calculations in the literature. Because of the rigorous construction of these basis sets, extrapolation can be done for almost any property.
+
