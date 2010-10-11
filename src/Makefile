@@ -5,7 +5,7 @@ F95 = gfortran
 
 OPTFLAGS = -O3
 ifndef ASPICROOT
-ASPICROOT=../../A.S.P.I.C
+ASPICROOT=../A.S.P.I.C
 endif
 
 ifeq ($(F95),g95)
