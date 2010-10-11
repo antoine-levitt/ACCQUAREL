@@ -1,0 +1,32 @@
+http://www.ceremade.dauphine.fr/~legendre/accquarel/
+
+
+Installation (sous linux)
+Étape 1 : installation du code A.S.P.I.C.
+Vérifier que la bibliothèque LAPACK est installée.
+Installer la bibliothèque de parsage XML Xerces-C++ (paquets libxerces-c2-dev et libxerces-c28 pour la version actuelle).
+Créer la variable d'environnement XERCESCROOT contenant le chemin du répertoire dans lequel se trouve celui de la bibliothèque Xerces-C++. Par exemple, en Bourne-again shell (bash), taper export XERCESCROOT="/usr" (et ajouter cette commande dans le fichier .bashrc par la suite).
+Télécharger puis extraire l'archive contenant la version modifiée du code A.S.P.I.C. dans le répertoire de son choix (le répertoire A.S.P.I.C/ sera alors automatiquement créé).
+Se placer dans le répertoire A.S.P.I.C/src/ et lancer la compilation d'A.S.P.I.C. en tapant make.
+Créer enfin la variable d'environnement ASPICROOT contenant le chemin d'accès au répertoire A.S.P.I.C/ (en incluant ce dernier).
+Étape 2 : installation du code ACCQUAREL
+Vérifier que le compilateur g++ est installé.
+S'assurer qu'au moins un des compilateurs g95, gfortran (faisant partie de gcc) ou Intel® Fortran Compiler est installé.
+Télécharger puis extraire l'archive contenant le code ACCQUAREL dans le répertoire de son choix (le répertoire ACCQUAREL/ sera alors automatiquement créé).
+Se placer dans le répertoire ACCQUAREL/src/ et éditer le fichier makefile pour choisir quel compilateur fortran utiliser en modifiant la valeur (g95 ou gfortran) de la variable F95. En fonction du système, modifier éventuellement le chemin de la bibliothèque libstdc++.a dans la variable ASPICLIBS.
+Lancer enfin la compilation d'ACCQUAREL en tapant la commande make. Si tout s'est bien passé, l'exécutable accquarel.exe doit maintenant se trouver dans le répertoire ACCQUAREL/.
+
+
+Utilisation
+
+Le choix de la configuration et des paramètres du calcul se fait via le fichier d'entrée setup, qui devra obligatoirement contenir les rubriques suivantes :
+CASE, pour le choix du cas relativiste ou non,
+APPROXIMATION, pour le choix du type d'approximation (Hartree ou Hartree-Fock),
+MODEL, pour le choix du modèle ou du formalisme (RHF en non relativiste, CSD en relativiste pour l'instant),
+DESCRIPTION OF THE MOLECULAR SYSTEM, pour la description du système moléculaire à traiter,
+BASIS DEFINITION, pour le choix de la base d'orbitales atomiques utilisée,
+SCF PARAMETERS, pour le choix du (des) algorithme(s) à utiliser et des paramètres pour la convergence numérique (tolérance, nombre d'itérations maximum...),
+et, le cas échéant,
+DIIS ALGORITHM PARAMETERS, pour le choix de la dimension du simplexe des matrices de densité de l'algorithme DIIS,
+LEVEL-SHIFTING ALGORITHM PARAMETERS, pour le choix du paramètre de shift de l'algorithme level-shifting.
+SERE'S ALGORITHM PARAMETERS, pour le choix de la méthode utilisée pour le calcul de la fonction \u0398 de l'algorithme ESA/RODA (diagonalisation ou récursion polynomiale).
