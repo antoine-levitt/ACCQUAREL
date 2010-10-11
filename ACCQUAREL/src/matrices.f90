@@ -11,7 +11,7 @@ SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
   DO I=LOON,HOON
      CALL ZHPR('U',NBAST,1.D0,EIGVEC(:,I),1,PDM)
   END DO
-END SUBROUTINE
+END SUBROUTINE FORMDM_relativistic
 
 SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
 ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
@@ -26,7 +26,7 @@ SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
   DO I=LOON,HOON
      CALL DSPR('U',NBAST,1.D0,EIGVEC(:,I),1,PDM)
   END DO
-END SUBROUTINE
+END SUBROUTINE FORMDM_nonrelativistic
 
 SUBROUTINE FORMPROJ(PPROJM,EIGVEC,NBAST,LOON)
 ! Assembly of the matrix of the projector on the "positive" space (i.e., the electronic states) associated to a Dirac-Fock Hamiltonian (only the upper triangular part of the matrix is stored in packed format).
@@ -41,7 +41,7 @@ SUBROUTINE FORMPROJ(PPROJM,EIGVEC,NBAST,LOON)
   DO I=0,NBAST-LOON
      CALL ZHPR('U',NBAST,1.D0,EIGVEC(:,LOON+I),1,PPROJM)
   END DO
-END SUBROUTINE
+END SUBROUTINE FORMPROJ
 
 SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
 ! Computation and assembly of the overlap matrix between basis functions, i.e., the Gram matrix of the basis with respect to the $L^2(\mathbb{R}^3,\mathbb{C}^4)$ inner product (only the upper triangular part of the matrix is stored in packed format).
@@ -84,7 +84,7 @@ SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
         POM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDOM_relativistic
 
 SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
 ! Computation and assembly of the overlap matrix between basis functions, i.e. the Gram matrix of the basis with respacet to the $L^2(\mathbb{R}^3)$ inner product (only the upper triangular part of the matrix is stored in packed format).
@@ -101,7 +101,7 @@ SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
         POM(I+(J-1)*J/2)=OVERLAPVALUE(PHI(I),PHI(J))
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDOM_nonrelativistic
 
 SUBROUTINE BUILDKPFM_nonrelativistic(PKPFM,PHI,NBAST)
 ! Computation and assembly of the kinetic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
@@ -119,7 +119,7 @@ SUBROUTINE BUILDKPFM_nonrelativistic(PKPFM,PHI,NBAST)
         PKPFM(I+(J-1)*J/2)=KINETICVALUE(PHI(I),PHI(J))/2.D0
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDKPFM_nonrelativistic
 
 SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
 ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed form)
@@ -202,7 +202,7 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDOEFM_relativistic
 
 SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
 ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
@@ -225,7 +225,7 @@ SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDOEFM_nonrelativistic
 
 SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
 ! Computation and assembly of the bielectronic part of the Fock matrix associated to a given density matrix using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
@@ -317,7 +317,7 @@ SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
         PTEFM(N)=TEFM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDTEFM_relativistic
 
 SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
 ! Computation and assembly of the two-electron part of the Fock matrix associated to a given density matrix in the restricted closed-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
@@ -461,7 +461,7 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
         PTEFM(N)=TEFM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDTEFM_RHF
 
 SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
 ! Computation and assembly of the two-electron part of one of the two Fock matrices in the unrestricted open-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
@@ -606,7 +606,7 @@ SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
         PTEFM(N)=TEFM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDTEFM_UHF
 
 SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
@@ -679,7 +679,7 @@ SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
         PCM(N)=CM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDCOULOMB_relativistic
 
 SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
@@ -779,7 +779,7 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
         PCM(N)=CM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDCOULOMB_nonrelativistic
 
 SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
@@ -852,7 +852,7 @@ SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
         PEM(N)=EM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDEXCHANGE_relativistic
 
 SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
@@ -969,7 +969,7 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
         PEM(N)=EM(I,J)
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE BUILDEXCHANGE_nonrelativistic
 
 SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
 ! Computation and assembly of the matrix associated to one of the three components of the total angular momentum operator J (only the upper triangular part of the matrix is stored in packed format).
@@ -1130,7 +1130,7 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
      END DO
   END DO
   END SELECT
-END SUBROUTINE
+END SUBROUTINE BUILDTAMCM
 
 MODULE matrices
 INTERFACE FORMDM

@@ -117,19 +117,6 @@ END INTERFACE
 
 CONTAINS
 
-FUNCTION POINTVALUE(PHI, X) RESULT(VALUE)
-! Function that computes the value of PHI at point X
-  USE iso_c_binding ; USE basis_parameters
-  TYPE(gaussianbasisfunction),INTENT(IN) :: PHI
-  DOUBLE PRECISION,DIMENSION(3), INTENT(IN) :: X
-  REAL(KIND=C_DOUBLE) :: VALUE, MONOMIAL
-  INTEGER :: I,D
-
-  VALUE = PRODUCT((X - PHI%center)**PHI%monomialdegree) &
-       & * DOT_PRODUCT(PHI%coefficients(1:PHI%nbrofexponents), EXP(-PHI%exponents(1:PHI%nbrofexponents) * SUM((X - PHI%center)**2)))
-
-END FUNCTION POINTVALUE
-  
 FUNCTION OVERLAPVALUE(PHI_A,PHI_B) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of two GTO basis functions.
   USE iso_c_binding ; USE basis_parameters
@@ -139,7 +126,7 @@ FUNCTION OVERLAPVALUE(PHI_A,PHI_B) RESULT (VALUE)
 
   VALUE=unrolloverlap(PHI_A%nbrofexponents,PHI_A%center,PHI_A%exponents,PHI_A%coefficients,PHI_A%monomialdegree, &
  &                    PHI_B%nbrofexponents,PHI_B%center,PHI_B%exponents,PHI_B%coefficients,PHI_B%monomialdegree)
-END FUNCTION
+END FUNCTION OVERLAPVALUE
 
 FUNCTION KINETICVALUE(PHI_A,PHI_B) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the scalar product between the gradients of two GTO basis functions.
@@ -150,7 +137,7 @@ FUNCTION KINETICVALUE(PHI_A,PHI_B) RESULT (VALUE)
 
   VALUE=unrollkinetic(PHI_A%nbrofexponents,PHI_A%center,PHI_A%exponents,PHI_A%coefficients,PHI_A%monomialdegree, &
  &                    PHI_B%nbrofexponents,PHI_B%center,PHI_B%exponents,PHI_B%coefficients,PHI_B%monomialdegree)
-END FUNCTION
+END FUNCTION KINETICVALUE
 
 FUNCTION DERIVVALUE(PHI_A,PHI_B,DIMENSION) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to a space variable) of a basis function with another basis function (this kind of integrals appear in the variational formulation involving the Dirac operator).
@@ -164,7 +151,7 @@ FUNCTION DERIVVALUE(PHI_A,PHI_B,DIMENSION) RESULT (VALUE)
   VALUE=unrollderiv(PHI_A%nbrofexponents,PHI_A%center,PHI_A%exponents,PHI_A%coefficients,PHI_A%monomialdegree, &
  &                  PHI_B%nbrofexponents,PHI_B%center,PHI_B%exponents,PHI_B%coefficients,PHI_B%monomialdegree, &
  &                  DIMENSION-1)
-END FUNCTION
+END FUNCTION DERIVVALUE
 
 FUNCTION POTENTIALVALUE(PHI_A,PHI_B,CENTER) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product between two GTO basis functions and a coulombic potential centered on a given point.
@@ -177,7 +164,7 @@ FUNCTION POTENTIALVALUE(PHI_A,PHI_B,CENTER) RESULT (VALUE)
   VALUE=unrollpotential(PHI_A%nbrofexponents,PHI_A%center,PHI_A%exponents,PHI_A%coefficients,PHI_A%monomialdegree, &
  &                      PHI_B%nbrofexponents,PHI_B%center,PHI_B%exponents,PHI_B%coefficients,PHI_B%monomialdegree, &
  &                      CENTER)
-END FUNCTION
+END FUNCTION POTENTIALVALUE
 
 FUNCTION XDERIVVALUE(PHI_A,PHI_B,DIMENSION1,DIMENSION2) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to the space variable x, y or z) of a GTO basis function with another GTO basis function, times x, y or z (this kind of integral appears in variational formulations involving the J operator).
@@ -192,7 +179,7 @@ FUNCTION XDERIVVALUE(PHI_A,PHI_B,DIMENSION1,DIMENSION2) RESULT (VALUE)
   VALUE=unrollxderiv(PHI_A%nbrofexponents,PHI_A%center,PHI_A%exponents,PHI_A%coefficients,PHI_A%monomialdegree, &
  &                   PHI_B%nbrofexponents,PHI_B%center,PHI_B%exponents,PHI_B%coefficients,PHI_B%monomialdegree, &
  &                   DIMENSION1-1,DIMENSION2-1)
-END FUNCTION
+END FUNCTION XDERIVVALUE
 
 FUNCTION COULOMBVALUE_nonrelativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four GTO basis functions.
@@ -205,7 +192,7 @@ FUNCTION COULOMBVALUE_nonrelativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
  &                    PHI_B%nbrofexponents,PHI_B%center,PHI_B%exponents,PHI_B%coefficients,PHI_B%monomialdegree, &
  &                    PHI_C%nbrofexponents,PHI_C%center,PHI_C%exponents,PHI_C%coefficients,PHI_C%monomialdegree, &
  &                    PHI_D%nbrofexponents,PHI_D%center,PHI_D%exponents,PHI_D%coefficients,PHI_D%monomialdegree)
-END FUNCTION
+END FUNCTION COULOMBVALUE_nonrelativistic
 
 SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAS,LISTSIZE)
 ! Subroutine that generates the list (without redundancy as symmetries are taken into account) of the bielectronic integrals with nonzero value.
@@ -239,7 +226,7 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAS,LISTSIZE)
   END DO ; END DO ; END DO ; END DO
   CLOSE(LUNIT)
   WRITE(*,*)' Number of CGTO bielectronic integrals to be computed:',LISTSIZE
-END SUBROUTINE
+END SUBROUTINE BUILDBILIST_nonrelativistic
 
 FUNCTION COULOMBVALUE_relativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four 2-spinor basis functions.
@@ -263,7 +250,7 @@ FUNCTION COULOMBVALUE_relativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
         END DO
      END DO ; END DO
   END DO
-END FUNCTION
+END FUNCTION COULOMBVALUE_relativistic
 
 FUNCTION COULOMBVALUE_precomputed(PHI_A,PHI_B,PHI_C,PHI_D,CLASS) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four 2-spinor basis functions from lists containing the precomputed values of the bielectronic integrals between scalar GTO functions.
@@ -288,7 +275,7 @@ FUNCTION COULOMBVALUE_precomputed(PHI_A,PHI_B,PHI_C,PHI_D,CLASS) RESULT (VALUE)
         END DO
      END DO ; END DO
   END DO
-END FUNCTION
+END FUNCTION COULOMBVALUE_precomputed
 
 SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
 ! Subroutine that generates the list (more or less without redundancy since the a priori symmetries for complex 2-spinor functions are taken into account) of the bielectronic integrals with nonzero value.
@@ -398,7 +385,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
   LISTSIZE=SUM(SUBSIZE)
   CLOSE(LUNIT)
   WRITE(*,*)' Number of 2-spinor-type orbital bielectronic integrals to be computed:',LISTSIZE
-END SUBROUTINE
+END SUBROUTINE BUILDBILIST_relativistic
 
 SUBROUTINE PRECOMPUTECGTOCOULOMBVALUES(CGTO,NCGTO)
 ! Routine that computes the values of the bielectronic integrals over a cartesian gaussian-type orbital basis, taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974). These values are next used to compute more efficiently the bielectronic integrals over a cartesian 2-spinor-type orbital basis in the relativistic case (see the GETPRECOMPUTEDCOULOMBVALUE function).
@@ -487,7 +474,7 @@ SUBROUTINE PRECOMPUTECGTOCOULOMBVALUES(CGTO,NCGTO)
         END IF
      END DO ; END DO ; END DO ; END DO
   END IF
-END SUBROUTINE
+END SUBROUTINE PRECOMPUTECGTOCOULOMBVALUES
 
 FUNCTION PRECOMPUTEDCOULOMBVALUE(I,J,K,L,CLASS) RESULT(VALUE)
 ! Functions that returns the value of a precomputed bielectronic integral of class LL, SL or SS between four (real) cartesian gaussian-type orbital scalar basis functions stored in a list taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974).
@@ -559,7 +546,7 @@ FUNCTION PRECOMPUTEDCOULOMBVALUE(I,J,K,L,CLASS) RESULT(VALUE)
         VALUE=SSILJK(IDX)
      END IF
   END IF  
-END FUNCTION
+END FUNCTION PRECOMPUTEDCOULOMBVALUE
 
 SUBROUTINE DEALLOCATE_INTEGRALS
   USE scf_parameters
@@ -567,48 +554,5 @@ SUBROUTINE DEALLOCATE_INTEGRALS
   IMPLICIT NONE
   DEALLOCATE(LLIJKL,LLIKJL,LLILJK,SLIJKL)
   IF (SSINTEGRALS) DEALLOCATE(SSIJKL,SSIKJL,SSILJK)
-END SUBROUTINE
-
-
-FUNCTION COMPUTE_DENSITY(X, PDM, PHI, N) RESULT(VALUE)
-! Subroutine that computes the density defined by PDM in the PHI basis at point X
-  USE basis_parameters ; USE matrix_tools
-  IMPLICIT NONE
-  integer N, I
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PDM
-  TYPE(gaussianbasisfunction),DIMENSION(N),INTENT(IN) :: PHI
-  DOUBLE PRECISION, DIMENSION(3), INTENT(IN) :: X
-  real, dimension(N) :: BASISVALUE
-  real value
-
-  DO I=1, N
-     BASISVALUE(I) = POINTVALUE(PHI(I), X)
-  END DO
-
-  VALUE = DOT_PRODUCT(BASISVALUE, MATMUL(UNPACK(PDM, N), BASISVALUE))
-  
-END FUNCTION
-
-SUBROUTINE EXPORT_DENSITY(PDM, PHI, N, MIN, MAX, NPOINTS, FILENAME)
-  USE basis_parameters ; USE matrix_tools
-  IMPLICIT NONE
-  INTEGER N, NPOINTS, I, J, K
-  DOUBLE PRECISION MIN, MAX, X, Y, Z
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PDM
-  TYPE(gaussianbasisfunction),DIMENSION(N),INTENT(IN) :: PHI
-  CHARACTER(*), INTENT(IN) :: FILENAME
-
-  OPEN(UNIT=42, FILE=FILENAME)
-  DO I=1,NPOINTS
-     DO J=1,NPOINTS
-        DO K=1,NPOINTS
-           X = MIN + (MAX - MIN)*(I-1)/(NPOINTS-1)
-           Y = MIN + (MAX - MIN)*(J-1)/(NPOINTS-1)
-           Z = MIN + (MAX - MIN)*(K-1)/(NPOINTS-1)
-           WRITE(42, *) X, Y, Z, COMPUTE_DENSITY((/X, Y, Z/), PDM, PHI, N)
-        END DO
-     END DO
-  END DO
-  CLOSE(42)
-END SUBROUTINE EXPORT_DENSITY
+END SUBROUTINE DEALLOCATE_INTEGRALS
 END MODULE

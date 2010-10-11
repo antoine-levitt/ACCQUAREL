@@ -3,6 +3,7 @@ SUBROUTINE ROOTHAAN_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME
 ! Reference: C. C. J. Roothaan, New developments in molecular orbital theory, Rev. Modern Phys., 23(2), 69-89, 1951.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools
+  USE graphics_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
@@ -68,6 +69,7 @@ SUBROUTINE ROOTHAAN_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME
      WRITE(9,'(i4,e22.14)')I,EIG(I)
   END DO
   CLOSE(9)
+  CALL EXPORT_DENSITY(PDM,PHI,NBAST,-1.5D0,1.5D0,100,'density')
   GO TO 5
 3 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine ROOTHAAN: no convergence after',ITER,'iteration(s).'
   OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
@@ -79,13 +81,14 @@ SUBROUTINE ROOTHAAN_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME
 4 WRITE(*,*)'(called from subroutine ROOTHAAN)'
 5 DEALLOCATE(PDM,PDM1,PTEFM,PFM)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE
+END SUBROUTINE ROOTHAAN_relativistic
 
 SUBROUTINE ROOTHAAN_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 ! Roothaan's algorithm (restricted closed-shell Hartree-Fock formalism).
 ! Reference: C. C. J. Roothaan, New developments in molecular orbital theory, Rev. Modern Phys., 23(2), 69-89, 1951.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools
+  USE graphics_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
@@ -150,6 +153,7 @@ SUBROUTINE ROOTHAAN_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      WRITE(9,'(i4,e22.14)')I,EIG(I)
   END DO
   CLOSE(9)
+  CALL EXPORT_DENSITY(PDM,PHI,NBAST,-10.D0,10.D0,15,'density')
   GO TO 5
 3 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine ROOTHAAN: no convergence after',ITER,'iteration(s).'
   OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
@@ -161,7 +165,7 @@ SUBROUTINE ROOTHAAN_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 4 WRITE(*,*)'(called from subroutine ROOTHAAN)'
 5 DEALLOCATE(PDM,PDM1,PTEFM,PFM)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE
+END SUBROUTINE ROOTHAAN_RHF
 
 SUBROUTINE ROOTHAAN_UHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 ! Roothaan's algorithm (unrestricted open-shell Hartree-Fock formalism).
@@ -248,7 +252,7 @@ SUBROUTINE ROOTHAAN_UHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   GO TO 5
 4 WRITE(*,*)'(called from subroutine ROOTHAAN)'
 5 DEALLOCATE(PDMA,PDMB,PDM,PDM1,PTEFMA,PTEFMB,PFMA,PFMB)
-END SUBROUTINE
+END SUBROUTINE ROOTHAAN_UHF
 
 ! NON WORKING PART!!!!!!!
 
@@ -344,5 +348,4 @@ SUBROUTINE ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
   GO TO 5
 4 WRITE(*,*)'(called from subroutine ROOTHAAN)'
 5 DEALLOCATE(PDMC,PDMO,PDMC1,PDMO1,PTEFMC,PTEFMO,PFMC,PFMO)
-END SUBROUTINE
-
+END SUBROUTINE ROOTHAAN_AOCOSDHF

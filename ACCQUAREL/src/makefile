@@ -2,8 +2,9 @@
 #F95 = g95
 F95 = gfortran
 #F95 = ifort
+
+OPTFLAGS = -O3
 ASPICROOT=../../A.S.P.I.C
-OPTFLAGS=-O3
 
 ifeq ($(F95),g95)
    F95FLAGS = -c $(OPTFLAGS) -fmod=$(MODDIR)
@@ -11,7 +12,7 @@ ifeq ($(F95),g95)
    FLIBS = -llapack -lblas -lm
 endif
 ifeq ($(F95),gfortran)
-   F95FLAGS = -c $(OPTFLAGS) -fopenmp -J $(MODDIR) -g
+   F95FLAGS = -c $(OPTFLAGS) -fopenmp -J $(MODDIR)
    LD = gfortran
    FLIBS = -lgomp -llapack -lblas -lm
 endif

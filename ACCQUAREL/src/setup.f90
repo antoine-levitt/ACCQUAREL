@@ -36,7 +36,7 @@ SUBROUTINE SETUP_CASE
      STOP
   END IF
   CLOSE(100)
-END SUBROUTINE
+END SUBROUTINE SETUP_CASE
 
 SUBROUTINE SETUP_APPROXIMATION
   USE setup_tools
@@ -60,7 +60,7 @@ SUBROUTINE SETUP_APPROXIMATION
      STOP
   END IF
   CLOSE(100)
-END SUBROUTINE
+END SUBROUTINE SETUP_APPROXIMATION
 
 SUBROUTINE SETUP_FORMALISM
   USE setup_tools
@@ -113,7 +113,7 @@ SUBROUTINE SETUP_FORMALISM
   RETURN
 1 WRITE(*,*)'Subroutine SETUP_FORMALISM: no known formalism given!'
   STOP
-END SUBROUTINE
+END SUBROUTINE SETUP_FORMALISM
 END MODULE
 
 MODULE data_parameters
@@ -211,7 +211,7 @@ SUBROUTINE SETUP_DATA
      WRITE(*,'(a)')' --------- **** ---------'
   END IF
   CLOSE(100)
-END SUBROUTINE
+END SUBROUTINE SETUP_DATA
 
 FUNCTION IDENTIFYZ(Z) RESULT (SYMBOL)
 ! Function returning the symbol of a chemical element given its atomic number Z.
@@ -334,7 +334,7 @@ FUNCTION IDENTIFYZ(Z) RESULT (SYMBOL)
 
      CASE (104); SYMBOL='Rf'
   END SELECT
-END FUNCTION
+END FUNCTION IDENTIFYZ
 
 SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
 ! Function that computes the internuclear repulsion energy for the given specific geometry of the molecular system.
@@ -349,7 +349,7 @@ SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
         INTERNUCLEAR_ENERGY=INTERNUCLEAR_ENERGY+Z(I)*Z(J)/SQRT(DOT_PRODUCT(DIFF,DIFF))
      END DO
   END DO
-END SUBROUTINE
+END SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
 
 ! Various functions for the Hartree model with temperature
 FUNCTION POSITIVE_PART(X) RESULT(FUNC)
@@ -362,7 +362,7 @@ FUNCTION POSITIVE_PART(X) RESULT(FUNC)
   ELSE
      FUNC=X
   END IF
-END FUNCTION
+END FUNCTION POSITIVE_PART
 
 FUNCTION ENTROPY_FUNCTION(X) RESULT(FUNC)
 ! beta test function for the entropy
@@ -371,7 +371,7 @@ FUNCTION ENTROPY_FUNCTION(X) RESULT(FUNC)
   DOUBLE PRECISION :: FUNC
 
   FUNC=POSITIVE_PART(X)**MB/MB
-END FUNCTION
+END FUNCTION ENTROPY_FUNCTION
 
 FUNCTION RECIP_DENTFUNC(X) RESULT(FUNC)
   IMPLICIT NONE
@@ -383,7 +383,7 @@ FUNCTION RECIP_DENTFUNC(X) RESULT(FUNC)
   ELSE
      FUNC=X**(1.D0/(MB-1.D0))
   END IF
-END FUNCTION
+END FUNCTION RECIP_DENTFUNC
 
 FUNCTION DRECIP_DENTFUNC(X) RESULT(FUNC)
   IMPLICIT NONE
@@ -414,7 +414,7 @@ FUNCTION FUNCFORMU(X) RESULT(FUNC)
         FUNC=FUNC+RECIP_DENTFUNC(Y)
      END IF
   END DO
-END FUNCTION
+END FUNCTION FUNCFORMU
 
 SUBROUTINE RDENTFUNCD(X,FVAL,FDERIV)
   IMPLICIT NONE
@@ -430,7 +430,7 @@ SUBROUTINE RDENTFUNCD(X,FVAL,FDERIV)
      FVAL=FVAL+RECIP_DENTFUNC(Y)
      FDERIV=FDERIV+DRECIP_DENTFUNC(Y)
   END DO
-END SUBROUTINE
+END SUBROUTINE RDENTFUNCD
 END MODULE
 
 MODULE basis_parameters
@@ -441,7 +441,7 @@ MODULE basis_parameters
 
 ! PARAMETERS FOR A GIVEN BASIS SET
   CHARACTER(26) :: BASISFILE
-  INTEGER,PARAMETER :: MAQN=3,MNOP=22,MNOC=5,MNOGTO=6
+  INTEGER,PARAMETER :: MAQN=4,MNOP=38,MNOC=38,MNOGTO=4
 ! Note: MAQN is the maximum number of different cartesian GTO function types (= maximum angular quantum number + 1) allowed, MNOP is the maximum number of primitives (of different exponents) allowed in any of these types, MNOC is the maximum number of contractions allowed in any of these types, MNOGTO is the maximum number of different GTO allowed in each component of a 2-spinor basis function (necessary for the lower 2-spinor basis due to the use of the Restricted Kinetic Balance scheme). MAQN, MNOP and MNOC depend on the basis that is used, MNOGTO depends on MAQN through the RKB scheme.
 
 ! PARAMETERS FOR AN EVEN-TEMPERED BASIS SET
@@ -460,7 +460,7 @@ TYPE gaussianbasisfunction
 ! exponents: array containing the exponent of each of the gaussian primitives present in the contraction
 ! coefficients: array containing the coefficient of each of the gaussian primitives present in the contraction
 ! monomialdegrees: array containing the degrees (n_x,n_y,n_z) of the monomial common to each of the gaussian primitives
-! 2009/08/31: maximum number of exponents/coefficients in a contraction is set to 6 (see Cr in 6-31G). The previous optimization (MNOP/MNOC) was stupid.
+! 2009/08/31: maximum number of terms in a contraction is set to 6 (see Cr in 6-31G for instance). The previous choice (MNOP/MNOC) was stupid.
   INTEGER(KIND=C_INT) :: nbrofexponents
   REAL(KIND=C_DOUBLE),DIMENSION(3) :: center
   INTEGER :: center_id
@@ -473,13 +473,13 @@ TYPE twospinor
 ! Definition of a Pauli 2-spinor basis function
 ! nbrofcontractions: array containing the number of different contractions (<=MNOGT0) present in each of the components of the 2-spinor
 ! contractions: array containing the contractions present in each of the components of the 2-spinor
-! CGTOidx : array containing the indices of the uncontracted CGTO appearing in the contractions with respect to a secondary array of uncontracted CGTO (used for precomputation purposes)
+! contidx : array containing the indices of the uncontracted CGTO appearing in the contractions with respect to a secondary array of uncontracted CGTO (used for precomputation purposes)
 ! coefficients: array containing the complex coefficient of each of the contractions present in each of the components of the 2-spinor
 ! Note: if one of the components of the 2-spinor is zero then the corresponding nbrofcontractions is set to 0
   INTEGER,DIMENSION(2) :: nbrofcontractions
   TYPE(gaussianbasisfunction),DIMENSION(2,MNOGTO) :: contractions
   INTEGER,DIMENSION(2,MNOGTO) :: contidx
-  COMPLEX,DIMENSION(2,MNOGTO) :: coefficients
+  DOUBLE COMPLEX,DIMENSION(2,MNOGTO) :: coefficients
 END TYPE twospinor
 
 CONTAINS
@@ -539,7 +539,19 @@ SUBROUTINE SETUP_BASIS
      END IF
   END IF
   CLOSE(100)
-END SUBROUTINE
+END SUBROUTINE SETUP_BASIS
+
+FUNCTION CGTO_POINTWISE_VALUE(CGTO,POINT) RESULT(VALUE)
+! Function that computes the value of a gaussian basis function at a given point of space.
+  USE iso_c_binding
+  TYPE(gaussianbasisfunction),INTENT(IN) :: CGTO
+  DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
+  REAL(KIND=C_DOUBLE) :: VALUE
+
+  VALUE=PRODUCT((POINT-CGTO%center)**CGTO%monomialdegree)         &
+      & *DOT_PRODUCT(CGTO%coefficients(1:CGTO%nbrofexponents),    &
+      &              EXP(-CGTO%exponents(1:CGTO%nbrofexponents)*SUM((POINT-CGTO%center)**2)))
+END FUNCTION CGTO_POINTWISE_VALUE
 
 SUBROUTINE PRINTGBF(PHI,NUNIT)
   IMPLICIT NONE
@@ -556,7 +568,24 @@ SUBROUTINE PRINTGBF(PHI,NUNIT)
      WRITE(NUNIT,*)'  exponent:',PHI%exponents(I)
      WRITE(NUNIT,*)'  coefficient:',PHI%coefficients(I)
   END DO
-END SUBROUTINE
+END SUBROUTINE PRINTGBF
+
+FUNCTION TWOSPINOR_POINTWISE_VALUE(PHI,POINT) RESULT(VALUE)
+! Function that computes the value of a Pauli 2-spinor basis function at a given point of space.
+  USE iso_c_binding
+  TYPE(twospinor),INTENT(IN) :: PHI
+  DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
+  DOUBLE COMPLEX,DIMENSION(2) :: VALUE
+
+  INTEGER :: I,J
+  
+  DO I=1,2
+     VALUE(I)=(0.D0,0.D0)
+     DO J=1,PHI%nbrofcontractions(I)
+        VALUE(I)=VALUE(I)+PHI%coefficients(I,J)*CGTO_POINTWISE_VALUE(PHI%contractions(I,J),POINT)
+     END DO
+  END DO
+END FUNCTION TWOSPINOR_POINTWISE_VALUE
 
 SUBROUTINE PRINT2SPINOR(PHI,NUNIT)
   IMPLICIT NONE
@@ -584,7 +613,7 @@ SUBROUTINE PRINT2SPINOR(PHI,NUNIT)
         END DO
      END IF
   END DO
-END SUBROUTINE
+END SUBROUTINE PRINT2SPINOR
 END MODULE
 
 MODULE scf_parameters
@@ -724,5 +753,5 @@ SUBROUTINE SETUP_SCF
 2 STOP'No simplex dimension given for the DIIS algorithm.'
 3 STOP'The simplex dimension for the DIIS algorithm must be at least equal to two.'
 4 STOP'No method given for the computation of $Theta$ in ES''s algorithm.'
-END SUBROUTINE
+END SUBROUTINE SETUP_SCF
 END MODULE

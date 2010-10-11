@@ -54,6 +54,7 @@ END INTERFACE
 INTERFACE PRINTMATRIX
    MODULE PROCEDURE PRINTMATRIX_symmetric,PRINTMATRIX_hermitian
 END INTERFACE
+
 CONTAINS
 
 ! handling of symmetric and hermitian matrices stored in packed form.
@@ -73,7 +74,7 @@ FUNCTION PACK_symmetric(A,N) RESULT (PA)
         PA(IJ)=A(I,J)
      END DO
   END DO
-END FUNCTION
+END FUNCTION PACK_symmetric
 
 FUNCTION PACK_hermitian(A,N) RESULT (PA)
 ! Function that stores the upper triangular part of a hermitian matrix in packed format.
@@ -90,7 +91,7 @@ FUNCTION PACK_hermitian(A,N) RESULT (PA)
         PA(IJ)=A(I,J)
      END DO
   END DO
-END FUNCTION
+END FUNCTION PACK_hermitian
 
 FUNCTION UNPACK_symmetric(PA,N) RESULT (A)
 ! Function that unpacks a symmetric matrix which upper triangular part is stored in packed format.
@@ -106,7 +107,7 @@ FUNCTION UNPACK_symmetric(PA,N) RESULT (A)
      A(1:I,I)=PA(1+J:I+J)
      A(I,1:I-1)=PA(1+J:I-1+J)
   END DO
-END FUNCTION
+END FUNCTION UNPACK_symmetric
 
 FUNCTION UNPACK_hermitian(PA,N) RESULT (A)
 ! Function that unpacks a hermitian matrix which upper triangular part is stored in packed format.
@@ -122,7 +123,7 @@ FUNCTION UNPACK_hermitian(PA,N) RESULT (A)
      A(1:I,I)=PA(1+J:I+J)
      A(I,1:I-1)=CONJG(PA(1+J:I-1+J))
   END DO
-END FUNCTION
+END FUNCTION UNPACK_hermitian
 
 FUNCTION ABA_symmetric(PA,PB,N) RESULT (PC)
 ! Function that computes the product ABA, where A and B are two symmetric matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
@@ -173,7 +174,7 @@ FUNCTION ABA_symmetric(PA,PB,N) RESULT (PC)
         END DO
      END DO
   END DO
-END FUNCTION
+END FUNCTION ABA_symmetric
 
 FUNCTION ABA_hermitian(PA,PB,N) RESULT (PC)
 ! Function that computes the product ABA, where A and B are two hermitian matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
@@ -224,7 +225,7 @@ FUNCTION ABA_hermitian(PA,PB,N) RESULT (PC)
         END DO
      END DO
   END DO
-END FUNCTION
+END FUNCTION ABA_hermitian
 
 FUNCTION ABCBA_symmetric(PA,PB,PC,N) RESULT (PD)
 ! Function that computes the product ABCBA, where A, B, and C are three symmetric matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
@@ -237,7 +238,7 @@ FUNCTION ABCBA_symmetric(PA,PB,PC,N) RESULT (PD)
 
   A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; C=UNPACK(PC,N)
   PD=PACK(MATMUL(A,MATMUL(B,MATMUL(C,MATMUL(B,A)))),N)
-END FUNCTION
+END FUNCTION ABCBA_symmetric
 
 FUNCTION ABCBA_hermitian(PA,PB,PC,N) RESULT (PD)
 ! Function that computes the product ABCBA, where A, B, and C are three hermitian matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
@@ -250,7 +251,7 @@ FUNCTION ABCBA_hermitian(PA,PB,PC,N) RESULT (PD)
 
   A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; C=UNPACK(PC,N)
   PD=PACK(MATMUL(A,MATMUL(B,MATMUL(C,MATMUL(B,A)))),N)
-END FUNCTION
+END FUNCTION ABCBA_hermitian
 
 FUNCTION ABC_CBA_symmetric(PA,PB,PC,N) RESULT (PD)
 ! Function that computes the sum ABC+CBA, where A, B, and C are three symmetric matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
@@ -263,7 +264,7 @@ FUNCTION ABC_CBA_symmetric(PA,PB,PC,N) RESULT (PD)
 
   A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; C=UNPACK(PC,N)
   PD=PACK(MATMUL(A,MATMUL(B,C))+MATMUL(C,MATMUL(B,A)),N)
-END FUNCTION
+END FUNCTION ABC_CBA_symmetric
 
 FUNCTION ABC_CBA_hermitian(PA,PB,PC,N) RESULT (PD)
 ! Function that computes the sum ABC+CBA, where A, B, and C are three hermitian matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
@@ -276,7 +277,7 @@ FUNCTION ABC_CBA_hermitian(PA,PB,PC,N) RESULT (PD)
 
   A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; C=UNPACK(PC,N)
   PD=PACK(MATMUL(A,MATMUL(B,C))+MATMUL(C,MATMUL(B,A)),N)
-END FUNCTION
+END FUNCTION ABC_CBA_hermitian
 
 ! diverse linear algebra routines
 
@@ -313,7 +314,7 @@ FUNCTION INVERSE_real(A,N) RESULT(INVA)
   END IF
 3 WRITE(*,*)'(called from function INVERSE)'
   STOP
-END FUNCTION
+END FUNCTION INVERSE_real
 
 FUNCTION INVERSE_complex(A,N) RESULT(INVA)
 ! Function that computes the inverse of a square complex matrix.
@@ -348,7 +349,7 @@ FUNCTION INVERSE_complex(A,N) RESULT(INVA)
   END IF
 3 WRITE(*,*)'(called from function INVERSE)'
   STOP
-END FUNCTION
+END FUNCTION INVERSE_complex
 
 FUNCTION INVERSE_symmetric(PA,N) RESULT(PINVA)
 ! Function that computes the inverse of a symmetric matrix which upper triangular part is stored in packed format (its inverse being stored as such).
@@ -383,7 +384,7 @@ FUNCTION INVERSE_symmetric(PA,N) RESULT(PINVA)
   END IF
 3 WRITE(*,*)'(called from function INVERSE)'
   STOP
-END FUNCTION
+END FUNCTION INVERSE_symmetric
 
 FUNCTION INVERSE_hermitian(PA,N) RESULT(PINVA)
 ! Function that computes the inverse of an hermitian matrix which upper triangular part is stored in packed format (its inverse being stored as such).
@@ -418,7 +419,7 @@ FUNCTION INVERSE_hermitian(PA,N) RESULT(PINVA)
   END IF
 3 WRITE(*,*)'(called from function INVERSE)'
   STOP
-END FUNCTION
+END FUNCTION INVERSE_hermitian
 
 FUNCTION SQUARE_ROOT_symmetric(PA,N) RESULT(PSQRA)
 ! Function that computes the square root of a symmetric, positive-definite matrix which upper triangular part is stored in packed format (its square root being stored as such).
@@ -447,7 +448,7 @@ FUNCTION SQUARE_ROOT_symmetric(PA,N) RESULT(PSQRA)
   END IF
   WRITE(*,*)'(called from function SQUARE_ROOT)'
   STOP
-END FUNCTION
+END FUNCTION SQUARE_ROOT_symmetric
 
 FUNCTION SQUARE_ROOT_hermitian(PA,N) RESULT(PSQRA)
 ! Function that computes the square root of an hermitian, positive-definite matrix which upper triangular part is stored in packed format (its square root being stored as such).
@@ -477,7 +478,7 @@ FUNCTION SQUARE_ROOT_hermitian(PA,N) RESULT(PSQRA)
   END IF
   WRITE(*,*)'(called from function SQUARE_ROOT)'
   STOP
-END FUNCTION
+END FUNCTION SQUARE_ROOT_hermitian
 
 FUNCTION TRACE_symmetric(PA,N) RESULT (TRACE)
 ! Function that computes the trace of a symmetric matrix, which upper triangular part is stored in packed format.
@@ -492,7 +493,7 @@ FUNCTION TRACE_symmetric(PA,N) RESULT (TRACE)
   DO I=1,N
      TRACE=TRACE+PA((I+1)*I/2)
   END DO
-END FUNCTION
+END FUNCTION TRACE_symmetric
 
 FUNCTION TRACE_hermitian(PA,N) RESULT (TRACE)
 ! Function that computes the trace of a hermitian matrix, which upper triangular part is stored in packed format.
@@ -507,7 +508,7 @@ FUNCTION TRACE_hermitian(PA,N) RESULT (TRACE)
   DO I=1,N
      TRACE=TRACE+PA((I+1)*I/2)
   END DO
-END FUNCTION
+END FUNCTION TRACE_hermitian
 
 FUNCTION TRACEOFPRODUCT_real(A,B,N) RESULT (TRACE)
 ! Function that computes the trace of the product of two square matrices A and B.
@@ -524,7 +525,7 @@ FUNCTION TRACEOFPRODUCT_real(A,B,N) RESULT (TRACE)
         TRACE=TRACE+A(I,J)*B(J,I)
      END DO
   END DO
-END FUNCTION
+END FUNCTION TRACEOFPRODUCT_real
 
 FUNCTION TRACEOFPRODUCT_complex(A,B,N) RESULT (TRACE)
 ! Function that computes the trace of the product of two square complex matrices A and B.
@@ -541,7 +542,7 @@ FUNCTION TRACEOFPRODUCT_complex(A,B,N) RESULT (TRACE)
         TRACE=TRACE+A(I,J)*B(J,I)
      END DO
   END DO
-END FUNCTION
+END FUNCTION TRACEOFPRODUCT_complex
 
 FUNCTION TRACEOFPRODUCT_symmetric(PA,PB,N) RESULT (TRACE)
 ! Function that computes the trace of the product of two symmetric matrices A and B, which upper triangular parts are stored in packed format. 
@@ -563,7 +564,7 @@ FUNCTION TRACEOFPRODUCT_symmetric(PA,PB,N) RESULT (TRACE)
         TRACE=TRACE+PA(JI)*PB(JI)
      END DO
   END DO
-END FUNCTION
+END FUNCTION TRACEOFPRODUCT_symmetric
 
 FUNCTION TRACEOFPRODUCT_hermitian(PA,PB,N) RESULT (TRACE)
 ! Function that computes the trace of the product of two hermitian matrices A and B, which upper triangular parts are stored in packed format. 
@@ -585,7 +586,7 @@ FUNCTION TRACEOFPRODUCT_hermitian(PA,PB,N) RESULT (TRACE)
         TRACE=TRACE+CONJG(PA(JI))*PB(JI)
      END DO
   END DO
-END FUNCTION
+END FUNCTION TRACEOFPRODUCT_hermitian
 
 FUNCTION FROBENIUSINNERPRODUCT_real(A,B,N) RESULT (FIP)
 ! Function that computes the Frobenius inner product between two square real matrices (i.e. $<A,B>_F=\sum_{i,j=1}^n a_{ij}b_{ij}$).
@@ -602,7 +603,7 @@ FUNCTION FROBENIUSINNERPRODUCT_real(A,B,N) RESULT (FIP)
         FIP=FIP+A(I,J)*B(I,J)
      END DO
   END DO
-END FUNCTION
+END FUNCTION FROBENIUSINNERPRODUCT_real
 
 FUNCTION FROBENIUSINNERPRODUCT_complex(A,B,N) RESULT (FIP)
 ! Function that computes the Frobenius inner product between two square complex matrices (i.e. $<A,B>_F=\sum_{i,j=1}^n a_{ij}\overline{b_{ij}}$).
@@ -619,7 +620,7 @@ FUNCTION FROBENIUSINNERPRODUCT_complex(A,B,N) RESULT (FIP)
         FIP=FIP+A(I,J)*CONJG(B(I,J))
      END DO
   END DO
-END FUNCTION
+END FUNCTION FROBENIUSINNERPRODUCT_complex
 
 FUNCTION NORM_real(M,N,CHAR) RESULT (NORM)
 ! Function that computes the Frobenius or infinity norm of a square real matrix (i.e., $\|M\|_F=\sqrt{\sum_{i,j=1}^n|m_{ij}|^2}$).
@@ -639,7 +640,7 @@ IF (CHAR=='F') THEN
   ELSE
      STOP'undefined matrix norm'
   END IF  
-END FUNCTION
+END FUNCTION NORM_real
 
 FUNCTION NORM_complex(M,N,CHAR) RESULT (NORM)
 ! Function that computes the Frobenius or infinity norm of a square complex matrix (i.e., $\|M\|_F=\sqrt{\sum_{i,j=1}^n|m_{ij}|^2}$).
@@ -659,7 +660,7 @@ IF (CHAR=='F') THEN
   ELSE
      STOP'undefined matrix norm'
   END IF  
-END FUNCTION
+END FUNCTION NORM_complex
 
 FUNCTION NORM_symmetric(PM,N,CHAR) RESULT (NORM)
 ! Function that returns the Frobenius norm, the infinity norm or the one norm of a symmetric matrix, which upper triangular part is stored in packed format.
@@ -681,7 +682,7 @@ FUNCTION NORM_symmetric(PM,N,CHAR) RESULT (NORM)
   ELSE
      STOP'Function NORM: undefined matrix norm.'
   END IF
-END FUNCTION
+END FUNCTION NORM_symmetric
 
 FUNCTION NORM_hermitian(PM,N,CHAR) RESULT (NORM)
 ! Function that returns the Frobenius norm, the infinity norm or the one norm of a hermitian matrix, which upper triangular part is stored in packed format.
@@ -703,7 +704,7 @@ FUNCTION NORM_hermitian(PM,N,CHAR) RESULT (NORM)
   ELSE
      STOP'Function NORM: undefined matrix norm.'
   END IF
-END FUNCTION
+END FUNCTION NORM_hermitian
 
 SUBROUTINE EIGENSOLVER_symmetric_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
 ! Subroutine that computes all the eigenvalues and the eigenvectors of a real generalized symmetric-definite eigenproblem, of the form A*x=(lambda)*B*x. Here A and B are assumed to be symmetric, their upper triangular part being stored in packed format, and B is also positive definite. It is also assumed that the Cholesky factorization of B has previously been computed and stored in packed format.
@@ -745,7 +746,7 @@ SUBROUTINE EIGENSOLVER_symmetric_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
   END IF
 3 WRITE(*,*)'(called from subroutine EIGENSOLVER)'
   RETURN
-END SUBROUTINE
+END SUBROUTINE EIGENSOLVER_symmetric_prefactorized
 
 SUBROUTINE EIGENSOLVER_hermitian_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
 ! Subroutine that computes all the eigenvalues and the eigenvectors of a complex generalized hermitian-definite eigenproblem, of the form A*x=(lambda)*B*x. Here A and B are assumed to be hermitian, their upper triangular part being stored in packed format, and B is also positive definite. It is also assumed that the Cholesky factorization of B has previously been computed and stored in packed format.
@@ -788,7 +789,7 @@ SUBROUTINE EIGENSOLVER_hermitian_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
   END IF
 3 WRITE(*,*)'(called from subroutine EIGENSOLVER)'
   RETURN
-END SUBROUTINE
+END SUBROUTINE EIGENSOLVER_hermitian_prefactorized
 
 FUNCTION COMMUTATOR_symmetric(PA,PB,PS,N) RESULT (C)
 ! Function that computes the "commutator" [A,B]=ABS-SBA in a discrete nonorthonormal basis, A and B being two symmetric matrices of size N (only the upper triangular part of the matrices is stored in packed format) and S being the overlap matrix of the basis (stored similarly).
@@ -801,7 +802,7 @@ FUNCTION COMMUTATOR_symmetric(PA,PB,PS,N) RESULT (C)
 
   A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; S=UNPACK(PS,N)
   C=MATMUL(MATMUL(A,B),S)-MATMUL(S,MATMUL(B,A))
-END FUNCTION
+END FUNCTION COMMUTATOR_symmetric
 
 FUNCTION COMMUTATOR_hermitian(PA,PB,PS,N) RESULT (C)
 ! Function that computes the "commutator" [A,B]=ABS-SBA in a discrete nonorthonormal basis, A and B being two hermitian matrices of size N (only the upper triangular part of the matrices is stored in packed format) and S being the overlap matrix of the basis (stored similarly).
@@ -814,7 +815,7 @@ FUNCTION COMMUTATOR_hermitian(PA,PB,PS,N) RESULT (C)
 
   A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; S=UNPACK(PS,N)
   C=MATMUL(MATMUL(A,B),S)-MATMUL(S,MATMUL(B,A))
-END FUNCTION
+END FUNCTION COMMUTATOR_hermitian
 
 SUBROUTINE PRINTMATRIX_symmetric(PMAT,N,LOGUNIT)
 ! Subroutine that prints in the file LOGUNIT a symmetric matrix of size N*N stored in packed format.
@@ -836,7 +837,7 @@ SUBROUTINE PRINTMATRIX_symmetric(PMAT,N,LOGUNIT)
      END DO
   END DO
   CLOSE(LOGUNIT)
-END SUBROUTINE
+END SUBROUTINE PRINTMATRIX_symmetric
 
 SUBROUTINE PRINTMATRIX_hermitian(PMAT,N,LOGUNIT)
 ! Subroutine that prints in the file LOGUNIT a hermitian matrix of size N*N stored in packed format.
@@ -858,15 +859,24 @@ SUBROUTINE PRINTMATRIX_hermitian(PMAT,N,LOGUNIT)
      END DO
   END DO
   CLOSE(LOGUNIT)
-END SUBROUTINE
+END SUBROUTINE PRINTMATRIX_hermitian
 END MODULE
 
 MODULE setup_tools
-  ! setup file name
+! name of the setup file
   CHARACTER(100) :: SETUP_FILE
 CONTAINS
 
+SUBROUTINE SETUP_FILENAME
+! Subroutine that retrieves the name of the setup file
+  IMPLICIT NONE
+
+  CALL GETARG(1,SETUP_FILE)
+  IF (SETUP_FILE=='') SETUP_FILE='setup'
+END SUBROUTINE SETUP_FILENAME
+
 SUBROUTINE LOOKFOR(NUNIT,SUBSTRING,INFO)
+! Subroutine that looks for a given text string in an open unit.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NUNIT
   INTEGER,INTENT(OUT) :: INFO
@@ -880,12 +890,5 @@ SUBROUTINE LOOKFOR(NUNIT,SUBSTRING,INFO)
   RETURN
 2 WRITE(*,*)'Subroutine LOOKFOR: text string "',SUBSTRING,'" was not found in file.'
   INFO=1
-END SUBROUTINE
-
-SUBROUTINE SETUP_TOOLS_INIT
-  CALL GETARG(1, SETUP_FILE)
-  IF ( SETUP_FILE == "" ) THEN
-     SETUP_FILE = "setup"
-  END IF
-END SUBROUTINE SETUP_TOOLS_INIT
+END SUBROUTINE LOOKFOR
 END MODULE

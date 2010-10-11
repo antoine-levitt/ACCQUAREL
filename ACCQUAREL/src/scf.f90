@@ -4,6 +4,7 @@ INTERFACE CHECKNUMCONV
 END INTERFACE
 
 CONTAINS
+
 SUBROUTINE CHECKORB(EIG,N,LOON)
 ! Subroutine that determines the number of the lowest and highest occupied electronic orbitals and checks if they are both in the spectral gap (in the relavistic case).
   USE case_parameters ; USE data_parameters
@@ -34,7 +35,7 @@ SUBROUTINE CHECKORB(EIG,N,LOON)
         WRITE(*,'(a,i2,a)')' Warning: there are less than ',NBE,' eigenvalues associated to electronic states in the gap.'
      END IF
   END IF
-END SUBROUTINE
+END SUBROUTINE CHECKORB
 
 SUBROUTINE CHECKNUMCONV_relativistic(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock equations (restricted closed-shell Hartree-Fock and closed-shell Dirac-Hartree-Fock formalisms).
@@ -76,7 +77,7 @@ SUBROUTINE CHECKNUMCONV_relativistic(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
   ELSE
      NUMCONV=.FALSE.
   END IF
-END SUBROUTINE
+END SUBROUTINE CHECKNUMCONV_relativistic
 
 SUBROUTINE CHECKNUMCONV_RHF(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock equations (restricted closed-shell Hartree-Fock formalism).
@@ -118,7 +119,7 @@ SUBROUTINE CHECKNUMCONV_RHF(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
   ELSE
      NUMCONV=.FALSE.
   END IF
-END SUBROUTINE
+END SUBROUTINE CHECKNUMCONV_RHF
 
 SUBROUTINE CHECKNUMCONV_AOCOSDHF(PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock type equations (average-of-configuration open-shell Dirac-Hartree-Fock formalism).
@@ -162,7 +163,7 @@ SUBROUTINE CHECKNUMCONV_AOCOSDHF(PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO,N,ETOTN,ETOTO
   ELSE
      NUMCONV=.FALSE.
   END IF
-END SUBROUTINE
+END SUBROUTINE CHECKNUMCONV_AOCOSDHF
 
 SUBROUTINE CHECKNUMCONV_UHF(PDMN,PDMO,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock type equations (unrestricted open-shell Hartree-Fock formalism).
@@ -192,5 +193,110 @@ SUBROUTINE CHECKNUMCONV_UHF(PDMN,PDMO,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
   ELSE
      NUMCONV=.FALSE.
   END IF
-END SUBROUTINE
+END SUBROUTINE CHECKNUMCONV_UHF
+END MODULE
+
+MODULE graphics_tools
+
+INTERFACE DENSITY_POINTWISE_VALUE
+  MODULE PROCEDURE DENSITY_POINTWISE_VALUE_relativistic,DENSITY_POINTWISE_VALUE_nonrelativistic
+END INTERFACE
+
+INTERFACE EXPORT_DENSITY
+  MODULE PROCEDURE EXPORT_DENSITY_relativistic,EXPORT_DENSITY_nonrelativistic
+END INTERFACE
+
+CONTAINS
+
+FUNCTION DENSITY_POINTWISE_VALUE_relativistic(PDM,PHI,NBAST,POINT) RESULT(VALUE)
+! Function that computes the value of the electronic density associated to a given density matrix (only the upper triangular part of this matrix is stored in packed format) at a given point of space.
+  USE basis_parameters ; USE matrix_tools
+  IMPLICIT NONE
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
+  TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+  INTEGER,INTENT(IN) :: NBAST
+  DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
+  DOUBLE PRECISION :: VALUE
+
+  INTEGER :: I
+  DOUBLE COMPLEX,DIMENSION(NBAST,2) :: POINTWISE_VALUES
+  DOUBLE COMPLEX,DIMENSION(2,2) :: MATRIX
+
+  DO I=1,NBAST
+     POINTWISE_VALUES(I,:)=TWOSPINOR_POINTWISE_VALUE(PHI(I),POINT)
+  END DO
+  MATRIX=MATMUL(TRANSPOSE(CONJG(POINTWISE_VALUES)),MATMUL(UNPACK(PDM,NBAST),POINTWISE_VALUES))
+  VALUE=REAL(MATRIX(1,1)+MATRIX(2,2))
+END FUNCTION DENSITY_POINTWISE_VALUE_relativistic
+
+FUNCTION DENSITY_POINTWISE_VALUE_nonrelativistic(PDM,PHI,NBAST,POINT) RESULT(VALUE)
+! Function that computes the value of the electronic density associated to a given density matrix (only the upper triangular part of this matrix is stored in packed format) at a given point of space.
+  USE basis_parameters ; USE matrix_tools
+  IMPLICIT NONE
+  DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
+  TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+  INTEGER,INTENT(IN) :: NBAST
+  DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
+  DOUBLE PRECISION :: VALUE
+
+  INTEGER :: I
+  REAL(KIND=C_DOUBLE),DIMENSION(NBAST) :: POINTWISE_VALUES
+
+  DO I=1,NBAST
+     POINTWISE_VALUES(I)=CGTO_POINTWISE_VALUE(PHI(I),POINT)
+  END DO
+  VALUE=DOT_PRODUCT(POINTWISE_VALUES,MATMUL(UNPACK(PDM,NBAST),POINTWISE_VALUES))
+END FUNCTION DENSITY_POINTWISE_VALUE_nonrelativistic
+
+SUBROUTINE EXPORT_DENSITY_relativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENAME)
+  USE basis_parameters ; USE matrices
+  IMPLICIT NONE
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PDM
+  TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+  INTEGER,INTENT(IN) :: NBAST,NPOINTS
+  DOUBLE PRECISION,INTENT(IN) :: RMIN,RMAX
+  CHARACTER(*), INTENT(IN) :: FILENAME
+
+  INTEGER :: I,J,K
+  DOUBLE PRECISION :: X,Y,Z
+
+  OPEN(UNIT=42,FILE=FILENAME)
+  DO I=1,NPOINTS
+     DO J=1,NPOINTS
+        DO K=1,NPOINTS
+           X=RMIN+(RMAX-RMIN)*(I-1)/(NPOINTS-1)
+           Y=RMIN+(RMAX-RMIN)*(J-1)/(NPOINTS-1)
+           Z=RMIN+(RMAX-RMIN)*(K-1)/(NPOINTS-1)
+           WRITE(42,*)X,Y,Z,DENSITY_POINTWISE_VALUE(PDM,PHI,NBAST,(/X,Y,Z/))
+        END DO
+     END DO
+  END DO
+  CLOSE(42)
+END SUBROUTINE EXPORT_DENSITY_relativistic
+
+SUBROUTINE EXPORT_DENSITY_nonrelativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENAME)
+  USE basis_parameters ; USE matrices
+  IMPLICIT NONE
+  DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2) :: PDM
+  TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+  INTEGER,INTENT(IN) :: NBAST,NPOINTS
+  DOUBLE PRECISION,INTENT(IN) :: RMIN,RMAX
+  CHARACTER(*), INTENT(IN) :: FILENAME
+
+  INTEGER :: I,J,K
+  DOUBLE PRECISION :: X,Y,Z
+
+  OPEN(UNIT=42,FILE=FILENAME)
+  DO I=1,NPOINTS
+     DO J=1,NPOINTS
+        DO K=1,NPOINTS
+           X=RMIN+(RMAX-RMIN)*(I-1)/(NPOINTS-1)
+           Y=RMIN+(RMAX-RMIN)*(J-1)/(NPOINTS-1)
+           Z=RMIN+(RMAX-RMIN)*(K-1)/(NPOINTS-1)
+           WRITE(42,*)X,Y,Z,DENSITY_POINTWISE_VALUE(PDM,PHI,NBAST,(/X,Y,Z/))
+        END DO
+     END DO
+  END DO
+  CLOSE(42)
+END SUBROUTINE EXPORT_DENSITY_nonrelativistic
 END MODULE

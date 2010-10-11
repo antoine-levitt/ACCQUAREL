@@ -38,7 +38,7 @@ FUNCTION ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ETOT)
   DOUBLE PRECISION :: ETOT
   
   ETOT=ELECTRONIC_ENERGY_relativistic(POEFM,PTEFM,PDM,N)+INTERNUCLEAR_ENERGY
-END FUNCTION
+END FUNCTION ENERGY_relativistic
 
 FUNCTION ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ETOT)
   USE data_parameters
@@ -48,7 +48,7 @@ FUNCTION ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ETOT)
   DOUBLE PRECISION :: ETOT
   
   ETOT=ELECTRONIC_ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N)+INTERNUCLEAR_ENERGY
-END FUNCTION
+END FUNCTION ENERGY_AOCOSDHF
 
 FUNCTION ENERGY_HF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
 ! Function that computes the Hartree-Fock energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given system, POEFM and PTEFM containing respectively the (core hamiltonian) matrix and the (two-electron) part of the Fock matrix (both stored similarly).
@@ -74,7 +74,7 @@ FUNCTION ENERGY_HF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
         END IF
      END DO
   END DO
-END FUNCTION
+END FUNCTION ENERGY_HF
 
 FUNCTION ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
 ! Function that computes the restricted closed-shell Hartree-Fock total energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
@@ -85,7 +85,7 @@ FUNCTION ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
   DOUBLE PRECISION :: ETOT
 
   ETOT=ELECTRONIC_ENERGY_RHF(POEFM,PTEFM,PDM,N)+INTERNUCLEAR_ENERGY
-END FUNCTION
+END FUNCTION ENERGY_RHF
 
 FUNCTION ENERGY_UHF(POEFM,PTEFMA,PTEFMB,PDMA,PDMB,N) RESULT(ETOT)
 ! Function that computes the unrestricted open-shell Hartree-Fock total energy associated to the $\alpha$ and $\beta$ spin density matrices (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
@@ -96,7 +96,7 @@ FUNCTION ENERGY_UHF(POEFM,PTEFMA,PTEFMB,PDMA,PDMB,N) RESULT(ETOT)
   DOUBLE PRECISION :: ETOT
 
   ETOT=ELECTRONIC_ENERGY_UHF(POEFM,PTEFMA,PTEFMB,PDMA,PDMB,N)+INTERNUCLEAR_ENERGY
-END FUNCTION
+END FUNCTION ENERGY_UHF
 
 FUNCTION ELECTRONIC_ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
 ! Function that computes the Dirac-Fock electronic energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
@@ -121,7 +121,7 @@ FUNCTION ELECTRONIC_ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
         END IF
      END DO
   END DO
-END FUNCTION
+END FUNCTION ELECTRONIC_ENERGY_relativistic
 
 FUNCTION ELECTRONIC_ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ENERGY)
 ! Function that computes average-of-configuration Dirac-Hartree-Fock electronic energy associated the closed- and open-shell density matrices (whose upper triangular parts are stored in packed form).
@@ -150,7 +150,7 @@ FUNCTION ELECTRONIC_ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ENER
         END IF
      END DO
   END DO
-END FUNCTION
+END FUNCTION ELECTRONIC_ENERGY_AOCOSDHF
 
 FUNCTION ELECTRONIC_ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
 ! Function that computes the restricted closed-shell Hartree-Fock electronic energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
@@ -175,7 +175,7 @@ FUNCTION ELECTRONIC_ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
         END IF
      END DO
   END DO
-END FUNCTION
+END FUNCTION ELECTRONIC_ENERGY_RHF
 
 FUNCTION ELECTRONIC_ENERGY_UHF(POEFM,PTEFMA,PTEFMB,PDMA,PDMB,N) RESULT(ENERGY)
 ! Function that computes the unrestricted open-shell Hartree-Fock electronic energy associated to the $\alpha$ and $\beta$ spin density matrices (whose upper triangular parts are stored in packed form).
@@ -200,7 +200,7 @@ FUNCTION ELECTRONIC_ENERGY_UHF(POEFM,PTEFMA,PTEFMB,PDMA,PDMB,N) RESULT(ENERGY)
         END IF
      END DO
   END DO
-END FUNCTION
+END FUNCTION ELECTRONIC_ENERGY_UHF
 
 FUNCTION FREEENERGY_HF(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
 ! Function that computes the free energy (of a Hartree(-Fock) model with temperature) associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given system, POEFM and PTEFM containing respectively the (core hamiltonian) matrix and the (two-electron) part of the Fock matrix (both stored similarly).
@@ -242,5 +242,5 @@ FUNCTION FREEENERGY_HF(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
   END IF
   WRITE(*,*)'(called from function FREEENERGY)'
   STOP
-END FUNCTION
+END FUNCTION FREEENERGY_HF
 END MODULE

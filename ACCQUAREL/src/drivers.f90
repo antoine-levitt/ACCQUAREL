@@ -158,7 +158,7 @@ SUBROUTINE DRIVER_relativistic
   END IF
   WRITE(*,*)'(called from subroutine DRIVER)'
   STOP
-END SUBROUTINE
+END SUBROUTINE DRIVER_relativistic
 
 SUBROUTINE DRIVER_nonrelativistic
   !$ USE omp_lib
@@ -312,7 +312,7 @@ SUBROUTINE DRIVER_nonrelativistic
   END IF
   WRITE(*,*)'(called from subroutine DRIVER)'
   STOP
-END SUBROUTINE
+END SUBROUTINE DRIVER_nonrelativistic
 
 SUBROUTINE DRIVER_boson_star
 ! Preliminary driver for the boson star model (G. Aki, J. Dolbeault: a Hartree model with temperature for boson stars)
@@ -433,7 +433,7 @@ SUBROUTINE DRIVER_boson_star
   CALL BUILDCOULOMB(PTEFM,NBAST,PHI,PDM)
   PTEFM=KAPPA*MASS*PTEFM/(4.D0*PI)
 
-  DO K=0,2000
+  DO K=0,1000
 ! TEMPERATURE LOOP
      TEMPERATURE=DBLE(K)*0.0001
   ITER=0
@@ -543,4 +543,4 @@ SUBROUTINE DRIVER_boson_star
   END IF
 6 WRITE(*,*)'(called from subroutine DRIVER_boson_star)'
 7 DEALLOCATE(POM,PIOM,PSROM,PISROM,NBAS,PHI)
-END SUBROUTINE
+END SUBROUTINE DRIVER_boson_star
