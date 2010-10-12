@@ -229,7 +229,7 @@ END SUBROUTINE BUILDOEFM_nonrelativistic
 
 SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
 ! Computation and assembly of the bielectronic part of the Fock matrix associated to a given density matrix using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  USE scf_parameters ; USE basis_parameters ; USE integrals
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
@@ -242,14 +242,7 @@ SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST) :: TEFM,DM
 
   TEFM=(0.D0,0.D0)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        DM(I,J)=PDM(N)
-        IF (I/=J) DM(J,I)=CONJG(DM(I,J))
-     END DO
-  END DO
+  DM = UNPACK(PDM, NBAST)
 
   IF ((DIRECT.OR.SEMIDIRECT).AND.USEDISK) OPEN(LUNIT,form='UNFORMATTED')
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
@@ -311,18 +304,13 @@ SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
   IF ((DIRECT.OR.SEMIDIRECT).AND.USEDISK) CLOSE(LUNIT)
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) CLOSE(BIUNIT)
   N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        PTEFM(N)=TEFM(I,J)
-     END DO
-  END DO
+  PTEFM = PACK(TEFM, NBAST)
 END SUBROUTINE BUILDTEFM_relativistic
 
 SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
 ! Computation and assembly of the two-electron part of the Fock matrix associated to a given density matrix in the restricted closed-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
 ! Note: G(D)=2J(D)-K(D), with J(D) the Coulomb term and K(D) the exchange term.
-  USE scf_parameters ; USE basis_parameters ; USE integrals
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
@@ -335,13 +323,7 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
 
   TEFM=0.D0
   N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        DM(I,J)=PDM(N)
-        DM(J,I)=DM(I,J)
-     END DO
-  END DO
+  DM = UNPACK(PDM, NBAST)
   IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
@@ -454,19 +436,13 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
      END IF
   END DO
   IF (.NOT.DIRECT.AND.USEDISK) CLOSE(BIUNIT)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        PTEFM(N)=TEFM(I,J)
-     END DO
-  END DO
+  PTEFM = PACK(TEFM, NBAST)
 END SUBROUTINE BUILDTEFM_RHF
 
 SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
 ! Computation and assembly of the two-electron part of one of the two Fock matrices in the unrestricted open-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
 ! Note: G(D_a)=J(D_a)-K(D_a)+J(D_b), with J(D_a) the Coulomb term and K(D_a) the exchange term associated to D_a, and J(D_b) the Coulomb term associated to D_b.
-  USE scf_parameters ; USE basis_parameters ; USE integrals
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
@@ -478,14 +454,8 @@ SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
   DOUBLE PRECISION :: INTGRL
 
   TEFM=0.D0
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        DMA(I,J)=PDMA(N) ; DMB(I,J)=PDMB(N)
-        DMA(J,I)=DMA(I,J) ; DMB(J,I)=DMB(I,J)
-     END DO
-  END DO
+  DMA = UNPACK(PDMA, NBAST)
+  DMB = UNPACK(PDMB, NBAST)
   DM=DMA+DMB
   IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
@@ -599,18 +569,12 @@ SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
      END IF
   END DO
   IF (.NOT.DIRECT.AND.USEDISK) CLOSE(BIUNIT)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        PTEFM(N)=TEFM(I,J)
-     END DO
-  END DO
+  PTEFM = PACK(TEFM, NBAST)
 END SUBROUTINE BUILDTEFM_UHF
 
 SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  USE scf_parameters ; USE basis_parameters ; USE integrals
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
@@ -623,14 +587,7 @@ SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST) :: CM,DM
 
   CM=(0.D0,0.D0)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        DM(I,J)=PDM(N)
-        IF (I/=J) DM(J,I)=CONJG(DM(I,J))
-     END DO
-  END DO
+  DM = UNPACK(PDM, NBAST)
 
   IF ((DIRECT.OR.SEMIDIRECT).AND.USEDISK) OPEN(LUNIT,form='UNFORMATTED')
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
@@ -672,18 +629,12 @@ SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
   END DO
   IF ((DIRECT.OR.SEMIDIRECT).AND.USEDISK) CLOSE(LUNIT)
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) CLOSE(BIUNIT)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        PCM(N)=CM(I,J)
-     END DO
-  END DO
+  PCM = PACK(CM, NBAST)
 END SUBROUTINE BUILDCOULOMB_relativistic
 
 SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  USE scf_parameters ; USE basis_parameters ; USE integrals
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
@@ -695,14 +646,7 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
   DOUBLE PRECISION :: INTGRL
 
   CM=0.D0
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        DM(I,J)=PDM(N)
-        DM(J,I)=DM(I,J)
-     END DO
-  END DO
+  DM = UNPACK(PDM, NBAST)
   IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
@@ -772,18 +716,12 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
      END IF
   END DO
   IF (.NOT.DIRECT.AND.USEDISK) CLOSE(BIUNIT)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        PCM(N)=CM(I,J)
-     END DO
-  END DO
+  PCM = PACK(CM, NBAST)
 END SUBROUTINE BUILDCOULOMB_nonrelativistic
 
 SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  USE scf_parameters ; USE basis_parameters ; USE integrals
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
@@ -796,14 +734,7 @@ SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST) :: EM,DM
 
   EM=(0.D0,0.D0)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        DM(I,J)=PDM(N)
-        IF (I/=J) DM(J,I)=CONJG(DM(I,J))
-     END DO
-  END DO
+  DM = UNPACK(PDM, NBAST)
 
   IF ((DIRECT.OR.SEMIDIRECT).AND.USEDISK) OPEN(LUNIT,form='UNFORMATTED')
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
@@ -845,18 +776,12 @@ SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
   END DO
   IF ((DIRECT.OR.SEMIDIRECT).AND.USEDISK) CLOSE(LUNIT)
   IF ((.NOT.DIRECT.AND..NOT.SEMIDIRECT).AND.USEDISK) CLOSE(BIUNIT)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        PEM(N)=EM(I,J)
-     END DO
-  END DO
+  PEM = PACK(EM, NBAST)
 END SUBROUTINE BUILDEXCHANGE_relativistic
 
 SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  USE scf_parameters ; USE basis_parameters ; USE integrals
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
@@ -868,14 +793,7 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
   DOUBLE PRECISION :: INTGRL
 
   EM=0.D0
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        DM(I,J)=PDM(N)
-        DM(J,I)=DM(I,J)
-     END DO
-  END DO
+  DM = UNPACK(PDM, NBAST)
   IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
   DO N=1,BINMBR
      IF (DIRECT) THEN
@@ -962,13 +880,7 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
      END IF
   END DO
   IF (.NOT.DIRECT.AND.USEDISK) CLOSE(BIUNIT)
-  N=0
-  DO J=1,NBAST
-     DO I=1,J
-        N=N+1
-        PEM(N)=EM(I,J)
-     END DO
-  END DO
+  PEM = PACK(EM, NBAST)
 END SUBROUTINE BUILDEXCHANGE_nonrelativistic
 
 SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
