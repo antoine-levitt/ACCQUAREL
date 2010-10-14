@@ -3,32 +3,33 @@
 F95 = gfortran
 #F95 = ifort
 
-OPTFLAGS = -O3
+# common to compilers and linker
+FLAGS = -O3 -g
 
 ifndef ASPICROOT
    ASPICROOT=../A.S.P.I.C
 endif
 
 ifeq ($(F95),g95)
-   F95FLAGS = -c $(OPTFLAGS) -fmod=$(MODDIR)
+   F95FLAGS = -c $(FLAGS) -fmod=$(MODDIR)
    LD = g95
    FLIBS = -llapack -lblas -lm
 endif
 ifeq ($(F95),gfortran)
-   F95FLAGS = -c $(OPTFLAGS) -fopenmp -J $(MODDIR)
+   F95FLAGS = -c $(FLAGS) -fopenmp -J $(MODDIR)
    LD = gfortran
    FLIBS = -lgomp -llapack -lblas -lm
 endif
 ifeq ($(F95),ifort)
-   F95FLAGS = -c $(OPTFLAGS) -module $(MODDIR)
+   F95FLAGS = -c $(FLAGS) -module $(MODDIR)
    LD = ifort
    FLIBS = -llapack -lblas -lm
 endif
 
-LDFLAGS = $(OPTFLAGS)
+LDFLAGS = $(FLAGS)
 
 CPP = g++
-CXXFLAGS = -c $(OPTFLAGS)
+CXXFLAGS = -c $(FLAGS)
 
 ## DIRECTORIES ##
 TARGET = accquarel.exe
