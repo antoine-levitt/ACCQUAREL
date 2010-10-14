@@ -1,5 +1,9 @@
+function plot_density(filename)
+if(nargin < 1)
+    filename = '../density'
+end
 % import density.
-bigmat = dlmread('../density');
+bigmat = dlmread(filename);
 x = bigmat(:, 1);
 y = bigmat(:, 2);
 z = bigmat(:, 3);
@@ -16,7 +20,13 @@ z = x;
 D = reshape(d, N, N, N); % D is a 3D matrix
 clf
 %slice(X, Y, Z, (D), 0, 0, 0); % to plot slices of the volume
+
+mmin = M/400;
+mmax = M/1.1;
+
 ms = [M/1.1 M/2 M/5 M/10 M/20 M/50 M/100 M/200 M/400]; % which isosurfaces to plot
+ms = logspace(log10(mmin), log10(mmax), 10);
+
 hs = arrayfun(@(m) patch(isosurface(X, Y, Z, D, m, log(D))), ms); % plot each isosurface
 isonormals(X,Y,Z,D,D);
 shading flat % shading faceted for the mesh
