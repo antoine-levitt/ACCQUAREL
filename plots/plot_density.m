@@ -1,6 +1,6 @@
 function plot_density(filename)
 if(nargin < 1)
-    filename = '../density'
+    filename = 'density'
 end
 % import density.
 bigmat = dlmread(filename);
