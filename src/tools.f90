@@ -1,3 +1,7 @@
+MODULE constants
+  DOUBLE PRECISION,PARAMETER :: PI=3.14159265358979323846D0
+END MODULE
+
 MODULE matrix_tools
 INTERFACE PACK
   MODULE PROCEDURE PACK_symmetric,PACK_hermitian
@@ -820,8 +824,8 @@ END FUNCTION COMMUTATOR_hermitian
 SUBROUTINE PRINTMATRIX_symmetric(PMAT,N,LOGUNIT)
 ! Subroutine that prints in the file LOGUNIT a symmetric matrix of size N*N stored in packed format.
   IMPLICIT NONE
-  INTEGER :: N,LOGUNIT
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PMAT
+  INTEGER,INTENT(IN) :: N,LOGUNIT
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PMAT
 
   INTEGER :: I,J,IJ
 
@@ -842,8 +846,8 @@ END SUBROUTINE PRINTMATRIX_symmetric
 SUBROUTINE PRINTMATRIX_hermitian(PMAT,N,LOGUNIT)
 ! Subroutine that prints in the file LOGUNIT a hermitian matrix of size N*N stored in packed format.
   IMPLICIT NONE
-  INTEGER :: N,LOGUNIT
-  DOUBLE COMPLEX,DIMENSION(N*(N+1)/2) :: PMAT
+  INTEGER,INTENT(IN) :: N,LOGUNIT
+  DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PMAT
 
   INTEGER :: I,J,IJ
 
@@ -860,6 +864,54 @@ SUBROUTINE PRINTMATRIX_hermitian(PMAT,N,LOGUNIT)
   END DO
   CLOSE(LOGUNIT)
 END SUBROUTINE PRINTMATRIX_hermitian
+END MODULE
+
+MODULE mathematical_functions
+INTERFACE DFACT
+  MODULE PROCEDURE DOUBLE_FACTORIAL
+END INTERFACE
+
+CONTAINS
+
+FUNCTION FACTORIAL(N) RESULT(FACT)
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: N
+  INTEGER :: FACT
+
+  INTEGER :: I
+
+  IF (N<0) THEN
+     STOP'Function FACTORIAL: the factorial is undefined for negative integers.'
+  ELSE 
+     FACT=1
+     IF (N>1) THEN
+        DO I=2,N
+           FACT=FACT*I
+        END DO
+     END IF
+  END IF
+END FUNCTION FACTORIAL
+
+FUNCTION DOUBLE_FACTORIAL(N) RESULT(DFACT)
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: N
+  INTEGER :: DFACT
+
+  INTEGER :: I
+
+  IF (N<-1) THEN
+     STOP'Function DOUBLE_FACTORIAL: the double factorial is undefined for negative integers lower than -1.'
+  ELSE
+     DFACT=1
+     IF (N>1) THEN
+        I=N
+        DO WHILE (I>1)
+           DFACT=DFACT*I
+           I=I-2
+        END DO
+     END IF
+  END IF
+END FUNCTION DOUBLE_FACTORIAL
 END MODULE
 
 MODULE setup_tools

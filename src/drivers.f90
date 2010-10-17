@@ -7,8 +7,8 @@ SUBROUTINE DRIVER_relativistic
   INTEGER :: NBAST
   TYPE(twospinor),DIMENSION(:),ALLOCATABLE :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
-  TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE :: CGTO
-  INTEGER,DIMENSION(2) :: NCGTO
+  TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE :: GBF
+  INTEGER,DIMENSION(2) :: NGBF
   INTEGER :: TYPENMBR(3),INFO,I
   DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: EIG
   DOUBLE COMPLEX,DIMENSION(:),ALLOCATABLE :: POEFM
@@ -20,7 +20,7 @@ SUBROUTINE DRIVER_relativistic
   RESUME=.FALSE.
 
 ! Computation of the discretization basis
-  CALL FORMBASIS(PHI,NBAS,CGTO,NCGTO)
+  CALL FORMBASIS(PHI,NBAS,GBF,NGBF)
   NBAST=SUM(NBAS)
 ! Computations of the tensors relative to the metric
 ! - computation and assembly of the overlap matrix
@@ -60,12 +60,12 @@ SUBROUTINE DRIVER_relativistic
      END IF
   ELSE IF (.NOT.DIRECT) THEN
 ! Precomputation of the bielectronic integrals is preferred to "on the fly" computation
-! Precomputation of the bielectronic integrals involving CGTO functions
-     WRITE(*,'(a)')'* Computation and storage in memory of the bielectronic integrals of CGTO'
-     CALL PRECOMPUTECGTOCOULOMBVALUES(CGTO,NCGTO)
+! Precomputation of the bielectronic integrals involving gaussian basis functions
+     WRITE(*,'(a)')'* Computation and storage in memory of the bielectronic integrals of GBF'
+     CALL PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
      IF (SEMIDIRECT) THEN
         IF (.NOT.USEDISK) THEN
-! storage the list and the type of nonzero bielectronic integrals (in order to use the precomputed CGTO bielectronic integrals) in memory
+! storage the list and the type of nonzero bielectronic integrals (in order to use the precomputed GBF bielectronic integrals) in memory
            ALLOCATE(BILIST(1:BINMBR,1:4),BITYPE(1:BINMBR))
            OPEN(LUNIT,form='UNFORMATTED')
            DO I=1,BINMBR
@@ -215,7 +215,7 @@ SUBROUTINE DRIVER_nonrelativistic
      CLOSE(LUNIT,STATUS='DELETE')
   ELSE
 ! Precomputation of the bielectronic integrals
-     WRITE(*,'(a)')'* Computation of the bielectronic integrals of CGTO basis functions'
+     WRITE(*,'(a)')'* Computation of the bielectronic integrals of GBF basis functions'
      IF (USEDISK) THEN
         ALLOCATE(BILIST(1:1,1:4))
         OPEN(LUNIT,form='UNFORMATTED') ; OPEN(BIUNIT,form='UNFORMATTED')
@@ -318,7 +318,7 @@ SUBROUTINE DRIVER_boson_star
 ! Preliminary driver for the boson star model (G. Aki, J. Dolbeault: a Hartree model with temperature for boson stars)
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE common_functions
-  USE metric_nonrelativistic ; USE scf_tools ; USE rootfinding_tools
+  USE metric_nonrelativistic ; USE scf_tools ; USE rootfinding_tools ; USE constants
   IMPLICIT NONE
   INTEGER :: NBAST,ITER,I,J,INFO
   INTEGER,TARGET :: RANK

@@ -137,7 +137,7 @@ MODULE data_parameters
 ! internuclear repulsion energy
   DOUBLE PRECISION :: INTERNUCLEAR_ENERGY
 ! ** DATA FOR BOSON STAR MODEL **
-  DOUBLE PRECISION,PARAMETER :: KAPPA=-1.D0,PI=3.14159265358979323846D0
+  DOUBLE PRECISION,PARAMETER :: KAPPA=-1.D0
 ! mass
   DOUBLE PRECISION :: MASS
 ! temperature
@@ -441,8 +441,8 @@ MODULE basis_parameters
 
 ! PARAMETERS FOR A GIVEN BASIS SET
   CHARACTER(26) :: BASISFILE
-  INTEGER,PARAMETER :: MAQN=4,MNOP=38,MNOC=38,MNOGTO=4
-! Note: MAQN is the maximum number of different cartesian GTO function types (= maximum angular quantum number + 1) allowed, MNOP is the maximum number of primitives (of different exponents) allowed in any of these types, MNOC is the maximum number of contractions allowed in any of these types, MNOGTO is the maximum number of different GTO allowed in each component of a 2-spinor basis function (necessary for the lower 2-spinor basis due to the use of the Restricted Kinetic Balance scheme). MAQN, MNOP and MNOC depend on the basis that is used, MNOGTO depends on MAQN through the RKB scheme.
+  INTEGER,PARAMETER :: MAQN=4,MNOP=38,MNOC=38,MNOGBF=4
+! Note: MAQN is the maximum number of different cartesian GBF function types (= maximum angular quantum number + 1) allowed, MNOP is the maximum number of primitives (of different exponents) allowed in any of these types, MNOC is the maximum number of contractions allowed in any of these types, MNOGBF is the maximum number of different GBF allowed in each component of a 2-spinor basis function (necessary for the lower 2-spinor basis due to the use of the Restricted Kinetic Balance scheme). MAQN, MNOP and MNOC depend on the basis that is used, MNOGBF depends on MAQN through the RKB scheme.
 
 ! PARAMETERS FOR AN EVEN-TEMPERED BASIS SET
   INTEGER :: NUMBER_OF_TERMS
@@ -453,14 +453,14 @@ MODULE basis_parameters
   LOGICAL :: KINBAL,UKB
 
 TYPE gaussianbasisfunction
-! Definition of a contracted cartesian gaussian type orbital (CGTO) basis function
+! Definition of a contracted cartesian gaussian type "orbital" (CGTO) basis function.
 ! nbrofexponents: the number of different gaussian primitives present in the contraction
 ! center: coordinates (x,y,z) of the center of the basis function
 ! center_id: number of the nucleus relative to the center of the basis function in the list of the nuclei forming the molecular system (used for checking the parity of the bielectronic integrands when the four basis functions share the same center)
 ! exponents: array containing the exponent of each of the gaussian primitives present in the contraction
 ! coefficients: array containing the coefficient of each of the gaussian primitives present in the contraction
 ! monomialdegrees: array containing the degrees (n_x,n_y,n_z) of the monomial common to each of the gaussian primitives
-! 2009/08/31: maximum number of terms in a contraction is set to 6 (see Cr in 6-31G for instance). The previous choice (MNOP/MNOC) was stupid.
+! Note: the maximum number of terms in a contraction is set to 6 (see the basis for Cr in 6-31G for instance).
   INTEGER(KIND=C_INT) :: nbrofexponents
   REAL(KIND=C_DOUBLE),DIMENSION(3) :: center
   INTEGER :: center_id
@@ -470,16 +470,16 @@ TYPE gaussianbasisfunction
 END TYPE gaussianbasisfunction
 
 TYPE twospinor
-! Definition of a Pauli 2-spinor basis function
+! Definition of a Pauli 2-spinor type basis function using gaussian basis functions.
 ! nbrofcontractions: array containing the number of different contractions (<=MNOGT0) present in each of the components of the 2-spinor
 ! contractions: array containing the contractions present in each of the components of the 2-spinor
-! contidx : array containing the indices of the uncontracted CGTO appearing in the contractions with respect to a secondary array of uncontracted CGTO (used for precomputation purposes)
+! contidx : array containing the indices of the gaussian primitives appearing in the contractions with respect to a secondary array of gaussian primitives (used for precomputation purposes)
 ! coefficients: array containing the complex coefficient of each of the contractions present in each of the components of the 2-spinor
 ! Note: if one of the components of the 2-spinor is zero then the corresponding nbrofcontractions is set to 0
   INTEGER,DIMENSION(2) :: nbrofcontractions
-  TYPE(gaussianbasisfunction),DIMENSION(2,MNOGTO) :: contractions
-  INTEGER,DIMENSION(2,MNOGTO) :: contidx
-  DOUBLE COMPLEX,DIMENSION(2,MNOGTO) :: coefficients
+  TYPE(gaussianbasisfunction),DIMENSION(2,MNOGBF) :: contractions
+  INTEGER,DIMENSION(2,MNOGBF) :: contidx
+  DOUBLE COMPLEX,DIMENSION(2,MNOGBF) :: coefficients
 END TYPE twospinor
 
 CONTAINS
@@ -541,17 +541,17 @@ SUBROUTINE SETUP_BASIS
   CLOSE(100)
 END SUBROUTINE SETUP_BASIS
 
-FUNCTION CGTO_POINTWISE_VALUE(CGTO,POINT) RESULT(VALUE)
+FUNCTION GBF_POINTWISE_VALUE(GBF,POINT) RESULT(VALUE)
 ! Function that computes the value of a gaussian basis function at a given point of space.
   USE iso_c_binding
-  TYPE(gaussianbasisfunction),INTENT(IN) :: CGTO
+  TYPE(gaussianbasisfunction),INTENT(IN) :: GBF
   DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
   REAL(KIND=C_DOUBLE) :: VALUE
 
-  VALUE=PRODUCT((POINT-CGTO%center)**CGTO%monomialdegree)         &
-      & *DOT_PRODUCT(CGTO%coefficients(1:CGTO%nbrofexponents),    &
-      &              EXP(-CGTO%exponents(1:CGTO%nbrofexponents)*SUM((POINT-CGTO%center)**2)))
-END FUNCTION CGTO_POINTWISE_VALUE
+  VALUE=PRODUCT((POINT-GBF%center)**GBF%monomialdegree)         &
+      & *DOT_PRODUCT(GBF%coefficients(1:GBF%nbrofexponents),    &
+      &              EXP(-GBF%exponents(1:GBF%nbrofexponents)*SUM((POINT-GBF%center)**2)))
+END FUNCTION GBF_POINTWISE_VALUE
 
 SUBROUTINE PRINTGBF(PHI,NUNIT)
   IMPLICIT NONE
@@ -564,9 +564,9 @@ SUBROUTINE PRINTGBF(PHI,NUNIT)
   WRITE(NUNIT,*)' center:',PHI%center
   WRITE(NUNIT,*)' common monomial:',PHI%monomialdegree
   DO I=1,PHI%nbrofexponents
-     WRITE(NUNIT,*)'  GTO #',I
-     WRITE(NUNIT,*)'  exponent:',PHI%exponents(I)
-     WRITE(NUNIT,*)'  coefficient:',PHI%coefficients(I)
+     WRITE(NUNIT,*)'  gaussian primitive #',I
+     WRITE(NUNIT,*)'    exponent:',PHI%exponents(I)
+     WRITE(NUNIT,*)'    coefficient:',PHI%coefficients(I)
   END DO
 END SUBROUTINE PRINTGBF
 
@@ -582,7 +582,7 @@ FUNCTION TWOSPINOR_POINTWISE_VALUE(PHI,POINT) RESULT(VALUE)
   DO I=1,2
      VALUE(I)=(0.D0,0.D0)
      DO J=1,PHI%nbrofcontractions(I)
-        VALUE(I)=VALUE(I)+PHI%coefficients(I,J)*CGTO_POINTWISE_VALUE(PHI%contractions(I,J),POINT)
+        VALUE(I)=VALUE(I)+PHI%coefficients(I,J)*GBF_POINTWISE_VALUE(PHI%contractions(I,J),POINT)
      END DO
   END DO
 END FUNCTION TWOSPINOR_POINTWISE_VALUE
@@ -602,11 +602,11 @@ SUBROUTINE PRINT2SPINOR(PHI,NUNIT)
         DO I=1,PHI%nbrofcontractions(K)
            WRITE(NUNIT,*)'  contraction #',I
            WRITE(NUNIT,*)'    coefficient:',PHI%coefficients(K,I)
-           WRITE(NUNIT,*)'    number of GTO:',PHI%contractions(K,I)%nbrofexponents
+           WRITE(NUNIT,*)'    number of gaussian primitives:',PHI%contractions(K,I)%nbrofexponents
            WRITE(NUNIT,*)'    common monomial:',PHI%contractions(K,I)%monomialdegree
            WRITE(NUNIT,*)'    center:',PHI%contractions(K,I)%center
            DO J=1,PHI%contractions(K,I)%nbrofexponents
-              WRITE(NUNIT,*)'      GTO #',J
+              WRITE(NUNIT,*)'      gaussian primitive #',J
               WRITE(NUNIT,*)'        exponent:',PHI%contractions(K,I)%exponents(J)
               WRITE(NUNIT,*)'        coefficient:',PHI%contractions(K,I)%coefficients(J)
            END DO
@@ -628,7 +628,7 @@ MODULE scf_parameters
 ! direct computation of the bielectronic integrals or not
   LOGICAL :: DIRECT
 ! "semi-direct" computation of the bielectronic integrals (relativistic case only)
-! Note: the case is considered as a (DIRECT==.FALSE.) subcase: GTO bielectronic integrals are precomputed and kept in memory, 2-spinor bielectronic integrals being computed "directly" using these values afterwards.
+! Note: the case is considered as a (DIRECT==.FALSE.) subcase: GBF bielectronic integrals are precomputed and kept in memory, 2-spinor bielectronic integrals being computed "directly" using these values afterwards.
   LOGICAL :: SEMIDIRECT
 ! storage of the computed bielectronic integrals (and/or their list) on disk or in memory
   LOGICAL :: USEDISK
