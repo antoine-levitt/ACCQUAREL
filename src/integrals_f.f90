@@ -1,14 +1,14 @@
 MODULE integrals
-! Note: all the CGTO integrals are computed by the A.S.P.I.C. code (written in C++ by F. Lodier, see http://www.ann.jussieu.fr/A.S.P.I.C/).
+! Note: all the integrals involving gaussian basis functions are computed by the A.S.P.I.C. code (written in C++ by F. Lodier, see http://www.ann.jussieu.fr/A.S.P.I.C/).
   IMPLICIT NONE
 ! number of a priori nonzero bielectronic integrals
   INTEGER :: BINMBR
-! arrays for the list, values (real/complex for CGTO/2-spinor basis functions in the non-relativistic/relativistic case) and "class" (relativistic case only) of bielectronic integrals (when stored in memory)
+! arrays for the list, values (real/complex for GBF/2-spinor basis functions in the non-relativistic/relativistic case) and "class" (relativistic case only) of bielectronic integrals (when stored in memory)
   INTEGER,DIMENSION(:,:),ALLOCATABLE :: BILIST
   DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: RBIVALUES
   DOUBLE COMPLEX,DIMENSION(:),ALLOCATABLE :: CBIVALUES
   CHARACTER(2),DIMENSION(:),ALLOCATABLE :: BITYPE
-! arrays for the values of precomputed CGTO bielectronic integrals used to compute more efficiently (thanks to the use of symmetries) the 2-spinor bielectronic integrals in the relativistic case
+! arrays for the values of precomputed GBF bielectronic integrals used to compute more efficiently (thanks to the use of symmetries) the 2-spinor bielectronic integrals in the relativistic case
   DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: LLIJKL,LLIKJL,LLILJK,SLIJKL,SSIJKL,SSIKJL,SSILJK
   INTEGER,DIMENSION(2) :: NBF
 ! unit number for the list of nonzero bielectronic integrals (when stored on disk)
@@ -118,7 +118,7 @@ END INTERFACE
 CONTAINS
 
 FUNCTION OVERLAPVALUE(PHI_A,PHI_B) RESULT (VALUE)
-! Function that computes the value of the integral over R^3 of the product of two GTO basis functions.
+! Function that computes the value of the integral over R^3 of the product of two gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
   IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
@@ -129,7 +129,7 @@ FUNCTION OVERLAPVALUE(PHI_A,PHI_B) RESULT (VALUE)
 END FUNCTION OVERLAPVALUE
 
 FUNCTION KINETICVALUE(PHI_A,PHI_B) RESULT (VALUE)
-! Function that computes the value of the integral over R^3 of the scalar product between the gradients of two GTO basis functions.
+! Function that computes the value of the integral over R^3 of the scalar product between the gradients of two gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
   IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
@@ -140,7 +140,7 @@ FUNCTION KINETICVALUE(PHI_A,PHI_B) RESULT (VALUE)
 END FUNCTION KINETICVALUE
 
 FUNCTION DERIVVALUE(PHI_A,PHI_B,DIMENSION) RESULT (VALUE)
-! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to a space variable) of a basis function with another basis function (this kind of integrals appear in the variational formulation involving the Dirac operator).
+! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to a space variable) of a gaussain basis function with another gaussian basis function (this kind of integrals appear in the variational formulation involving the Dirac operator).
 ! Note: if DIMENSION = 1 (respectively 2, 3) then partial derivative with respect to x (respectively y, z).
   USE iso_c_binding ; USE basis_parameters
   IMPLICIT NONE
@@ -154,7 +154,7 @@ FUNCTION DERIVVALUE(PHI_A,PHI_B,DIMENSION) RESULT (VALUE)
 END FUNCTION DERIVVALUE
 
 FUNCTION POTENTIALVALUE(PHI_A,PHI_B,CENTER) RESULT (VALUE)
-! Function that computes the value of the integral over R^3 of the product between two GTO basis functions and a coulombic potential centered on a given point.
+! Function that computes the value of the integral over R^3 of the product of two gaussian basis functions times a coulombic potential centered on a given point.
   USE iso_c_binding ; USE basis_parameters
   IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
@@ -167,7 +167,7 @@ FUNCTION POTENTIALVALUE(PHI_A,PHI_B,CENTER) RESULT (VALUE)
 END FUNCTION POTENTIALVALUE
 
 FUNCTION XDERIVVALUE(PHI_A,PHI_B,DIMENSION1,DIMENSION2) RESULT (VALUE)
-! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to the space variable x, y or z) of a GTO basis function with another GTO basis function, times x, y or z (this kind of integral appears in variational formulations involving the J operator).
+! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to the space variable x, y or z) of a gaussian basis function with another gaussian basis function, times x, y or z (this kind of integral appears in variational formulations involving the J operator).
 ! Notes: - if DIMENSION1 = 1 (respectively 2, 3) then partial derivative with respect to x (respectively y, z).
 !        - if DIMENSION2 = 1 (respectively 2, 3) then the product is multiplied by x (respectively y, z).
   USE iso_c_binding ; USE basis_parameters
@@ -182,7 +182,7 @@ FUNCTION XDERIVVALUE(PHI_A,PHI_B,DIMENSION1,DIMENSION2) RESULT (VALUE)
 END FUNCTION XDERIVVALUE
 
 FUNCTION COULOMBVALUE_nonrelativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
-! Function that computes the value of the bielectronic integral between four GTO basis functions.
+! Function that computes the value of the bielectronic integral between four gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
   IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B,PHI_C,PHI_D
@@ -225,7 +225,7 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAS,LISTSIZE)
      END IF
   END DO ; END DO ; END DO ; END DO
   CLOSE(LUNIT)
-  WRITE(*,*)' Number of CGTO bielectronic integrals to be computed:',LISTSIZE
+  WRITE(*,*)' Number of GBF bielectronic integrals to be computed:',LISTSIZE
 END SUBROUTINE BUILDBILIST_nonrelativistic
 
 FUNCTION COULOMBVALUE_relativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
@@ -253,7 +253,7 @@ FUNCTION COULOMBVALUE_relativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
 END FUNCTION COULOMBVALUE_relativistic
 
 FUNCTION COULOMBVALUE_precomputed(PHI_A,PHI_B,PHI_C,PHI_D,CLASS) RESULT (VALUE)
-! Function that computes the value of the bielectronic integral between four 2-spinor basis functions from lists containing the precomputed values of the bielectronic integrals between scalar GTO functions.
+! Function that computes the value of the bielectronic integral between four 2-spinor basis functions from lists containing the precomputed values of the bielectronic integrals between scalar gaussian basis functions.
   USE basis_parameters
   IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI_A,PHI_B,PHI_C,PHI_D
@@ -267,9 +267,9 @@ FUNCTION COULOMBVALUE_precomputed(PHI_A,PHI_B,PHI_C,PHI_D,CLASS) RESULT (VALUE)
      DO IA=1,PHI_A%nbrofcontractions(I) ; DO IB=1,PHI_B%nbrofcontractions(I)
         DO J=1,2
            DO JC=1,PHI_C%nbrofcontractions(J) ; DO JD=1,PHI_D%nbrofcontractions(J)
-              VALUE=VALUE+PHI_A%coefficients(I,IA)*CONJG(PHI_B%coefficients(I,IB))                                      &
- &                        *PHI_C%coefficients(J,JC)*CONJG(PHI_D%coefficients(J,JD))                                     &
- &                        *PRECOMPUTEDCOULOMBVALUE(PHI_A%contidx(I,IA),PHI_B%contidx(I,IB),PHI_C%contidx(J,JC),         &
+              VALUE=VALUE+PHI_A%coefficients(I,IA)*CONJG(PHI_B%coefficients(I,IB))                              &
+ &                        *PHI_C%coefficients(J,JC)*CONJG(PHI_D%coefficients(J,JD))                             &
+ &                        *PRECOMPUTEDCOULOMBVALUE(PHI_A%contidx(I,IA),PHI_B%contidx(I,IB),PHI_C%contidx(J,JC), &
  &                                                 PHI_D%contidx(J,JD),CLASS)
            END DO ; END DO
         END DO
@@ -311,7 +311,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
                           IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
                              SUBSIZE(1)=SUBSIZE(1)+1
                              WRITE(LUNIT)I,J,K,L,'LL'
-                             GOTO 1
+                             GO TO 1
                           END IF
                        END DO
                     END DO
@@ -333,14 +333,12 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
                        SC=((PHI(I)%contractions(I1,I2)%center_id==PHI(J)%contractions(I1,I3)%center_id)      &
  &                         .AND.(PHI(J)%contractions(I1,I3)%center_id==PHI(K)%contractions(I4,I5)%center_id) &
  &                         .AND.(PHI(K)%contractions(I4,I5)%center_id==PHI(L)%contractions(I4,I6)%center_id))
-                       GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree &
- &                                          +PHI(J)%contractions(I1,I3)%monomialdegree &
- &                                          +PHI(K)%contractions(I4,I5)%monomialdegree &
- &                                          +PHI(L)%contractions(I4,I6)%monomialdegree
+                       GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree+PHI(J)%contractions(I1,I3)%monomialdegree &
+ &                                          +PHI(K)%contractions(I4,I5)%monomialdegree+PHI(L)%contractions(I4,I6)%monomialdegree
                        IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
                           WRITE(LUNIT)I,J,K,L,'SL'
                           SUBSIZE(2)=SUBSIZE(2)+1
-                          GOTO 2
+                          GO TO 2
                        END IF
                     END DO
                  END DO
@@ -370,7 +368,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
                              IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
                                 WRITE(LUNIT)I,J,K,L,'SS'
                                 SUBSIZE(3)=SUBSIZE(3)+1
-                                GOTO 3
+                                GO TO 3
                              END IF
                           END DO
                        END DO
@@ -387,36 +385,35 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
   WRITE(*,*)' Number of 2-spinor-type orbital bielectronic integrals to be computed:',LISTSIZE
 END SUBROUTINE BUILDBILIST_relativistic
 
-SUBROUTINE PRECOMPUTECGTOCOULOMBVALUES(CGTO,NCGTO)
-! Routine that computes the values of the bielectronic integrals over a cartesian gaussian-type orbital basis, taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974). These values are next used to compute more efficiently the bielectronic integrals over a cartesian 2-spinor-type orbital basis in the relativistic case (see the GETPRECOMPUTEDCOULOMBVALUE function).
+SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
+! Routine that computes the values of the bielectronic integrals over a cartesian gaussian basis, taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974). These values are next used to compute more efficiently the bielectronic integrals over a cartesian 2-spinor-type orbital basis in the relativistic case (see the GETPRECOMPUTEDCOULOMBVALUE function).
   USE basis_parameters ; USE scf_parameters
   IMPLICIT NONE
-  INTEGER,DIMENSION(2),INTENT(IN) :: NCGTO  
-  TYPE(gaussianbasisfunction),DIMENSION(SUM(NCGTO)),INTENT(IN) :: CGTO
+  INTEGER,DIMENSION(2),INTENT(IN) :: NGBF  
+  TYPE(gaussianbasisfunction),DIMENSION(SUM(NGBF)),INTENT(IN) :: GBF
 
   INTEGER :: I,J,K,L,M,N,O
   INTEGER,DIMENSION(3) :: GLOBALMONOMIALDEGREE
   LOGICAL :: SC
 
-  NBF=NCGTO
+  NBF=NGBF
 ! (LL|LL) integrals
   WRITE(*,*)'- Computing LL integrals'
-  ALLOCATE(LLIJKL(1:NCGTO(1)*(NCGTO(1)+1)*(NCGTO(1)**2+5*NCGTO(1)+6)/24), &
- &         LLIKJL(1:NCGTO(1)*(NCGTO(1)+1)*(NCGTO(1)**2+NCGTO(1)-2)/24),   &
- &         LLILJK(1:NCGTO(1)*(NCGTO(1)+1)*(NCGTO(1)**2-3*NCGTO(1)+2)/24))
+  ALLOCATE(LLIJKL(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2+5*NGBF(1)+6)/24), &
+ &         LLIKJL(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2+NGBF(1)-2)/24),   &
+ &         LLILJK(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2-3*NGBF(1)+2)/24))
   M=0 ; N=0 ; O=0
-  DO I=1,NCGTO(1) ; DO J=1,I ; DO K=1,J ; DO L=1,K
-     SC=((CGTO(I)%center_id==CGTO(J)%center_id).AND.(CGTO(J)%center_id==CGTO(K)%center_id) &
- &                                             .AND.(CGTO(K)%center_id==CGTO(L)%center_id))
-     GLOBALMONOMIALDEGREE=CGTO(I)%monomialdegree+CGTO(J)%monomialdegree+CGTO(K)%monomialdegree+CGTO(L)%monomialdegree
+  DO I=1,NGBF(1) ; DO J=1,I ; DO K=1,J ; DO L=1,K
+     SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
+     GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
 ! parity check (one center case)
      IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
-        M=M+1 ; LLIJKL(M)=COULOMBVALUE(CGTO(I),CGTO(J),CGTO(K),CGTO(L))
+        M=M+1 ; LLIJKL(M)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
         IF (K<J) THEN
-           N=N+1 ; LLIKJL(N)=COULOMBVALUE(CGTO(I),CGTO(K),CGTO(J),CGTO(L))
+           N=N+1 ; LLIKJL(N)=COULOMBVALUE(GBF(I),GBF(K),GBF(J),GBF(L))
         END IF
         IF ((J<I).AND.(L<K)) THEN
-           O=O+1 ; LLILJK(O)=COULOMBVALUE(CGTO(I),CGTO(L),CGTO(J),CGTO(K))
+           O=O+1 ; LLILJK(O)=COULOMBVALUE(GBF(I),GBF(L),GBF(J),GBF(K))
         END IF
      ELSE
         M=M+1 ; LLIJKL(M)=(0.D0,0.D0)
@@ -430,15 +427,14 @@ SUBROUTINE PRECOMPUTECGTOCOULOMBVALUES(CGTO,NCGTO)
   END DO ; END DO ; END DO ; END DO
 ! (SS|LL) integrals
   WRITE(*,*)'- Computing SL integrals'
-  ALLOCATE(SLIJKL(1:NCGTO(1)*(NCGTO(1)+1)*NCGTO(2)*(NCGTO(2)+1)/4))
+  ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
   N=0
-  DO I=NCGTO(1)+1,SUM(NCGTO) ; DO J=NCGTO(1)+1,I ; DO K=1,NCGTO(1) ; DO L=1,K
-     SC=((CGTO(I)%center_id==CGTO(J)%center_id).AND.(CGTO(J)%center_id==CGTO(K)%center_id) &
- &                                             .AND.(CGTO(K)%center_id==CGTO(L)%center_id))
-     GLOBALMONOMIALDEGREE=CGTO(I)%monomialdegree+CGTO(J)%monomialdegree+CGTO(K)%monomialdegree+CGTO(L)%monomialdegree
+  DO I=NGBF(1)+1,SUM(NGBF) ; DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
+     SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
+     GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
 ! parity check (one center case)
      IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
-        N=N+1 ; SLIJKL(N)=COULOMBVALUE(CGTO(I),CGTO(J),CGTO(K),CGTO(L))
+        N=N+1 ; SLIJKL(N)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
      ELSE
         N=N+1 ; SLIJKL(N)=(0.D0,0.D0)
      END IF
@@ -446,22 +442,21 @@ SUBROUTINE PRECOMPUTECGTOCOULOMBVALUES(CGTO,NCGTO)
   IF (SSINTEGRALS) THEN
 ! (SS|SS) integrals
      WRITE(*,*)'- Computing SS integrals'
-     ALLOCATE(SSIJKL(1:NCGTO(2)*(NCGTO(2)+1)*(NCGTO(2)**2+5*NCGTO(2)+6)/24), &
- &            SSIKJL(1:NCGTO(2)*(NCGTO(2)+1)*(NCGTO(2)**2+NCGTO(2)-2)/24),   &
- &            SSILJK(1:NCGTO(2)*(NCGTO(2)+1)*(NCGTO(2)**2-3*NCGTO(2)+2)/24))
+     ALLOCATE(SSIJKL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+5*NGBF(2)+6)/24), &
+ &            SSIKJL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+NGBF(2)-2)/24),   &
+ &            SSILJK(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2-3*NGBF(2)+2)/24))
      M=0 ; N=0 ; O=0
-     DO I=NCGTO(1)+1,SUM(NCGTO) ; DO J=NCGTO(1)+1,I ; DO K=NCGTO(1)+1,J ; DO L=NCGTO(1)+1,K
-        SC=((CGTO(I)%center_id==CGTO(J)%center_id).AND.(CGTO(J)%center_id==CGTO(K)%center_id) &
- &                                                .AND.(CGTO(K)%center_id==CGTO(L)%center_id))
-        GLOBALMONOMIALDEGREE=CGTO(I)%monomialdegree+CGTO(J)%monomialdegree+CGTO(K)%monomialdegree+CGTO(L)%monomialdegree
+     DO I=NGBF(1)+1,SUM(NGBF) ; DO J=NGBF(1)+1,I ; DO K=NGBF(1)+1,J ; DO L=NGBF(1)+1,K
+        SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
+        GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
 ! parity check (one center case)
         IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
-           M=M+1 ; SSIJKL(M)=COULOMBVALUE(CGTO(I),CGTO(J),CGTO(K),CGTO(L))
+           M=M+1 ; SSIJKL(M)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
            IF (K<J) THEN
-              N=N+1 ; SSIKJL(N)=COULOMBVALUE(CGTO(I),CGTO(K),CGTO(J),CGTO(L))
+              N=N+1 ; SSIKJL(N)=COULOMBVALUE(GBF(I),GBF(K),GBF(J),GBF(L))
            END IF
            IF ((J<I).AND.(L<K)) THEN
-              O=O+1 ; SSILJK(O)=COULOMBVALUE(CGTO(I),CGTO(L),CGTO(J),CGTO(K))
+              O=O+1 ; SSILJK(O)=COULOMBVALUE(GBF(I),GBF(L),GBF(J),GBF(K))
            END IF
         ELSE
            M=M+1 ; SSIJKL(M)=(0.D0,0.D0)
@@ -474,11 +469,11 @@ SUBROUTINE PRECOMPUTECGTOCOULOMBVALUES(CGTO,NCGTO)
         END IF
      END DO ; END DO ; END DO ; END DO
   END IF
-END SUBROUTINE PRECOMPUTECGTOCOULOMBVALUES
+END SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES
 
 FUNCTION PRECOMPUTEDCOULOMBVALUE(I,J,K,L,CLASS) RESULT(VALUE)
-! Functions that returns the value of a precomputed bielectronic integral of class LL, SL or SS between four (real) cartesian gaussian-type orbital scalar basis functions stored in a list taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974).
-! note: this function is called for the computation of bielectronic integrals over a (complex) 2-spinor, cartesian gaussian-type orbital basis, which does not naturally possess as many symmetries as a real scalar basis.
+! Functions that returns the value of a precomputed bielectronic integral of class LL, SL or SS between four (real) cartesian gaussian basis functions stored in a list taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974).
+! note: this function is called for the computation of bielectronic integrals over a (complex) 2-spinor, cartesian gaussian-type orbital basis, which does not naturally possess as many symmetries as a real scalar gaussian basis.
   USE basis_parameters
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J,K,L
@@ -494,7 +489,7 @@ FUNCTION PRECOMPUTEDCOULOMBVALUE(I,J,K,L,CLASS) RESULT(VALUE)
   TMP=N ; IF (N(3)<N(4)) N(3:4)=(/TMP(4),TMP(3)/)
   TMP=N ; IF (N(1)<N(3)) N=(/TMP(3),TMP(4),TMP(1),TMP(2)/)
   IF (CLASS.EQ.'LL') THEN
-! integral (LL|LL) between four "upper 2-spinor" scalar CGTO functions
+! integral (LL|LL) between four "upper 2-spinor" scalar gaussian basis functions
      IF (N(3)<=N(2)) THEN
 ! integral of type (IJ|KL) 
         IDX=N(4)+N(3)*(N(3)-1)/2+(N(2)+1)*N(2)*(N(2)-1)/6+(N(1)-1)*N(1)*(N(1)+1)*(N(1)+2)/24
@@ -517,13 +512,13 @@ FUNCTION PRECOMPUTEDCOULOMBVALUE(I,J,K,L,CLASS) RESULT(VALUE)
         VALUE=LLILJK(IDX)
      END IF
   ELSE IF (CLASS=='SL') THEN
-! integral (SS|LL) between two "lower 2-spinor" and two "upper 2-spinor" scalar CGTO functions
+! integral (SS|LL) between two "lower 2-spinor" and two "upper 2-spinor" scalar gaussian basis functions
      N(1:2)=N(1:2)-(/NBF(1),NBF(1)/)
      IDX=N(4)+N(3)*(N(3)-1)/2+(N(2)+N(1)*(N(1)-1)/2-1)*NBF(1)*(NBF(1)+1)/2
      VALUE=SLIJKL(IDX)
   ELSE IF (CLASS=='SS') THEN
      N=N-(/NBF(1),NBF(1),NBF(1),NBF(1)/)
-! integral (SS|SS) between four "lower 2-spinor" scalar CGTO functions
+! integral (SS|SS) between four "lower 2-spinor" scalar gaussian basis functions
      IF (N(3)<=N(2)) THEN
 ! integral of type (IJ|KL) 
         IDX=N(4)+N(3)*(N(3)-1)/2+(N(2)+1)*N(2)*(N(2)-1)/6+(N(1)-1)*N(1)*(N(1)+1)*(N(1)+2)/24
@@ -550,7 +545,7 @@ END FUNCTION PRECOMPUTEDCOULOMBVALUE
 
 SUBROUTINE DEALLOCATE_INTEGRALS
   USE scf_parameters
-! Routine that deallocate the arrays containing the values of the CGTO bielectronic integrals.
+! Routine that deallocate the arrays containing the values of the bielectronic integrals over a cartesian gaussian basis.
   IMPLICIT NONE
   DEALLOCATE(LLIJKL,LLIKJL,LLILJK,SLIJKL)
   IF (SSINTEGRALS) DEALLOCATE(SSIJKL,SSIKJL,SSILJK)

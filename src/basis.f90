@@ -1,40 +1,40 @@
 MODULE basis
   USE iso_c_binding
   IMPLICIT NONE
-  INTEGER,DIMENSION(4),PARAMETER :: NGTOUSC=(/1,3,6,10/)
-  INTEGER,DIMENSION(4),PARAMETER :: NGTOLSC=(/3,7,13,21/)
+  INTEGER,DIMENSION(4),PARAMETER :: NGPMUSC=(/1,3,6,10/)
+  INTEGER,DIMENSION(4),PARAMETER :: NGPMLSC=(/3,7,13,21/)
 
 INTERFACE FORMBASIS
   MODULE PROCEDURE FORMBASIS_relativistic,FORMBASIS_nonrelativistic
 END INTERFACE
 CONTAINS
 
-SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,CGTO,NCGTO)
+SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
 ! Subroutine that builds the 2-spinor basis functions and related contracted cartesian Gaussian-type orbital functions for the molecular system considered, from the coefficients read in a file.
   USE basis_parameters ; USE data_parameters
   IMPLICIT NONE
   TYPE(twospinor),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: NBAS
-  TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: CGTO
-  INTEGER,DIMENSION(2),INTENT(OUT) :: NCGTO
+  TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: GBF
+  INTEGER,DIMENSION(2),INTENT(OUT) :: NGBF
 
   INTEGER,DIMENSION(NBN) :: HAQN
   INTEGER,DIMENSION(MAQN,NBN) :: NOP,NOC
   DOUBLE PRECISION,DIMENSION(MNOP,MAQN,NBN) :: ALPHA
   DOUBLE PRECISION,DIMENSION(MNOP,MNOC,MAQN,NBN) :: CCOEF
-  INTEGER,DIMENSION(2,NBN) :: NBASN,NCGTON
-  INTEGER :: I,J,K,L,M,IUA,IUB,ILA,ILB,IP,IPIC,ICOEF,RNOC,NBOPIC,IUGTO,ILGTO,IDX
+  INTEGER,DIMENSION(2,NBN) :: NBASN,NGBFN
+  INTEGER :: I,J,K,L,M,IUA,IUB,ILA,ILB,IP,IPIC,ICOEF,RNOC,NBOPIC,IUGBF,ILGBF,IDX
 
   ALLOCATE(NBAS(1:2))
   DO M=1,NBN
-     CALL READBASIS(Z(M),HAQN(M),NOP(:,M),NOC(:,M),ALPHA(:,:,M),CCOEF(:,:,:,M),NBASN(:,M),NCGTON(:,M))
+     CALL READBASIS(Z(M),HAQN(M),NOP(:,M),NOC(:,M),ALPHA(:,:,M),CCOEF(:,:,:,M),NBASN(:,M),NGBFN(:,M))
   END DO
-  NBAS=SUM(NBASN,DIM=2) ; NCGTO=SUM(NCGTON,DIM=2)
-  ALLOCATE(PHI(1:SUM(NBAS)),CGTO(1:SUM(NCGTO)))
-! Initialization of the indices for the upper 2-spinor basis functions and related CGTO functions
-  IUA=0 ; IUB=NBAS(1)/2 ; IUGTO=0
-! Indices for the lower 2-spinor basis functions and related CGTO functions
-  ILA=NBAS(1) ; ILB=NBAS(1)+NBAS(2)/2 ; ILGTO=NCGTO(1)
+  NBAS=SUM(NBASN,DIM=2) ; NGBF=SUM(NGBFN,DIM=2)
+  ALLOCATE(PHI(1:SUM(NBAS)),GBF(1:SUM(NGBF)))
+! Initialization of the indices for the upper 2-spinor basis functions and related gaussian basis functions
+  IUA=0 ; IUB=NBAS(1)/2 ; IUGBF=0
+! Indices for the lower 2-spinor basis functions and related gaussian basis functions
+  ILA=NBAS(1) ; ILB=NBAS(1)+NBAS(2)/2 ; ILGBF=NGBF(1)
   DO M=1,NBN
 ! Loop on the nuclei of the molecular system
      DO I=1,HAQN(M)
@@ -42,47 +42,47 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,CGTO,NCGTO)
 ! uncontracted basis
            DO J=1,NOP(I,M)
               IF (KINBAL) THEN
-! Construction of the uncontracted CGTO functions related to the lower 2-spinor basis functions when a kinetic balance scheme is used
+! Construction of the gaussian primitives related to the lower 2-spinor basis functions when a kinetic balance scheme is used
 ! note: the coefficients in the contractions are derived from the RKB scheme and put to 1 if the UKB scheme is used.
-                 DO K=1,NGTOLSC(I)
-                    ILGTO=ILGTO+1
-                    CGTO(ILGTO)%center=CENTER(:,M)
-                    CGTO(ILGTO)%center_id=M
-                    CGTO(ILGTO)%nbrofexponents=1
-                    CGTO(ILGTO)%exponents(1)=ALPHA(J,I,M)
+                 DO K=1,NGPMLSC(I)
+                    ILGBF=ILGBF+1
+                    GBF(ILGBF)%center=CENTER(:,M)
+                    GBF(ILGBF)%center_id=M
+                    GBF(ILGBF)%nbrofexponents=1
+                    GBF(ILGBF)%exponents(1)=ALPHA(J,I,M)
 ! note: see how the UKB scheme is to be interpreted before modifying and uncommenting.
 !                    IF (((I==2).AND.(K==7)).OR.((I==3).AND.(K>=11)).OR.((I==4).AND.(K>=16))) THEN
-                       CGTO(ILGTO)%coefficients(1)=1.D0 
+                       GBF(ILGBF)%coefficients(1)=1.D0 
 !                    ELSE
-!                       CGTO(ILGTO)%coefficients(1)=2.D0*ALPHA(J,I,M)
+!                       GBF(ILGBF)%coefficients(1)=2.D0*ALPHA(J,I,M)
 !                    END IF
-                    CGTO(ILGTO)%monomialdegree=MDLSC(I,K)
+                    GBF(ILGBF)%monomialdegree=MDLSC(I,K)
                     IF (UKB) THEN
 ! Construction of the lower 2-spinor basis functions (unrestricted kinetic balance scheme)
 ! (nota bene: this scheme is not really functional due to linear depencies which have yet to be eliminated)
-                       CGTO(ILGTO)%coefficients(1)=1.D0
+                       GBF(ILGBF)%coefficients(1)=1.D0
                        ILA=ILA+1 ; ILB=ILB+1 
                        PHI(ILA)%nbrofcontractions=(/1,0/) ; PHI(ILB)%nbrofcontractions=(/0,1/) 
-                       PHI(ILA)%contractions(1,1)=CGTO(ILGTO) ; PHI(ILB)%contractions(2,1)=CGTO(ILGTO)
-                       PHI(ILA)%contidx(1,1)=ILGTO ; PHI(ILB)%contidx(2,1)=ILGTO
+                       PHI(ILA)%contractions(1,1)=GBF(ILGBF) ; PHI(ILB)%contractions(2,1)=GBF(ILGBF)
+                       PHI(ILA)%contidx(1,1)=ILGBF ; PHI(ILB)%contidx(2,1)=ILGBF
                        PHI(ILA)%coefficients(1,1)=(1.D0,0.D0) ; PHI(ILB)%coefficients(2,1)=(1.D0,0.D0)
                     END IF
                  END DO
               END IF
-              DO K=1,NGTOUSC(I)
-! Construction of the uncontracted CGTO functions related to the upper 2-spinor basis functions
-                 IUGTO=IUGTO+1
-                 CGTO(IUGTO)%center=CENTER(:,M)
-                 CGTO(IUGTO)%center_id=M
-                 CGTO(IUGTO)%nbrofexponents=1
-                 CGTO(IUGTO)%exponents(1)=ALPHA(J,I,M)
-                 CGTO(IUGTO)%coefficients(1)=1.D0
-                 CGTO(IUGTO)%monomialdegree=MDUSC(I,K)
+              DO K=1,NGPMUSC(I)
+! Construction of the uncontracted GBF functions related to the upper 2-spinor basis functions
+                 IUGBF=IUGBF+1
+                 GBF(IUGBF)%center=CENTER(:,M)
+                 GBF(IUGBF)%center_id=M
+                 GBF(IUGBF)%nbrofexponents=1
+                 GBF(IUGBF)%exponents(1)=ALPHA(J,I,M)
+                 GBF(IUGBF)%coefficients(1)=1.D0
+                 GBF(IUGBF)%monomialdegree=MDUSC(I,K)
 ! Construction of the upper 2-spinor basis functions
                  IUA=IUA+1 ; IUB=IUB+1
                  PHI(IUA)%nbrofcontractions=(/1,0/) ; PHI(IUB)%nbrofcontractions=(/0,1/)
-                 PHI(IUA)%contractions(1,1)=CGTO(IUGTO) ; PHI(IUB)%contractions(2,1)=CGTO(IUGTO)
-                 PHI(IUA)%contidx(1,1)=IUGTO ; PHI(IUB)%contidx(2,1)=IUGTO
+                 PHI(IUA)%contractions(1,1)=GBF(IUGBF) ; PHI(IUB)%contractions(2,1)=GBF(IUGBF)
+                 PHI(IUA)%contidx(1,1)=IUGBF ; PHI(IUB)%contidx(2,1)=IUGBF
                  PHI(IUA)%coefficients(1,1)=(1.D0,0.D0) ; PHI(IUB)%coefficients(2,1)=(1.D0,0.D0)
 ! Construction of the lower 2-spinor basis functions (restricted kinetic balance scheme)
                  ILA=ILA+1 ; ILB=ILB+1
@@ -108,44 +108,44 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,CGTO,NCGTO)
                  ICOEF=ICOEF+1
               END DO
               IF (KINBAL) THEN
-! Construction of the contracted CGTO functions related to the lower 2-spinor basis functions when a kinetic balance scheme is used
-                 DO K=1,NGTOLSC(I)
-                    ILGTO=ILGTO+1
-                    CGTO(ILGTO)%center=CENTER(:,M)
-                    CGTO(ILGTO)%center_id=M
-                    CGTO(ILGTO)%nbrofexponents=NBOPIC
+! Construction of the gaussian basis functions related to the lower 2-spinor basis functions when a kinetic balance scheme is used
+                 DO K=1,NGPMLSC(I)
+                    ILGBF=ILGBF+1
+                    GBF(ILGBF)%center=CENTER(:,M)
+                    GBF(ILGBF)%center_id=M
+                    GBF(ILGBF)%nbrofexponents=NBOPIC
                     IPIC=0
                     DO L=IP,IP+NBOPIC-1
                        IPIC=IPIC+1
-                       CGTO(ILGTO)%exponents(IPIC)=ALPHA(L,I,M)
+                       GBF(ILGBF)%exponents(IPIC)=ALPHA(L,I,M)
 ! nota bene: the multiplication of the contraction coefficient by the exponent, when needed, is done here.
                        IF (((I==2).AND.(K==7)).OR.((I==3).AND.(K>=11)).OR.((I==4).AND.(K>=16))) THEN
-                          CGTO(ILGTO)%coefficients(IPIC)=CCOEF(L,J,I,M)
+                          GBF(ILGBF)%coefficients(IPIC)=CCOEF(L,J,I,M)
                        ELSE
-                          CGTO(ILGTO)%coefficients(IPIC)=ALPHA(L,I,M)*CCOEF(L,J,I,M)
+                          GBF(ILGBF)%coefficients(IPIC)=ALPHA(L,I,M)*CCOEF(L,J,I,M)
                        END IF
-                       CGTO(ILGTO)%monomialdegree=MDLSC(I,K)
+                       GBF(ILGBF)%monomialdegree=MDLSC(I,K)
                     END DO
                  END DO
               END IF
-              DO K=1,NGTOUSC(I)
-! Construction of the contracted CGTO functions related to the upper 2-spinor basis functions
-                 IUGTO=IUGTO+1
-                 CGTO(IUGTO)%center=CENTER(:,M)
-                 CGTO(IUGTO)%center_id=M
-                 CGTO(IUGTO)%nbrofexponents=NBOPIC
+              DO K=1,NGPMUSC(I)
+! Construction of the gaussian basis functions related to the upper 2-spinor basis functions
+                 IUGBF=IUGBF+1
+                 GBF(IUGBF)%center=CENTER(:,M)
+                 GBF(IUGBF)%center_id=M
+                 GBF(IUGBF)%nbrofexponents=NBOPIC
                  IPIC=0
                  DO L=IP,IP+NBOPIC-1
                     IPIC=IPIC+1
-                    CGTO(IUGTO)%exponents(IPIC)=ALPHA(L,I,M)
-                    CGTO(IUGTO)%coefficients(IPIC)=CCOEF(L,J,I,M)
+                    GBF(IUGBF)%exponents(IPIC)=ALPHA(L,I,M)
+                    GBF(IUGBF)%coefficients(IPIC)=CCOEF(L,J,I,M)
                  END DO
-                 CGTO(IUGTO)%monomialdegree=MDUSC(I,K)
+                 GBF(IUGBF)%monomialdegree=MDUSC(I,K)
 ! Construction of the upper 2-spinor basis functions
                  IUA=IUA+1 ; IUB=IUB+1
                  PHI(IUA)%nbrofcontractions=(/1,0/) ; PHI(IUB)%nbrofcontractions=(/0,1/)
-                 PHI(IUA)%contractions(1,1)=CGTO(IUGTO) ; PHI(IUB)%contractions(2,1)=CGTO(IUGTO)
-                 PHI(IUA)%contidx(1,1)=IUGTO ; PHI(IUB)%contidx(2,1)=IUGTO
+                 PHI(IUA)%contractions(1,1)=GBF(IUGBF) ; PHI(IUB)%contractions(2,1)=GBF(IUGBF)
+                 PHI(IUA)%contidx(1,1)=IUGBF ; PHI(IUB)%contidx(2,1)=IUGBF
                  PHI(IUA)%coefficients(1,1)=(1.D0,0.D0) ; PHI(IUB)%coefficients(2,1)=(1.D0,0.D0)
 ! Construction of the lower 2-spinor basis functions (restricted kinetic balance scheme)
                  ILA=ILA+1 ; ILB=ILB+1
@@ -158,9 +158,9 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,CGTO,NCGTO)
   END DO
   IF (.NOT.KINBAL) THEN
 ! If no kinetic balance scheme is used, basis functions for the lower 2-spinor are exactly the same as the ones for the upper 2-spinor
-     DO I=1,NCGTO(2)
+     DO I=1,NGBF(2)
 ! HIS IS NOT OPTIMAL IN TERMS OF COMPUTATION...
-        CGTO(NCGTO(1)+I)=CGTO(I)
+        GBF(NGBF(1)+I)=GBF(I)
      END DO
      DO I=1,NBAS(2)
         PHI(NBAS(1)+I)=PHI(I)
@@ -168,28 +168,28 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,CGTO,NCGTO)
   END IF
   WRITE(*,'(a,i4)')' Total number of basis functions =',SUM(NBAS)
   RETURN
-3 IDX=ILGTO-NGTOLSC(I)
+3 IDX=ILGBF-NGPMLSC(I)
   SELECT CASE (I)
      CASE (1)
         PHI(ILA)%nbrofcontractions=(/1,2/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+3) ; PHI(ILA)%contractions(2,1:2)=(/CGTO(IDX+1),CGTO(IDX+2)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+3) ; PHI(ILA)%contractions(2,1:2)=(/GBF(IDX+1),GBF(IDX+2)/)
         PHI(ILA)%contidx(1,1)=IDX+3 ; PHI(ILA)%contidx(2,1:2)=(/IDX+1,IDX+2/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:2)=(/(0.D0,2.D0),(-2.D0,0.D0)/)
      CASE (2)
      SELECT CASE (K)
         CASE (1)
         PHI(ILA)%nbrofcontractions=(/1,3/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+1),CGTO(IDX+2),CGTO(IDX+7)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+1),GBF(IDX+2),GBF(IDX+7)/)
         PHI(ILA)%contidx(1,1)=IDX+3 ; PHI(ILA)%contidx(2,1:3)=(/IDX+1,IDX+2,IDX+7/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-1.D0)/)
         CASE (2)
         PHI(ILA)%nbrofcontractions=(/1,3/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+5) ; PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+2),CGTO(IDX+4),CGTO(IDX+7)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+5) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+2),GBF(IDX+4),GBF(IDX+7)/)
         PHI(ILA)%contidx(1,1)=IDX+5 ; PHI(ILA)%contidx(2,1:3)=(/IDX+2,IDX+4,IDX+7/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0)/)
         CASE (3)
         PHI(ILA)%nbrofcontractions=(/2,2/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+6),CGTO(IDX+7)/) ; PHI(ILA)%contractions(2,1:2)=(/CGTO(IDX+3),CGTO(IDX+5)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+6),GBF(IDX+7)/) ; PHI(ILA)%contractions(2,1:2)=(/GBF(IDX+3),GBF(IDX+5)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+6,IDX+7/) ; PHI(ILA)%contidx(2,1:2)=(/IDX+3,IDX+5/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/) ; PHI(ILA)%coefficients(2,1:2)=(/(0.D0,2.D0),(-2.D0,0.D0)/)
      END SELECT
@@ -197,36 +197,36 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,CGTO,NCGTO)
      SELECT CASE (K)
         CASE (1)
         PHI(ILA)%nbrofcontractions=(/1,3/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+1),CGTO(IDX+2),CGTO(IDX+11)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+1),GBF(IDX+2),GBF(IDX+11)/)
         PHI(ILA)%contidx(1,1)=IDX+3 ; PHI(ILA)%contidx(2,1:3)=(/IDX+1,IDX+2,IDX+11/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-2.D0)/)
         CASE (2)
         PHI(ILA)%nbrofcontractions=(/1,4/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+6) ; PHI(ILA)%contractions(2,1:4)=(/CGTO(IDX+2),CGTO(IDX+4),CGTO(IDX+11),CGTO(IDX+12)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+6) ; PHI(ILA)%contractions(2,1:4)=(/GBF(IDX+2),GBF(IDX+4),GBF(IDX+11),GBF(IDX+12)/)
         PHI(ILA)%contidx(1,1)=IDX+6 ; PHI(ILA)%contidx(2,1:4)=(/IDX+2,IDX+4,IDX+11,IDX+12/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:4)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0),(0.D0,-1.D0)/)
         CASE (3)
         PHI(ILA)%nbrofcontractions=(/2,3/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+5),CGTO(IDX+11)/)
-        PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+3),CGTO(IDX+6),CGTO(IDX+13)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+5),GBF(IDX+11)/)
+        PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+3),GBF(IDX+6),GBF(IDX+13)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+5,IDX+11/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+3,IDX+6,IDX+13/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-1.D0)/)
         CASE (4)
         PHI(ILA)%nbrofcontractions=(/1,3/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+8) ; PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+4),CGTO(IDX+7),CGTO(IDX+12)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+8) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+4),GBF(IDX+7),GBF(IDX+12)/)
         PHI(ILA)%contidx(1,1)=IDX+8 ; PHI(ILA)%contidx(2,1:3)=(/IDX+4,IDX+7,IDX+12/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(2.D0,0.D0)/)
         CASE (5)
         PHI(ILA)%nbrofcontractions=(/2,3/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+9),CGTO(IDX+12)/)
-        PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+6),CGTO(IDX+8),CGTO(IDX+13)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+9),GBF(IDX+12)/)
+        PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+6),GBF(IDX+8),GBF(IDX+13)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+9,IDX+12/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+6,IDX+8,IDX+13/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0)/)
         CASE (6)
         PHI(ILA)%nbrofcontractions=(/2,2/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+10),CGTO(IDX+13)/) ; PHI(ILA)%contractions(2,1:2)=(/CGTO(IDX+5),CGTO(IDX+9)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+10),GBF(IDX+13)/) ; PHI(ILA)%contractions(2,1:2)=(/GBF(IDX+5),GBF(IDX+9)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+10,IDX+13/) ; PHI(ILA)%contidx(2,1:2)=(/IDX+5,IDX+9/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-2.D0)/) ; PHI(ILA)%coefficients(2,1:2)=(/(0.D0,2.D0),(-2.D0,0.D0)/)
      END SELECT
@@ -234,64 +234,64 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,CGTO,NCGTO)
      SELECT CASE (K)
         CASE (1)
         PHI(ILA)%nbrofcontractions=(/1,3/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+1),CGTO(IDX+2),CGTO(IDX+16)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+1),GBF(IDX+2),GBF(IDX+16)/)
         PHI(ILA)%contidx(1,1)=IDX+3 ; PHI(ILA)%contidx(2,1:3)=(/IDX+1,IDX+2,IDX+16/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-3.D0)/)
         CASE (2)
         PHI(ILA)%nbrofcontractions=(/1,4/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+5)
-        PHI(ILA)%contractions(2,1:4)=(/CGTO(IDX+2),CGTO(IDX+4),CGTO(IDX+16),CGTO(IDX+17)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+5)
+        PHI(ILA)%contractions(2,1:4)=(/GBF(IDX+2),GBF(IDX+4),GBF(IDX+16),GBF(IDX+17)/)
         PHI(ILA)%contidx(1,1)=IDX+5 ; PHI(ILA)%contidx(2,1:4)=(/IDX+2,IDX+4,IDX+16,IDX+17/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0)
         PHI(ILA)%coefficients(2,1:4)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0),(0.D0,-2.D0)/)
         CASE (3)
         PHI(ILA)%nbrofcontractions=(/2,3/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+6),CGTO(IDX+16)/)
-        PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+3),CGTO(IDX+5),CGTO(IDX+18)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+6),GBF(IDX+16)/)
+        PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+3),GBF(IDX+5),GBF(IDX+18)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+6,IDX+16/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+3,IDX+5,IDX+18/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-2.D0)/)
         CASE (4)
         PHI(ILA)%nbrofcontractions=(/1,4/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+8) ; PHI(ILA)%contractions(2,1:4)=(/CGTO(IDX+4),CGTO(IDX+7),CGTO(IDX+17),CGTO(IDX+19)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+8) ; PHI(ILA)%contractions(2,1:4)=(/GBF(IDX+4),GBF(IDX+7),GBF(IDX+17),GBF(IDX+19)/)
         PHI(ILA)%contidx(1,1)=IDX+8 ; PHI(ILA)%contidx(2,1:4)=(/IDX+4,IDX+7,IDX+17,IDX+19/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:4)=(/(0.D0,2.D0),(-2.D0,0.D0),(2.D0,0.D0),(0.D0,-1.D0)/)
         CASE (5)
         PHI(ILA)%nbrofcontractions=(/2,3/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+10),CGTO(IDX+18)/)
-        PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+6),CGTO(IDX+9),CGTO(IDX+21)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+10),GBF(IDX+18)/)
+        PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+6),GBF(IDX+9),GBF(IDX+21)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+10,IDX+18/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+6,IDX+9,IDX+21/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-2.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-1.D0)/)
         CASE (6)
         PHI(ILA)%nbrofcontractions=(/2,4/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+9),CGTO(IDX+17)/)
-        PHI(ILA)%contractions(2,1:4)=(/CGTO(IDX+5),CGTO(IDX+8),CGTO(IDX+18),CGTO(IDX+20)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+9),GBF(IDX+17)/)
+        PHI(ILA)%contractions(2,1:4)=(/GBF(IDX+5),GBF(IDX+8),GBF(IDX+18),GBF(IDX+20)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+9,IDX+17/) ; PHI(ILA)%contidx(2,1:4)=(/IDX+5,IDX+8,IDX+18,IDX+20/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:4)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0),(0.D0,-1.D0)/)
         CASE (7)
         PHI(ILA)%nbrofcontractions=(/1,3/)
-        PHI(ILA)%contractions(1,1)=CGTO(IDX+12) ; PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+10),CGTO(IDX+11),CGTO(IDX+19)/)
+        PHI(ILA)%contractions(1,1)=GBF(IDX+12) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+10),GBF(IDX+11),GBF(IDX+19)/)
         PHI(ILA)%contidx(1,1)=IDX+12 ; PHI(ILA)%contidx(2,1:3)=(/IDX+10,IDX+11,IDX+19/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(3.D0,0.D0)/)
         CASE (8)
         PHI(ILA)%nbrofcontractions=(/2,3/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+13),CGTO(IDX+19)/)
-        PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+8),CGTO(IDX+12),CGTO(IDX+20)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+13),GBF(IDX+19)/)
+        PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+8),GBF(IDX+12),GBF(IDX+20)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+13,IDX+19/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+8,IDX+12,IDX+20/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(2.D0,0.D0)/)
         CASE (9)
         PHI(ILA)%nbrofcontractions=(/2,3/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+14),CGTO(IDX+20)/)
-        PHI(ILA)%contractions(2,1:3)=(/CGTO(IDX+9),CGTO(IDX+13),CGTO(IDX+21)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+14),GBF(IDX+20)/)
+        PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+9),GBF(IDX+13),GBF(IDX+21)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+14,IDX+20/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+9,IDX+13,IDX+21/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-2.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0)/)
         CASE (10)
         PHI(ILA)%nbrofcontractions=(/2,2/)
-        PHI(ILA)%contractions(1,1:2)=(/CGTO(IDX+15),CGTO(IDX+21)/) ; PHI(ILA)%contractions(2,1:2)=(/CGTO(IDX+10),CGTO(IDX+14)/)
+        PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+15),GBF(IDX+21)/) ; PHI(ILA)%contractions(2,1:2)=(/GBF(IDX+10),GBF(IDX+14)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+15,IDX+21/) ; PHI(ILA)%contidx(2,1:2)=(/IDX+10,IDX+14/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-3.D0)/) ; PHI(ILA)%coefficients(2,1:2)=(/(0.D0,2.D0),(-2.D0,0.D0)/)
      END SELECT
@@ -313,18 +313,19 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,CGTO,NCGTO)
 END SUBROUTINE FORMBASIS_relativistic
 
 SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
-! Subroutine that builds the GTO basis functions for the molecular system considered, from coefficients either read in a file (basis set from the existing literature) or depending on some given parameters (even-tempered basis set).
-  USE basis_parameters ; USE data_parameters
+! Subroutine that builds the gaussian basis functions for the molecular system considered, from coefficients either read in a file (basis set from the existing literature) or depending on some given parameters (even-tempered basis set).
+  USE basis_parameters ; USE data_parameters ; USE mathematical_functions ; USE constants
   IMPLICIT NONE
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: NBAS
 
+  INTEGER :: I,J,K,L,M,IBF,IP,IPIC,ICOEF,NBOPIC
   INTEGER,DIMENSION(NBN) :: HAQN
+  INTEGER,DIMENSION(1,NBN) :: NBASN
   INTEGER,DIMENSION(MAQN,NBN) :: NOP,NOC
+  DOUBLE PRECISION :: NCOEF
   DOUBLE PRECISION,DIMENSION(MNOP,MAQN,NBN) :: ALPHA
   DOUBLE PRECISION,DIMENSION(MNOP,MNOC,MAQN,NBN) :: CCOEF
-  INTEGER,DIMENSION(1,NBN) :: NBASN
-  INTEGER :: I,J,K,L,M,IBF,IP,IPIC,ICOEF,NBOPIC
 
   ALLOCATE(NBAS(1:1))
   IF (LIBRARY) THEN
@@ -339,7 +340,7 @@ SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
         DO I=1,HAQN(M)
            IF (UNCONT) THEN
               DO J=1,NOP(I,M)
-                 DO K=1,NGTOUSC(I)
+                 DO K=1,NGPMUSC(I)
                     IBF=IBF+1
                     PHI(IBF)%center=CENTER(:,M)
                     PHI(IBF)%center_id=M
@@ -360,18 +361,21 @@ SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
                     IF (ICOEF==NOP(I,M)) EXIT
                     ICOEF=ICOEF+1
                  END DO
-                 DO K=1,NGTOUSC(I)
+                 DO K=1,NGPMUSC(I)
                     IBF=IBF+1
                     PHI(IBF)%center=CENTER(:,M)
                     PHI(IBF)%center_id=M
                     PHI(IBF)%nbrofexponents=NBOPIC
+                    PHI(IBF)%monomialdegree=MDUSC(I,K)
                     IPIC=0
                     DO L=IP,IP+NBOPIC-1
                        IPIC=IPIC+1
                        PHI(IBF)%exponents(IPIC)=ALPHA(L,I,M)
-                       PHI(IBF)%coefficients(IPIC)=CCOEF(L,J,I,M)
+                       NCOEF=SQRT((2.D0*ALPHA(L,I,M)/PI)**1.5D0*(4.D0*ALPHA(L,I,M))**SUM(PHI(IBF)%monomialdegree) &
+ &                                /(DFACT(2*PHI(IBF)%monomialdegree(1)-1)*DFACT(2*PHI(IBF)%monomialdegree(2)-1)   &
+ &                                  *DFACT(2*PHI(IBF)%monomialdegree(3)-1)))
+                       PHI(IBF)%coefficients(IPIC)=NCOEF*CCOEF(L,J,I,M)
                     END DO
-                    PHI(IBF)%monomialdegree=MDUSC(I,K)
                  END DO
                  IP=IP+NBOPIC
               END DO
@@ -395,7 +399,7 @@ SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
   WRITE(*,'(a,i4)')' Total number of basis functions =',SUM(NBAS)
 END SUBROUTINE FORMBASIS_nonrelativistic
 
-SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NCGTO)
+SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NGBF)
 ! Subroutine that reads (for a given chemical element) the coefficients of the functions of a chosen basis in the DALTON library and computes the number of basis functions (and related cartesian gaussian-type orbital functions) for the components of the upper and lower 2-spinors with respect to the indicated options (contracted basis or not, use of the "kinetic balance" process or not, etc...)
 ! Note: the name (and path) of the file containing the basis name is stored in the variable BASISFILE from the module basis_parameters.
 ! Z : atomic number of the element under consideration
@@ -415,7 +419,7 @@ SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NCGTO)
   DOUBLE PRECISION,DIMENSION(MNOP,MAQN),INTENT(OUT) :: ALPHA
   DOUBLE PRECISION,DIMENSION(MNOP,MNOC,MAQN),INTENT(OUT) :: CCOEF
   INTEGER,DIMENSION(:),INTENT(OUT) :: NBAS
-  INTEGER,DIMENSION(2),INTENT(OUT),OPTIONAL :: NCGTO
+  INTEGER,DIMENSION(2),INTENT(OUT),OPTIONAL :: NGBF
 
   INTEGER :: LUBAS,PRINUM,CONNUM,IDUMMY,I
   LOGICAL :: LEX,CHKNELM
@@ -446,39 +450,39 @@ SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NCGTO)
 ! Computation of the number of basis functions
   IF (RELATIVISTIC) THEN
 ! relativistic case
-     NBAS=0 ; NCGTO=0
+     NBAS=0 ; NGBF=0
      DO I=1,HAQN
         IF (UNCONT) THEN
 ! uncontracted basis
-           NBAS(1)=NBAS(1)+NOP(I)*NGTOUSC(I) 
-           NCGTO(1)=NCGTO(1)+NOP(I)*NGTOUSC(I)
+           NBAS(1)=NBAS(1)+NOP(I)*NGPMUSC(I) 
+           NGBF(1)=NGBF(1)+NOP(I)*NGPMUSC(I)
            IF (KINBAL) THEN
-              NCGTO(2)=NCGTO(2)+NOP(I)*NGTOLSC(I)
-              IF (UKB) NBAS(2)=NBAS(2)+NOP(I)*NGTOLSC(I)
+              NGBF(2)=NGBF(2)+NOP(I)*NGPMLSC(I)
+              IF (UKB) NBAS(2)=NBAS(2)+NOP(I)*NGPMLSC(I)
            END IF
         ELSE
 ! a priori contracted basis
            IF (NOC(I)/=0) THEN
-              NBAS(1)=NBAS(1)+NOC(I)*NGTOUSC(I)
-              NCGTO(1)=NCGTO(1)+NOC(I)*NGTOUSC(I)
+              NBAS(1)=NBAS(1)+NOC(I)*NGPMUSC(I)
+              NGBF(1)=NGBF(1)+NOC(I)*NGPMUSC(I)
            ELSE
-              NBAS(1)=NBAS(1)+NOP(I)*NGTOUSC(I)
-              NCGTO(1)=NCGTO(1)+NOP(I)*NGTOUSC(I)
+              NBAS(1)=NBAS(1)+NOP(I)*NGPMUSC(I)
+              NGBF(1)=NGBF(1)+NOP(I)*NGPMUSC(I)
            END IF
            IF (KINBAL) THEN
               IF (NOC(I)/=0) THEN
-                 NCGTO(2)=NCGTO(2)+NOC(I)*NGTOLSC(I)
-                 IF (UKB) NBAS(2)=NBAS(2)+NOC(I)*NGTOLSC(I)
+                 NGBF(2)=NGBF(2)+NOC(I)*NGPMLSC(I)
+                 IF (UKB) NBAS(2)=NBAS(2)+NOC(I)*NGPMLSC(I)
               ELSE
-                 NCGTO(2)=NCGTO(2)+NOP(I)*NGTOLSC(I)
-                 IF (UKB) NBAS(2)=NBAS(2)+NOP(I)*NGTOLSC(I)
+                 NGBF(2)=NGBF(2)+NOP(I)*NGPMLSC(I)
+                 IF (UKB) NBAS(2)=NBAS(2)+NOP(I)*NGPMLSC(I)
               END IF
            END IF
         END IF
      END DO
      IF (KINBAL.AND..NOT.UKB) NBAS(2)=NBAS(1)
      IF (.NOT.KINBAL) THEN
-        NBAS(2)=NBAS(1) ; NCGTO(2)=NCGTO(1)
+        NBAS(2)=NBAS(1) ; NGBF(2)=NGBF(1)
      END IF
      NBAS=2*NBAS
   ELSE
@@ -487,13 +491,13 @@ SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NCGTO)
      DO I=1,HAQN
         IF (UNCONT) THEN
 ! uncontracted basis
-           NBAS(1)=NBAS(1)+NOP(I)*NGTOUSC(I)
+           NBAS(1)=NBAS(1)+NOP(I)*NGPMUSC(I)
         ELSE
 ! a priori contracted basis
            IF (NOC(I)/=0) THEN
-              NBAS(1)=NBAS(1)+NOC(I)*NGTOUSC(I)
+              NBAS(1)=NBAS(1)+NOC(I)*NGPMUSC(I)
            ELSE
-              NBAS(1)=NBAS(1)+NOP(I)*NGTOUSC(I)
+              NBAS(1)=NBAS(1)+NOP(I)*NGPMUSC(I)
            END IF
         END IF
      END DO
@@ -502,7 +506,7 @@ SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NCGTO)
 ! MESSAGES
 2 WRITE(*,'(a)')' Subroutine READBASIS: the file containing the basis could not be found.'
   GO TO 4
-3 WRITE(*,'(a)')' Subroutine READBASIS: this GTO type is not supported!'
+3 WRITE(*,'(a)')' Subroutine READBASIS: this type of gaussian basis function is not supported!'
 4 STOP
 END SUBROUTINE READBASIS
 
@@ -677,7 +681,7 @@ SUBROUTINE CONLIN(NOC,NUMLIN)
 END SUBROUTINE CONLIN
 
 FUNCTION MDUSC(I,J) RESULT (MONOMIALDEGREE)
-! Function that returns the monomial degree of each cartesian gaussian-type orbital (CGTO) function of shell type "I" (where "I=1" means "s", "I=2" means "p", "I=3" means "d", etc...) appearing in the components of the upper 2-spinor basis functions.
+! Function that returns the monomial degree of each cartesian gaussian primitive function of shell type "I" (where "I=1" means "s", "I=2" means "p", "I=3" means "d", etc...) appearing in the components of the upper 2-spinor basis functions.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J
   INTEGER,DIMENSION(3) :: MONOMIALDEGREE
@@ -721,8 +725,8 @@ FUNCTION MDUSC(I,J) RESULT (MONOMIALDEGREE)
 END FUNCTION MDUSC
 
 FUNCTION MDLSC(I,J) RESULT (MONOMIALDEGREE)
-! Function that returns the monomial degree of each cartesian gaussian-type orbital (CGTO) function appearing in the components of the lower 2-spinor basis functions when a kinetic balance scheme is applied on the upper 2-spinor basis functions.
-! Note: the integer I refers to the shell type of the CGTO functions appearing in the components of the upper 2-spinor basis function to which the (R/U)KB scheme is applied (see the function MDUSC above).
+! Function that returns the monomial degree of each cartesian gaussian primitive function appearing in the components of the lower 2-spinor basis functions when a kinetic balance scheme is applied on the upper 2-spinor basis functions.
+! Note: the integer I refers to the shell type of the gaussian basis functions appearing in the components of the upper 2-spinor basis function to which the (R/U)KB scheme is applied (see the function MDUSC above).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J
   INTEGER,DIMENSION(3) :: MONOMIALDEGREE

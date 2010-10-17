@@ -8,10 +8,10 @@ CSD
 * The first entry is the number of atoms in the system.
 * For each atom, the nucleus charge and position are given.
 * The last entry is the total number of electrons in the system
-Ne atom
+C atom
 1
-10 0. 0. 0.
-10
+6 0. 0. 0.
+6
 ## BASIS DEFINITION
 * The first entry is the keyword 'BASIS' followed by the name of the basis set contained in the basis/ directory or the keywords 'EVEN-TEMPERED BASIS'.
 * The second entry is the choice of CONTRACTED or UNCONTRACTED basis functions for the calculation or the number of exponents for the even-tempered basis set. In the last case, the first term and the common ratio of the geometric series must be given, in this order, as two separate entries.
@@ -28,11 +28,8 @@ RESTRICTED
 * - the maximum number of iterations allowed,
 * - two indicators to know if the bielectronic integrals are directly computed and, if not, if their list and values are stored on disk or not.
 * - an indicator to make the computation without using the the SS-bielectronic integrals in the relativistic case.
-4
 1
-2
-3
-5
+1
 1.E-6
 100
 NOTDIRECT
