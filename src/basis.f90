@@ -371,6 +371,7 @@ SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
                     DO L=IP,IP+NBOPIC-1
                        IPIC=IPIC+1
                        PHI(IBF)%exponents(IPIC)=ALPHA(L,I,M)
+! normalization coefficient
                        NCOEF=SQRT((2.D0*ALPHA(L,I,M)/PI)**1.5D0*(4.D0*ALPHA(L,I,M))**SUM(PHI(IBF)%monomialdegree) &
  &                                /(DFACT(2*PHI(IBF)%monomialdegree(1)-1)*DFACT(2*PHI(IBF)%monomialdegree(2)-1)   &
  &                                  *DFACT(2*PHI(IBF)%monomialdegree(3)-1)))
