@@ -20,8 +20,6 @@ CO molecule
 * The next two entries are are for the relativistic case: application or not of the Kinetic Balance scheme (KINBAL/NOTKINBAL) and, if so, choice between the RESTRICTED or UNRESTRICTED scheme.
 BASIS 6-31G*
 CONTRACTED
-KINBAL
-RESTRICTED
 ## SCF PARAMETERS OF THE COMPUTATION
 * They are:
 * - the number of different scf algorithms to be used on the considered case,
