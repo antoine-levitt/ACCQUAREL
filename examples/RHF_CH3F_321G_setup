@@ -8,11 +8,14 @@ RHF
 * The first entry is the number of atoms in the system.
 * For each atom, the nucleus charge and position are given.
 * The last entry is the total number of electrons in the system
-Cr2 molecule
-2
-24 0. 0. 0.
-24 3.401507025 0. 0.
-48
+CH3F molecule
+5
+6  0.              0.              0.426596314746
+9  0.              0.             -0.98392891998
+1  0.509715617414  0.882853346772  0.786416057331
+1  0.509715617414 -0.882853346772  0.786416057331
+1 -1.01943123483   0.              0.786416057331
+18
 ## BASIS DEFINITION
 * The first entry is the keyword 'BASIS' followed by the name of the basis set contained in the basis/ directory or the keywords 'EVEN-TEMPERED BASIS'.
 * The second entry is the choice of CONTRACTED or UNCONTRACTED basis functions for the calculation or the number of exponents for the even-tempered basis set. In the last case, the first term and the common ratio of the geometric series must be given, in this order, as two separate entries.
@@ -36,6 +39,8 @@ CONTRACTED
 100
 NOTDIRECT
 MEMORY
+DISK
+SS
 ## LEVEL-SHIFTING ALGORITHM PARAMETERS
 * Value of the shift
 1.1
