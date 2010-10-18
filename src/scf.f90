@@ -8,7 +8,6 @@ CONTAINS
 SUBROUTINE CHECKORB(EIG,N,LOON)
 ! Subroutine that determines the number of the lowest and highest occupied electronic orbitals and checks if they are both in the spectral gap (in the relavistic case).
   USE case_parameters ; USE data_parameters
-  IMPLICIT NONE
   DOUBLE PRECISION,DIMENSION(N),INTENT(IN) :: EIG
   INTEGER,INTENT(IN) :: N
   INTEGER,INTENT(OUT) :: LOON
@@ -40,7 +39,6 @@ END SUBROUTINE CHECKORB
 SUBROUTINE CHECKNUMCONV_relativistic(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock equations (restricted closed-shell Hartree-Fock and closed-shell Dirac-Hartree-Fock formalisms).
   USE matrix_tools ; USE metric_relativistic
-  IMPLICIT NONE
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PDMN,PDMO,PFM
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,INTENT(IN) :: ETOTN,ETOTO,TRSHLD
@@ -82,7 +80,6 @@ END SUBROUTINE CHECKNUMCONV_relativistic
 SUBROUTINE CHECKNUMCONV_RHF(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock equations (restricted closed-shell Hartree-Fock formalism).
   USE matrix_tools ; USE metric_nonrelativistic
-  IMPLICIT NONE
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PDMN,PDMO,PFM
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,INTENT(IN) :: ETOTN,ETOTO,TRSHLD
@@ -124,7 +121,6 @@ END SUBROUTINE CHECKNUMCONV_RHF
 SUBROUTINE CHECKNUMCONV_AOCOSDHF(PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock type equations (average-of-configuration open-shell Dirac-Hartree-Fock formalism).
   USE matrix_tools ; USE metric_relativistic
-  IMPLICIT NONE
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,INTENT(IN) :: ETOTN,ETOTO,TRSHLD
@@ -168,7 +164,6 @@ END SUBROUTINE CHECKNUMCONV_AOCOSDHF
 SUBROUTINE CHECKNUMCONV_UHF(PDMN,PDMO,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock type equations (unrestricted open-shell Hartree-Fock formalism).
   USE matrix_tools ; USE metric_nonrelativistic
-  IMPLICIT NONE
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PDMN,PDMO
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,INTENT(IN) :: ETOTN,ETOTO,TRSHLD
@@ -211,7 +206,6 @@ CONTAINS
 FUNCTION DENSITY_POINTWISE_VALUE_relativistic(PDM,PHI,NBAST,POINT) RESULT(VALUE)
 ! Function that computes the value of the electronic density associated to a given density matrix (only the upper triangular part of this matrix is stored in packed format) at a given point of space.
   USE basis_parameters ; USE matrix_tools
-  IMPLICIT NONE
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NBAST
@@ -232,7 +226,6 @@ END FUNCTION DENSITY_POINTWISE_VALUE_relativistic
 FUNCTION DENSITY_POINTWISE_VALUE_nonrelativistic(PDM,PHI,NBAST,POINT) RESULT(VALUE)
 ! Function that computes the value of the electronic density associated to a given density matrix (only the upper triangular part of this matrix is stored in packed format) at a given point of space.
   USE basis_parameters ; USE matrix_tools
-  IMPLICIT NONE
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: PDM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NBAST
@@ -250,7 +243,6 @@ END FUNCTION DENSITY_POINTWISE_VALUE_nonrelativistic
 
 SUBROUTINE EXPORT_DENSITY_relativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENAME,FILEFORMAT)
   USE basis_parameters ; USE data_parameters ; USE matrices
-  IMPLICIT NONE
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PDM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NBAST,NPOINTS
@@ -301,7 +293,6 @@ END SUBROUTINE EXPORT_DENSITY_relativistic
 
 SUBROUTINE EXPORT_DENSITY_nonrelativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENAME,FILEFORMAT)
   USE basis_parameters ; USE data_parameters ; USE matrices
-  IMPLICIT NONE
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2) :: PDM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NBAST,NPOINTS

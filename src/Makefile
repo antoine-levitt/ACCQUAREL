@@ -4,7 +4,9 @@ F95 = gfortran
 #F95 = ifort
 
 # common to compilers and linker
-FLAGS = -O3 -g
+DEBUGFLAGS = -O0 -g -fbounds-check -fimplicit-none -ffpe-trap=invalid,zero,denormal
+PRODFLAGS = -O3 -g -fimplicit-none
+FLAGS = $(PRODFLAGS)
 
 ifndef ASPICROOT
    ASPICROOT=../A.S.P.I.C

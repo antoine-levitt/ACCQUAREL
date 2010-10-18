@@ -5,10 +5,8 @@ SUBROUTINE scrsho(func)
 ! Reference: W. H. Press, B. P. Flannery, S. A. Teukolsky and W. T. Vetterling, Numerical Recipes in Fortran 90: the art of parallel scientific computing, Cambridge University Press, 1986-1996.
 ! For interactive "dumb terminal" use. Produce a crude graph of the function func over the prompted-for interval x1,x2. Query for another plot until the user signals satisfaction.
 ! Parameters: Number of horizontal and vertical positions in display.
-  IMPLICIT NONE
   INTERFACE
     DOUBLE PRECISION FUNCTION func(x)
-      IMPLICIT NONE
       DOUBLE PRECISION,INTENT(IN) :: x
     END FUNCTION func
   END INTERFACE
@@ -56,12 +54,10 @@ END SUBROUTINE scrsho
 FUNCTION rtbis(func,x1,x2,xacc)
 ! Reference: W. H. Press, B. P. Flannery, S. A. Teukolsky and W. T. Vetterling, Numerical Recipes in Fortran 90: the art of parallel scientific computing, Cambridge University Press, 1986-1996.
 ! Using bisection, find the root of a function func known to lie between x1 and x2. The root, returned as rtbis, will be refined until its accuracy is ±xacc.
-  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: x1,x2,xacc
   DOUBLE PRECISION :: rtbis
   INTERFACE
     DOUBLE PRECISION FUNCTION func(x)
-      IMPLICIT NONE
       DOUBLE PRECISION,INTENT(IN) :: x
     END FUNCTION func
   END INTERFACE
@@ -92,12 +88,10 @@ END FUNCTION rtbis
 FUNCTION rtsafe(funcd,x1,x2,xacc)
 ! Reference: W. H. Press, B. P. Flannery, S. A. Teukolsky and W. T. Vetterling, Numerical Recipes in Fortran 90: the art of parallel scientific computing, Cambridge University Press, 1986-1996.
 ! Using a combination of Newton-Raphson and bisection, find the root of a function bracketed between x1 and x2. The root, returned as the function value rtsafe, will be refined until its accuracy is known within ±xacc. funcd is a user-supplied subroutine that returns both the function value and the first derivative of the function.
-  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: x1,x2,xacc
   DOUBLE PRECISION :: rtsafe
   INTERFACE
     SUBROUTINE funcd(x,fval,fderiv)
-      IMPLICIT NONE
       DOUBLE PRECISION,INTENT(IN) :: x
       DOUBLE PRECISION,INTENT(OUT) :: fval,fderiv
     END SUBROUTINE funcd

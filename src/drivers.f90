@@ -3,7 +3,6 @@ SUBROUTINE DRIVER_relativistic
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools
   USE metric_relativistic ; USE scf_algorithms
-  IMPLICIT NONE
   INTEGER :: NBAST
   TYPE(twospinor),DIMENSION(:),ALLOCATABLE :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
@@ -165,7 +164,6 @@ SUBROUTINE DRIVER_nonrelativistic
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE metric_nonrelativistic
   USE scf_algorithms
-  IMPLICIT NONE
   INTEGER :: NBAST
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
@@ -319,7 +317,6 @@ SUBROUTINE DRIVER_boson_star
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE common_functions
   USE metric_nonrelativistic ; USE scf_tools ; USE rootfinding_tools ; USE constants
-  IMPLICIT NONE
   INTEGER :: NBAST,ITER,I,J,INFO
   INTEGER,TARGET :: RANK
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
