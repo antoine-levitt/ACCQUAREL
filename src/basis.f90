@@ -1,6 +1,5 @@
 MODULE basis
   USE iso_c_binding
-  IMPLICIT NONE
   INTEGER,DIMENSION(4),PARAMETER :: NGPMUSC=(/1,3,6,10/)
   INTEGER,DIMENSION(4),PARAMETER :: NGPMLSC=(/3,7,13,21/)
 
@@ -12,7 +11,6 @@ CONTAINS
 SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
 ! Subroutine that builds the 2-spinor basis functions and related contracted cartesian Gaussian-type orbital functions for the molecular system considered, from the coefficients read in a file.
   USE basis_parameters ; USE data_parameters
-  IMPLICIT NONE
   TYPE(twospinor),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: NBAS
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: GBF
@@ -315,7 +313,6 @@ END SUBROUTINE FORMBASIS_relativistic
 SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
 ! Subroutine that builds the gaussian basis functions for the molecular system considered, from coefficients either read in a file (basis set from the existing literature) or depending on some given parameters (even-tempered basis set).
   USE basis_parameters ; USE data_parameters ; USE mathematical_functions ; USE constants
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: NBAS
 
@@ -413,7 +410,6 @@ SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NGBF)
 ! ALPHA : array containing the exponents of the primitives for each type of basis functions
 ! CCOEF : array containing the contraction coefficients for each type of basis functions
   USE case_parameters ; USE basis_parameters
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: Z
   INTEGER,INTENT(OUT) :: HAQN
   INTEGER,DIMENSION(MAQN),INTENT(OUT) :: NOP,NOC
@@ -512,7 +508,6 @@ SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NGBF)
 END SUBROUTINE READBASIS
 
 SUBROUTINE FINDELM(Z,BASNAM,LUBAS)
-  IMPLICIT NONE
   INTEGER :: Z,LUBAS
   CHARACTER(*) :: BASNAM
   CHARACTER(20) :: STRING
@@ -542,7 +537,6 @@ SUBROUTINE FINDELM(Z,BASNAM,LUBAS)
 END SUBROUTINE FINDELM
 
 SUBROUTINE READPCN(CHKNELM,PRINUM,CONNUM,INTISG,BASNAM,LUBAS)
-  IMPLICIT NONE
   LOGICAL :: CHKNELM
   INTEGER :: PRINUM,CONNUM,INTISG,LUBAS
   CHARACTER(*) :: BASNAM
@@ -576,7 +570,6 @@ SUBROUTINE READPCN(CHKNELM,PRINUM,CONNUM,INTISG,BASNAM,LUBAS)
 END SUBROUTINE READPCN
 
 SUBROUTINE READECC(MNOP,MNOC,NOP,NOC,ALPHA,CCOEF,BASNAM,LUBAS)
-  IMPLICIT NONE
   INTEGER :: MNOP,MNOC,NOP,NOC,LUBAS
   DOUBLE PRECISION,DIMENSION(MNOP) :: ALPHA
   DOUBLE PRECISION,DIMENSION(MNOP,MNOC) :: CCOEF
@@ -654,7 +647,6 @@ END SUBROUTINE READECC
 
 SUBROUTINE CHBLANK(BLANK,STRING)
 ! Subroutine that checks whether a line is a blank one or not.
-  IMPLICIT NONE
   LOGICAL :: BLANK
   CHARACTER*(*) :: STRING
   INTEGER :: J
@@ -668,7 +660,6 @@ END SUBROUTINE CHBLANK
 
 SUBROUTINE CONLIN(NOC,NUMLIN)
 ! Subroutine that finds out on how many lines the contraction coefficients are written in a given block (knowing there at most NUMCCA coefficients on the first line and NUMCCB on the following ones), and returns that number.
-  IMPLICIT NONE
   INTEGER :: NOC,NUMLIN
   INTEGER,PARAMETER :: NUMCCA=6,NUMCCB=7
 
@@ -683,7 +674,6 @@ END SUBROUTINE CONLIN
 
 FUNCTION MDUSC(I,J) RESULT (MONOMIALDEGREE)
 ! Function that returns the monomial degree of each cartesian gaussian primitive function of shell type "I" (where "I=1" means "s", "I=2" means "p", "I=3" means "d", etc...) appearing in the components of the upper 2-spinor basis functions.
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J
   INTEGER,DIMENSION(3) :: MONOMIALDEGREE
 
@@ -728,7 +718,6 @@ END FUNCTION MDUSC
 FUNCTION MDLSC(I,J) RESULT (MONOMIALDEGREE)
 ! Function that returns the monomial degree of each cartesian gaussian primitive function appearing in the components of the lower 2-spinor basis functions when a kinetic balance scheme is applied on the upper 2-spinor basis functions.
 ! Note: the integer I refers to the shell type of the gaussian basis functions appearing in the components of the upper 2-spinor basis function to which the (R/U)KB scheme is applied (see the function MDUSC above).
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J
   INTEGER,DIMENSION(3) :: MONOMIALDEGREE
 

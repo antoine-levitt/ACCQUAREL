@@ -1,6 +1,5 @@
 PROGRAM ACCQUAREL
   USE setup_tools ; USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters
-  IMPLICIT NONE
   DOUBLE PRECISION :: STARTTIME,ENDTIME
 
   CALL CPU_TIME(STARTTIME)

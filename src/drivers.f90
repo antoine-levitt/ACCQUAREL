@@ -3,7 +3,6 @@ SUBROUTINE DRIVER_relativistic
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools
   USE metric_relativistic ; USE scf_algorithms
-  IMPLICIT NONE
   INTEGER :: NBAST
   TYPE(twospinor),DIMENSION(:),ALLOCATABLE :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
@@ -165,7 +164,6 @@ SUBROUTINE DRIVER_nonrelativistic
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE metric_nonrelativistic
   USE scf_algorithms
-  IMPLICIT NONE
   INTEGER :: NBAST
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
@@ -219,29 +217,25 @@ SUBROUTINE DRIVER_nonrelativistic
      IF (USEDISK) THEN
         ALLOCATE(BILIST(1:1,1:4))
         OPEN(LUNIT,form='UNFORMATTED') ; OPEN(BIUNIT,form='UNFORMATTED')
-	!$OMP PARALLEL SHARED(BILIST,PHI,BINMBR) 
-        !$OMP DO
+	!$OMP PARALLEL DO SCHEDULE(STATIC, 1)
         DO I=1,BINMBR
            READ(LUNIT)BILIST(1,:)
            WRITE(BIUNIT)BILIST(1,:),COULOMBVALUE(PHI(BILIST(1,1)),PHI(BILIST(1,2)),PHI(BILIST(1,3)),PHI(BILIST(1,4)))
            IF (BINMBR>=10.AND.MODULO(I,BINMBR/10)==0) WRITE(*,'(a1,i3,a6)')' ',CEILING(100.*I/BINMBR),'% done'
         END DO
-	!$OMP END DO
-	!$OMP END PARALLEL
+	!$OMP END PARALLEL DO
         DEALLOCATE(BILIST)
         CLOSE(LUNIT,STATUS='DELETE') ; CLOSE(BIUNIT)
      ELSE
         ALLOCATE(BILIST(1:BINMBR,1:4),RBIVALUES(1:BINMBR))
         OPEN(LUNIT,form='UNFORMATTED')
-	!$OMP PARALLEL SHARED(BILIST,RBIVALUES,PHI,BINMBR) 
-        !$OMP DO
+	!$OMP PARALLEL DO SCHEDULE(STATIC, 1)
         DO I=1,BINMBR
            READ(LUNIT)BILIST(I,:)
            RBIVALUES(I)=COULOMBVALUE(PHI(BILIST(I,1)),PHI(BILIST(I,2)),PHI(BILIST(I,3)),PHI(BILIST(I,4)))
            IF (BINMBR>=10.AND.MODULO(I,BINMBR/10)==0) WRITE(*,'(a1,i3,a6)')' ',CEILING(100.*I/BINMBR),'% done'
         END DO
-	!$OMP END DO
-	!$OMP END PARALLEL
+	!$OMP END PARALLEL DO
         CLOSE(LUNIT,STATUS='DELETE')
      END IF
   END IF
@@ -319,7 +313,6 @@ SUBROUTINE DRIVER_boson_star
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE common_functions
   USE metric_nonrelativistic ; USE scf_tools ; USE rootfinding_tools ; USE constants
-  IMPLICIT NONE
   INTEGER :: NBAST,ITER,I,J,INFO
   INTEGER,TARGET :: RANK
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
@@ -382,29 +375,25 @@ SUBROUTINE DRIVER_boson_star
   IF (USEDISK) THEN
      ALLOCATE(BILIST(1:1,1:4))
      OPEN(LUNIT,form='UNFORMATTED') ; OPEN(BIUNIT,form='UNFORMATTED')
-     !$OMP PARALLEL SHARED(BILIST,PHI,BINMBR) 
-     !$OMP DO
+     !$OMP PARALLEL DO SCHEDULE(STATIC, 1)
      DO I=1,BINMBR
         READ(LUNIT)BILIST(1,:)
         WRITE(BIUNIT)BILIST(1,:),COULOMBVALUE(PHI(BILIST(1,1)),PHI(BILIST(1,2)),PHI(BILIST(1,3)),PHI(BILIST(1,4)))
         IF (BINMBR>=10.AND.MODULO(I,BINMBR/10)==0) WRITE(*,'(a1,i3,a6)')' ',CEILING(100.*I/BINMBR),'% done'
      END DO
-     !$OMP END DO
-     !$OMP END PARALLEL
+     !$OMP END PARALLEL DO
      DEALLOCATE(BILIST)
      CLOSE(LUNIT,STATUS='DELETE') ; CLOSE(BIUNIT)
   ELSE
      ALLOCATE(BILIST(1:BINMBR,1:4),RBIVALUES(1:BINMBR))
      OPEN(LUNIT,form='UNFORMATTED')
-     !$OMP PARALLEL SHARED(BILIST,RBIVALUES,PHI,BINMBR) 
-     !$OMP DO
+     !$OMP PARALLEL DO SCHEDULE(STATIC, 1)
      DO I=1,BINMBR
         READ(LUNIT)BILIST(I,:)
         RBIVALUES(I)=COULOMBVALUE(PHI(BILIST(I,1)),PHI(BILIST(I,2)),PHI(BILIST(I,3)),PHI(BILIST(I,4)))
         IF (BINMBR>=10.AND.MODULO(I,BINMBR/10)==0) WRITE(*,'(a1,i3,a6)')' ',CEILING(100.*I/BINMBR),'% done'
      END DO
-     !$OMP END DO
-     !$OMP END PARALLEL
+     !$OMP END PARALLEL DO
      CLOSE(LUNIT,STATUS='DELETE')
   END IF
 !

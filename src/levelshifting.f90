@@ -3,7 +3,6 @@ SUBROUTINE LEVELSHIFTING_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,R
 ! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE setup_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -94,7 +93,6 @@ SUBROUTINE LEVELSHIFTING_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 ! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE setup_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC

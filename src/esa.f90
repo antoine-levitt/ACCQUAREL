@@ -1,6 +1,5 @@
 MODULE esa_mod
   USE basis_parameters
-  IMPLICIT NONE
   INTEGER,POINTER :: NBAST_P
   DOUBLE COMPLEX,POINTER,DIMENSION(:) :: POEFM_P,PTDM_P,PDMDIF_P
   TYPE(twospinor),POINTER,DIMENSION(:) :: PHI_P
@@ -13,7 +12,6 @@ FUNCTION THETA(PDM,POEFM,N,PHI,METHOD) RESULT (PDMNEW)
   USE case_parameters ; USE basis_parameters ; USE matrices
   USE matrix_tools ; USE metric_relativistic
   USE debug
-  IMPLICIT NONE
   CHARACTER,INTENT(IN) :: METHOD
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PDM,POEFM
@@ -87,7 +85,6 @@ FUNCTION SIGN(PA,N) RESULT (SA)
 ! Function that computes the sign function of the hermitian matrix of a selfadjoint operator, which upper triangular part is stored in packed form, using a polynomial recursion (PINVS contains the inverse of the overlap matrix, which upper triangular part is stored in packed form).
 ! Note: the result is an unpacked matrix due to subsequent use.
   USE matrix_tools ; USE metric_relativistic
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA
   DOUBLE COMPLEX,DIMENSION(N,N) :: SA
@@ -118,7 +115,6 @@ END MODULE
 
 FUNCTION DFE(LAMBDA) RESULT (ETOT)
   USE common_functions ; USE matrices ; USE matrix_tools ; USE esa_mod
-  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: LAMBDA
   DOUBLE PRECISION :: ETOT
 
@@ -135,7 +131,6 @@ SUBROUTINE ESA(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE setup_tools
   USE optimization_tools ; USE esa_mod
   USE debug
-  IMPLICIT NONE
   INTEGER,INTENT(IN),TARGET :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(INOUT) :: EIG
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(INOUT) :: EIGVEC

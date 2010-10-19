@@ -1,6 +1,5 @@
 SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
 ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON,HOON
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
@@ -15,7 +14,6 @@ END SUBROUTINE FORMDM_relativistic
 
 SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
 ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON,HOON
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
@@ -30,7 +28,6 @@ END SUBROUTINE FORMDM_nonrelativistic
 
 SUBROUTINE FORMPROJ(PPROJM,EIGVEC,NBAST,LOON)
 ! Assembly of the matrix of the projector on the "positive" space (i.e., the electronic states) associated to a Dirac-Fock Hamiltonian (only the upper triangular part of the matrix is stored in packed format).
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PPROJM
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
@@ -46,7 +43,6 @@ END SUBROUTINE FORMPROJ
 SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
 ! Computation and assembly of the overlap matrix between basis functions, i.e., the Gram matrix of the basis with respect to the $L^2(\mathbb{R}^3,\mathbb{C}^4)$ inner product (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -89,7 +85,6 @@ END SUBROUTINE BUILDOM_relativistic
 SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
 ! Computation and assembly of the overlap matrix between basis functions, i.e. the Gram matrix of the basis with respacet to the $L^2(\mathbb{R}^3)$ inner product (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -106,7 +101,6 @@ END SUBROUTINE BUILDOM_nonrelativistic
 SUBROUTINE BUILDKPFM_nonrelativistic(PKPFM,PHI,NBAST)
 ! Computation and assembly of the kinetic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PKPFM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -124,7 +118,6 @@ END SUBROUTINE BUILDKPFM_nonrelativistic
 SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
 ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed form)
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE integrals
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -207,7 +200,6 @@ END SUBROUTINE BUILDOEFM_relativistic
 SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
 ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
   USE data_parameters ; USE basis_parameters ; USE integrals
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -230,7 +222,6 @@ END SUBROUTINE BUILDOEFM_nonrelativistic
 SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
 ! Computation and assembly of the bielectronic part of the Fock matrix associated to a given density matrix using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -310,7 +301,6 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
 ! Computation and assembly of the two-electron part of the Fock matrix associated to a given density matrix in the restricted closed-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
 ! Note: G(D)=2J(D)-K(D), with J(D) the Coulomb term and K(D) the exchange term.
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -441,7 +431,6 @@ SUBROUTINE BUILDTEFM_UHF(PTEFM,NBAST,PHI,PDMA,PDMB)
 ! Computation and assembly of the two-electron part of one of the two Fock matrices in the unrestricted open-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
 ! Note: G(D_a)=J(D_a)-K(D_a)+J(D_b), with J(D_a) the Coulomb term and K(D_a) the exchange term associated to D_a, and J(D_b) the Coulomb term associated to D_b.
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -573,7 +562,6 @@ END SUBROUTINE BUILDTEFM_UHF
 SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -632,7 +620,6 @@ END SUBROUTINE BUILDCOULOMB_relativistic
 SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -719,7 +706,6 @@ END SUBROUTINE BUILDCOULOMB_nonrelativistic
 SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -778,7 +764,6 @@ END SUBROUTINE BUILDEXCHANGE_relativistic
 SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -882,7 +867,6 @@ END SUBROUTINE BUILDEXCHANGE_nonrelativistic
 SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
 ! Computation and assembly of the matrix associated to one of the three components of the total angular momentum operator J (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTAMCM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI

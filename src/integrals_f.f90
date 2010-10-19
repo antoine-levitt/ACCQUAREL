@@ -1,6 +1,5 @@
 MODULE integrals
 ! Note: all the integrals involving gaussian basis functions are computed by the A.S.P.I.C. code (written in C++ by F. Lodier, see http://www.ann.jussieu.fr/A.S.P.I.C/).
-  IMPLICIT NONE
 ! number of a priori nonzero bielectronic integrals
   INTEGER :: BINMBR
 ! arrays for the list, values (real/complex for GBF/2-spinor basis functions in the non-relativistic/relativistic case) and "class" (relativistic case only) of bielectronic integrals (when stored in memory)
@@ -21,7 +20,6 @@ INTERFACE
  &                       nbrofprimitives_b,center_b,exponents_b,coefficients_b,monomialdegree_b)                     &
  & BIND(C,NAME="unrolloverlap")
     USE iso_c_binding
-    IMPLICIT NONE
     INTEGER(KIND=C_INT),VALUE :: nbrofprimitives_a,nbrofprimitives_b
     REAL(KIND=C_DOUBLE),DIMENSION(3) :: center_a,center_b
     REAL(KIND=C_DOUBLE),DIMENSION(6) :: exponents_a,exponents_b
@@ -35,7 +33,6 @@ INTERFACE
  &                                           nbrofprimitives_b,center_b,exponents_b,coefficients_b,monomialdegree_b) &
  & BIND(C,NAME="unrollkinetic")
     USE iso_c_binding
-    IMPLICIT NONE
     INTEGER(KIND=C_INT),VALUE :: nbrofprimitives_a,nbrofprimitives_b
     REAL(KIND=C_DOUBLE),DIMENSION(3) :: center_a,center_b
     REAL(KIND=C_DOUBLE),DIMENSION(6) :: exponents_a,exponents_b
@@ -50,7 +47,6 @@ INTERFACE
  &                                         dimension)                                                              &
  & BIND(C,NAME="unrollderiv")
     USE iso_c_binding
-    IMPLICIT NONE
     INTEGER(KIND=C_INT),VALUE :: nbrofprimitives_a,nbrofprimitives_b
     REAL(KIND=C_DOUBLE),DIMENSION(3) :: center_a,center_b
     REAL(KIND=C_DOUBLE),DIMENSION(6) :: exponents_a,exponents_b
@@ -66,7 +62,6 @@ INTERFACE
  &                                             center)                                                                 &
  & BIND(C,NAME="unrollpotential")
     USE iso_c_binding
-    IMPLICIT NONE
     INTEGER(KIND=C_INT),VALUE :: nbrofprimitives_a,nbrofprimitives_b
     REAL(KIND=C_DOUBLE),DIMENSION(3) :: center_a,center_b,center
     REAL(KIND=C_DOUBLE),DIMENSION(6) :: exponents_a,exponents_b
@@ -81,7 +76,6 @@ INTERFACE
  &                                          dimension1,dimension2)                                                  &
  & BIND(C,NAME="unrollxderiv")
     USE iso_c_binding
-    IMPLICIT NONE
     INTEGER(KIND=C_INT),VALUE :: nbrofprimitives_a,nbrofprimitives_b
     REAL(KIND=C_DOUBLE),DIMENSION(3) :: center_a,center_b
     REAL(KIND=C_DOUBLE),DIMENSION(6) :: exponents_a,exponents_b
@@ -98,7 +92,6 @@ INTERFACE
  &                                           nbrofprimitives_d,center_d,exponents_d,coefficients_d,monomialdegree_d) &
  & BIND(C,NAME="unrollcoulomb")
     USE iso_c_binding
-    IMPLICIT NONE
     INTEGER(KIND=C_INT),VALUE :: nbrofprimitives_a,nbrofprimitives_b,nbrofprimitives_c,nbrofprimitives_d
     REAL(KIND=C_DOUBLE),DIMENSION(3) :: center_a,center_b,center_c,center_d
     REAL(KIND=C_DOUBLE),DIMENSION(6) :: exponents_a,exponents_b,exponents_c,exponents_d
@@ -120,7 +113,6 @@ CONTAINS
 FUNCTION OVERLAPVALUE(PHI_A,PHI_B) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of two gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   REAL(KIND=C_DOUBLE) :: VALUE
 
@@ -131,7 +123,6 @@ END FUNCTION OVERLAPVALUE
 FUNCTION KINETICVALUE(PHI_A,PHI_B) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the scalar product between the gradients of two gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   REAL(KIND=C_DOUBLE) :: VALUE
 
@@ -143,7 +134,6 @@ FUNCTION DERIVVALUE(PHI_A,PHI_B,DIMENSION) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to a space variable) of a gaussain basis function with another gaussian basis function (this kind of integrals appear in the variational formulation involving the Dirac operator).
 ! Note: if DIMENSION = 1 (respectively 2, 3) then partial derivative with respect to x (respectively y, z).
   USE iso_c_binding ; USE basis_parameters
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   INTEGER(KIND=C_INT),INTENT(IN) :: DIMENSION
   REAL(KIND=C_DOUBLE) :: VALUE
@@ -156,7 +146,6 @@ END FUNCTION DERIVVALUE
 FUNCTION POTENTIALVALUE(PHI_A,PHI_B,CENTER) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of two gaussian basis functions times a coulombic potential centered on a given point.
   USE iso_c_binding ; USE basis_parameters
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   REAL(KIND=C_DOUBLE),DIMENSION(3),INTENT(IN) :: CENTER
   REAL(KIND=C_DOUBLE) :: VALUE
@@ -171,7 +160,6 @@ FUNCTION XDERIVVALUE(PHI_A,PHI_B,DIMENSION1,DIMENSION2) RESULT (VALUE)
 ! Notes: - if DIMENSION1 = 1 (respectively 2, 3) then partial derivative with respect to x (respectively y, z).
 !        - if DIMENSION2 = 1 (respectively 2, 3) then the product is multiplied by x (respectively y, z).
   USE iso_c_binding ; USE basis_parameters
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   INTEGER(KIND=C_INT),INTENT(IN) :: DIMENSION1,DIMENSION2
   REAL(KIND=C_DOUBLE) :: VALUE
@@ -184,7 +172,6 @@ END FUNCTION XDERIVVALUE
 FUNCTION COULOMBVALUE_nonrelativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B,PHI_C,PHI_D
   REAL(KIND=C_DOUBLE) :: VALUE
 
@@ -198,7 +185,6 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAS,LISTSIZE)
 ! Subroutine that generates the list (without redundancy as symmetries are taken into account) of the bielectronic integrals with nonzero value.
 ! Reference: R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974.
   USE case_parameters ; USE basis_parameters
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),DIMENSION(:),INTENT(IN) :: PHI
   INTEGER,DIMENSION(1),INTENT(IN) :: NBAS
   INTEGER,INTENT(OUT) :: LISTSIZE
@@ -231,7 +217,6 @@ END SUBROUTINE BUILDBILIST_nonrelativistic
 FUNCTION COULOMBVALUE_relativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four 2-spinor basis functions.
   USE basis_parameters
-  IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI_A,PHI_B,PHI_C,PHI_D
   DOUBLE COMPLEX :: VALUE
 
@@ -255,7 +240,6 @@ END FUNCTION COULOMBVALUE_relativistic
 FUNCTION COULOMBVALUE_precomputed(PHI_A,PHI_B,PHI_C,PHI_D,CLASS) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four 2-spinor basis functions from lists containing the precomputed values of the bielectronic integrals between scalar gaussian basis functions.
   USE basis_parameters
-  IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI_A,PHI_B,PHI_C,PHI_D
   CHARACTER(2),INTENT(IN) :: CLASS
   DOUBLE COMPLEX :: VALUE
@@ -280,7 +264,6 @@ END FUNCTION COULOMBVALUE_precomputed
 SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
 ! Subroutine that generates the list (more or less without redundancy since the a priori symmetries for complex 2-spinor functions are taken into account) of the bielectronic integrals with nonzero value.
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
-  IMPLICIT NONE
   TYPE(twospinor),DIMENSION(:),INTENT(IN) :: PHI
   INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
   INTEGER,INTENT(OUT) :: LISTSIZE,SUBSIZE(3)
@@ -388,7 +371,6 @@ END SUBROUTINE BUILDBILIST_relativistic
 SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
 ! Routine that computes the values of the bielectronic integrals over a cartesian gaussian basis, taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974). These values are next used to compute more efficiently the bielectronic integrals over a cartesian 2-spinor-type orbital basis in the relativistic case (see the GETPRECOMPUTEDCOULOMBVALUE function).
   USE basis_parameters ; USE scf_parameters
-  IMPLICIT NONE
   INTEGER,DIMENSION(2),INTENT(IN) :: NGBF  
   TYPE(gaussianbasisfunction),DIMENSION(SUM(NGBF)),INTENT(IN) :: GBF
 
@@ -429,7 +411,15 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
   WRITE(*,*)'- Computing SL integrals'
   ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
   N=0
-  DO I=NGBF(1)+1,SUM(NGBF) ; DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
+  ! Here the first integrals are faster to compute than the last ones : therefore, schedule
+  ! with CHUNK=1 to distribute work evenly
+  !$OMP PARALLEL DO PRIVATE(N, J, K, L, SC, GLOBALMONOMIALDEGREE) SCHEDULE(STATIC, 1)
+  DO I=NGBF(1)+1,SUM(NGBF)
+     ! reinit N: we can't be sure of its value because it's parallel. This does nothing in the non-parallel case
+     ! TODO it seems calculations towards the end take more time. The code should explicitly tell that to the compiler
+     N = NGBF(1)*(NGBF(1)+1)/2 * (I-NGBF(1)-1)*(I-NGBF(1))/2
+     ! this takes N(N+1)/2*(I-N) iters
+     DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
      SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
      GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
 ! parity check (one center case)
@@ -439,6 +429,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
         N=N+1 ; SLIJKL(N)=(0.D0,0.D0)
      END IF
   END DO ; END DO ; END DO ; END DO
+  !$OMP END PARALLEL DO
   IF (SSINTEGRALS) THEN
 ! (SS|SS) integrals
      WRITE(*,*)'- Computing SS integrals'
@@ -446,7 +437,13 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
  &            SSIKJL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+NGBF(2)-2)/24),   &
  &            SSILJK(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2-3*NGBF(2)+2)/24))
      M=0 ; N=0 ; O=0
-     DO I=NGBF(1)+1,SUM(NGBF) ; DO J=NGBF(1)+1,I ; DO K=NGBF(1)+1,J ; DO L=NGBF(1)+1,K
+     !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC, 1)
+     DO I=NGBF(1)+1,SUM(NGBF)
+        ! reinit M N O: we can't be sure of their values because it's parallel. This does nothing in the non-parallel case
+        M = (I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)*(I-NGBF(1)+2)/24
+        N = (I-NGBF(1)-2)*(I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)/24
+        O = (I-NGBF(1)-3)*(I-NGBF(1)-2)*(I-NGBF(1)-1)*(I-NGBF(1))/24
+        DO J=NGBF(1)+1,I ; DO K=NGBF(1)+1,J ; DO L=NGBF(1)+1,K
         SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
         GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
 ! parity check (one center case)
@@ -468,6 +465,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
            END IF
         END IF
      END DO ; END DO ; END DO ; END DO
+     !$OMP END PARALLEL DO
   END IF
 END SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES
 
@@ -475,7 +473,6 @@ FUNCTION PRECOMPUTEDCOULOMBVALUE(I,J,K,L,CLASS) RESULT(VALUE)
 ! Functions that returns the value of a precomputed bielectronic integral of class LL, SL or SS between four (real) cartesian gaussian basis functions stored in a list taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974).
 ! note: this function is called for the computation of bielectronic integrals over a (complex) 2-spinor, cartesian gaussian-type orbital basis, which does not naturally possess as many symmetries as a real scalar gaussian basis.
   USE basis_parameters
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J,K,L
   CHARACTER(2),INTENT(IN) :: CLASS
   DOUBLE COMPLEX :: VALUE
@@ -546,7 +543,6 @@ END FUNCTION PRECOMPUTEDCOULOMBVALUE
 SUBROUTINE DEALLOCATE_INTEGRALS
   USE scf_parameters
 ! Routine that deallocate the arrays containing the values of the bielectronic integrals over a cartesian gaussian basis.
-  IMPLICIT NONE
   DEALLOCATE(LLIJKL,LLIKJL,LLILJK,SLIJKL)
   IF (SSINTEGRALS) DEALLOCATE(SSIJKL,SSIKJL,SSILJK)
 END SUBROUTINE DEALLOCATE_INTEGRALS
