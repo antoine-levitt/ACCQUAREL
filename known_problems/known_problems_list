@@ -1,0 +1,2 @@
+* N2 RHF computation with STO-3G basis (the converged value of the energy is not the one given in Szabo & Ostlund, table 3.12, page 192)
+* CO RHF computation with STO-3G basis (nonsense result to be compared with the one given in Szabo & Ostlund, table 3.12, page 192)
