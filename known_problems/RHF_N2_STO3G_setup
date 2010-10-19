@@ -1,0 +1,45 @@
+# This file is for a reference calculation documented (table 3.12, page 192) in Szabo & Ostlund, Modern Quantum Chemistry: Introduction to Advanced Electronic Structure Theory, 1989.
+## CASE
+NONRELATIVISTIC
+## APPROXIMATION
+HARTREE-FOCK
+## MODEL
+RHF
+## DESCRIPTION OF THE MOLECULAR SYSTEM
+* The first entry is the number of atoms in the system.
+* For each atom, the nucleus charge and position are given.
+* The last entry is the total number of electrons in the system
+N2 molecule
+2
+7 0. 0. 0.
+7 2.074 0. 0.
+14
+## BASIS DEFINITION
+* The first entry is the keyword 'BASIS' followed by the name of the basis set contained in the basis/ directory or the keywords 'EVEN-TEMPERED BASIS'.
+* The second entry is the choice of CONTRACTED or UNCONTRACTED basis functions for the calculation or the number of exponents for the even-tempered basis set. In the last case, the first term and the common ratio of the geometric series must be given, in this order, as two separate entries.
+* The next two entries are are for the relativistic case: application or not of the Kinetic Balance scheme (KINBAL/NOTKINBAL) and, if so, choice between the RESTRICTED or UNRESTRICTED scheme.
+BASIS STO-3G
+CONTRACTED
+## SCF PARAMETERS OF THE COMPUTATION
+* They are:
+* - the number of different scf algorithms to be used on the considered case,
+* - the "numbers" of the algorithms (1 is for Roothaan, 2 is for level-shifting, 3 is for DIIS, 4 is for ODA, 5 is for ES's),
+* - the threshold for numerical convergence,
+* - the maximum number of iterations allowed,
+* - two indicators to know if the bielectronic integrals are directly computed and, if not, if their list and values are stored on disk or not,
+* - an indicator to make the computation without using the SS-bielectronic integrals in the relativistic case.
+4
+1
+2
+3
+4
+1.E-6
+100
+NOTDIRECT
+MEMORY
+## LEVEL-SHIFTING ALGORITHM PARAMETERS
+* Value of the shift
+1.1
+## DIIS ALGORITHM PARAMETERS
+* Maximum dimension of the density matrix simplex
+10

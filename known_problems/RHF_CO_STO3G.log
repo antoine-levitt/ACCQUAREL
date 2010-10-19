@@ -1,0 +1,2694 @@
+  *** ACCQUAREL using A.S.P.I.C. *** 
+ Non-relativistic case
+ Hartree-Fock approximation (Slater determinant wave function)
+ Restricted closed-shell formalism
+ Threshold = 0.000001
+ Maximum number of iterations = 100
+ Computed bielectronic integrals stored in memory
+ --- Molecular system ---
+ ** NAME: CO molecule                   
+ * Nucleus # 1
+   Charge Z=  6 (element: C )
+   Center position =       0.00000000       0.00000000       0.00000000
+ * Nucleus # 2
+   Charge Z=  8 (element: O )
+   Center position =       2.13200000       0.00000000       0.00000000
+ * Internuclear repulsion energy of the system =      22.51407129
+ * Total number of electrons in the system =  14
+ --------- **** ---------
+ Basis set: BASIS STO-3G               (contracted)
+ Total number of basis functions =  10
+
+* Computation and assembly of the overlap matrix
+* Computation and assembly of the core hamiltonian matrix
+* Creation of the list of nonzero bielectronic integrals
+  Number of GBF bielectronic integrals to be computed: 1366
+* Computation of the bielectronic integrals of GBF basis functions
+  10% done
+  20% done
+  30% done
+  40% done
+  50% done
+  60% done
+  70% done
+  80% done
+  90% done
+ 100% done
+
+ Roothaan's algorithm
+  
+ # ITER = 1
+ E(D_n)= -9.073124781581628E+11
+ Infinity norm of the difference D_n-D_{n-1} = 1.2100579819673856
+ Frobenius norm of the difference D_n-D_{n-1} = 2.645751311064592
+ Infinity norm of the commutator [F(D_n),D_n] = 1.0412161960774183E+12
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.338737729383472E+12
+ Difference of the energies E_n-E_{n-1} = -9.073124781581628E+11
+  
+ # ITER = 2
+ E(D_n)= -6.624089601525484E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3009747150339748
+ Frobenius norm of the difference D_n-D_{n-1} = 1.868410256174138
+ Infinity norm of the commutator [F(D_n),D_n] = 2.767526807413616E+11
+ Frobenius norm of the commutator [F(D_n),D_n] = 3.210571393316269E+11
+ Difference of the energies E_n-E_{n-1} = -5.716777123367321E+12
+  
+ # ITER = 3
+ E(D_n)= -6.654187827229986E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.04950111641461568
+ Frobenius norm of the difference D_n-D_{n-1} = 0.08947695158032672
+ Infinity norm of the commutator [F(D_n),D_n] = 5.525877770276561E+10
+ Frobenius norm of the commutator [F(D_n),D_n] = 6.415766521772859E+10
+ Difference of the energies E_n-E_{n-1} = -3.0098225704501953E+10
+  
+ # ITER = 4
+ E(D_n)= -6.655384408772801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.00965403711996582
+ Frobenius norm of the difference D_n-D_{n-1} = 0.017852563679180162
+ Infinity norm of the commutator [F(D_n),D_n] = 1.0979032315808683E+10
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.274652344568357E+10
+ Difference of the energies E_n-E_{n-1} = -1.1965815428144531E+9
+  
+ # ITER = 5
+ E(D_n)= -6.655431617733268E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.0019102407484255265
+ Frobenius norm of the difference D_n-D_{n-1} = 0.003545775127000044
+ Infinity norm of the commutator [F(D_n),D_n] = 2.180026516466998E+9
+ Frobenius norm of the commutator [F(D_n),D_n] = 2.5309528983494825E+9
+ Difference of the energies E_n-E_{n-1} = -4.7208960466796875E+7
+  
+ # ITER = 6
+ E(D_n)= -6.655433478878964E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.0003789972514012589
+ Frobenius norm of the difference D_n-D_{n-1} = 0.0007040158252857439
+ Infinity norm of the commutator [F(D_n),D_n] = 4.3283035403956103E+8
+ Frobenius norm of the commutator [F(D_n),D_n] = 5.0250324153350693E+8
+ Difference of the energies E_n-E_{n-1} = -1861145.6962890625
+  
+ # ITER = 7
+ E(D_n)= -6.655433552243254E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.00007523548509311476
+ Frobenius norm of the difference D_n-D_{n-1} = 0.00013977620780798253
+ Infinity norm of the commutator [F(D_n),D_n] = 8.593414929641753E+7
+ Frobenius norm of the commutator [F(D_n),D_n] = 9.97669541118814E+7
+ Difference of the energies E_n-E_{n-1} = -73364.2900390625
+  
+ # ITER = 8
+ E(D_n)= -6.655433555135134E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.000014936782321012737
+ Frobenius norm of the difference D_n-D_{n-1} = 0.00002775110746219737
+ Infinity norm of the commutator [F(D_n),D_n] = 1.7061307498857487E+7
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.9807661096722428E+7
+ Difference of the energies E_n-E_{n-1} = -2891.8798828125
+  
+ # ITER = 9
+ E(D_n)= -6.655433555249118E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.000002965519959713296
+ Frobenius norm of the difference D_n-D_{n-1} = 0.0000055096834507478994
+ Infinity norm of the commutator [F(D_n),D_n] = 3387337.9916560412
+ Frobenius norm of the commutator [F(D_n),D_n] = 3932596.7006554697
+ Difference of the energies E_n-E_{n-1} = -113.984375
+  
+ # ITER = 10
+ E(D_n)= -6.65543355525362E+12
+ Infinity norm of the difference D_n-D_{n-1} = 5.887711653437171E-7
+ Frobenius norm of the difference D_n-D_{n-1} = 0.000001093887931496685
+ Infinity norm of the commutator [F(D_n),D_n] = 672519.2110593879
+ Frobenius norm of the commutator [F(D_n),D_n] = 780774.4094945464
+ Difference of the energies E_n-E_{n-1} = -4.501953125
+  
+ # ITER = 11
+ E(D_n)= -6.655433555253789E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1689409969135961E-7
+ Frobenius norm of the difference D_n-D_{n-1} = 2.1717957812987995E-7
+ Infinity norm of the commutator [F(D_n),D_n] = 133521.3860332804
+ Frobenius norm of the commutator [F(D_n),D_n] = 155014.28201810445
+ Difference of the energies E_n-E_{n-1} = -0.1689453125
+  
+ # ITER = 12
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.3208052611859317E-8
+ Frobenius norm of the difference D_n-D_{n-1} = 4.3118647675411076E-8
+ Infinity norm of the commutator [F(D_n),D_n] = 26509.223364844573
+ Frobenius norm of the commutator [F(D_n),D_n] = 30776.404450294376
+ Difference of the energies E_n-E_{n-1} = -0.01171875
+  
+ # ITER = 13
+ E(D_n)= -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 4.607707442387816E-9
+ Frobenius norm of the difference D_n-D_{n-1} = 8.560739449311445E-9
+ Infinity norm of the commutator [F(D_n),D_n] = 5263.117464205615
+ Frobenius norm of the commutator [F(D_n),D_n] = 6110.32121917598
+ Difference of the energies E_n-E_{n-1} = 0.00390625
+  
+ # ITER = 14
+ E(D_n)= -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 9.148100205317379E-10
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6996419901833426E-9
+ Infinity norm of the commutator [F(D_n),D_n] = 1044.936542330056
+ Frobenius norm of the commutator [F(D_n),D_n] = 1213.1390987967911
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 15
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8162602502733666E-10
+ Frobenius norm of the difference D_n-D_{n-1} = 3.37445542826422E-10
+ Infinity norm of the commutator [F(D_n),D_n] = 207.46230752511465
+ Frobenius norm of the commutator [F(D_n),D_n] = 240.85734112185816
+ Difference of the energies E_n-E_{n-1} = -0.0078125
+  
+ # ITER = 16
+ E(D_n)= -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 3.60600750635283E-11
+ Frobenius norm of the difference D_n-D_{n-1} = 6.699598726726368E-11
+ Infinity norm of the commutator [F(D_n),D_n] = 41.189857791829354
+ Frobenius norm of the commutator [F(D_n),D_n] = 47.82036259696997
+ Difference of the energies E_n-E_{n-1} = 0.0078125
+  
+ # ITER = 17
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 7.15950361286928E-12
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3301627036950307E-11
+ Infinity norm of the commutator [F(D_n),D_n] = 8.180325184176949
+ Frobenius norm of the commutator [F(D_n),D_n] = 9.495587813892667
+ Difference of the energies E_n-E_{n-1} = -0.0068359375
+  
+ # ITER = 18
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.421301630769462E-12
+ Frobenius norm of the difference D_n-D_{n-1} = 2.6408264422743436E-12
+ Infinity norm of the commutator [F(D_n),D_n] = 1.6237587945342689
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.8860605386045168
+ Difference of the energies E_n-E_{n-1} = 0.00390625
+  
+ # ITER = 19
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.8280614846791427E-13
+ Frobenius norm of the difference D_n-D_{n-1} = 5.241859332183749E-13
+ Infinity norm of the commutator [F(D_n),D_n] = 0.31994832485684577
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.3732624432732286
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 20
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 5.5770262247640113E-14
+ Frobenius norm of the difference D_n-D_{n-1} = 1.0421381881245466E-13
+ Infinity norm of the commutator [F(D_n),D_n] = 0.06348466595877274
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0744420903573228
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 21
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1794992107837885E-14
+ Frobenius norm of the difference D_n-D_{n-1} = 2.0812864327049814E-14
+ Infinity norm of the commutator [F(D_n),D_n] = 0.012731248043732607
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.014952016326266023
+ Difference of the energies E_n-E_{n-1} = -0.0048828125
+  
+ # ITER = 22
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.5264559601570736E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 4.177448683698503E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.006241321000327123
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00577702980703381
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 23
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.0663651827126985E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2571731046273136E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024130865534871516
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0022429412437799064
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 24
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0924393438583185E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5379548164066449E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004393016898259179
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003889174478790022
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 25
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5820106603638713E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4362129619698505E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024382241282984237
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020089274079922483
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 26
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.296946092008408E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.558551199342951E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002887368973104623
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0022896204666690025
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 27
+ E(D_n)= -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5403655497560937E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4407239288298634E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002962279413094558
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0025303386598856145
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 28
+ E(D_n)= -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1143780651047683E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.096504528946479E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003216803984809231
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00248866780044782
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 29
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.199598593871094E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8102753606885588E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028077427336412612
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026306111495469596
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 30
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.4781367863611494E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8845988722376258E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0033343698805407096
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026287347082889875
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 31
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.215497662517774E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6347230097418927E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0037674172625989117
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0038514198986340674
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 32
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6692404107877593E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4028734987710074E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003116721255129899
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023465829476512928
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 33
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.785851182667827E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.0383516402710934E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0025596382638359955
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0025048103817702392
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 34
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.6399618868590163E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.2420095368978242E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0009416893855348603
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0010362879123506203
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 35
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.0642508042805921E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.0449618360539438E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0018504803016957218
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017318877162972087
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 36
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.531205688912257E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.114286718827591E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0033330920087327825
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0028290252035016914
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 37
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.174821162976422E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6231802296201945E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0027930808403445503
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023283975135527995
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 38
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.652073191288944E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5250297434768896E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002744375522224152
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0027799713561774604
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 39
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.287815273873868E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8571001161536374E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0021310430022561735
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0019184861132037383
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 40
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0868943978344737E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5066476544195228E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024528155760313395
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001957592062143808
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 41
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2245583192079385E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2479599470469577E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00255546856849089
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024637610939157897
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 42
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.836024812515969E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3889375072924388E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0018755689060197375
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0016289802623165681
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 43
+ E(D_n)= -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5053142486975445E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5701530230283257E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0043472223017318075
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0036035699291977223
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 44
+ E(D_n)= -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.0954925030012788E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2172785594654824E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0036532749370245744
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003412506051055545
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 45
+ E(D_n)= -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 9.310385607935654E-16
+ Frobenius norm of the difference D_n-D_{n-1} = 1.0238097819877922E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023378015307948118
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001995472363999492
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 46
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8287064954556846E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4454997617475184E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024208845143845
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0021329902159969044
+ Difference of the energies E_n-E_{n-1} = -0.005859375
+  
+ # ITER = 47
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.583459936338342E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.526205032896248E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002292184307590269
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017932583817770688
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 48
+ E(D_n)= -6.655433555253805E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.9973584245512664E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.93940746316494E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0032197204007475854
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002652675049558457
+ Difference of the energies E_n-E_{n-1} = -0.005859375
+  
+ # ITER = 49
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.462701503756956E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5942214474498695E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0029488976005574994
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00288622392629348
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 50
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4320977594263452E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.552353176045796E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002416039024402095
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023057453484050167
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 51
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5049668292908863E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4879995049092023E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002272426154393354
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002187091878949049
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 52
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.565465445022753E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.521866319216111E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0037294193517665047
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00318951159221864
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 53
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0098737531709958E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5879888240130812E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0027318695470487037
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002340432828077849
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 54
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.183683080690805E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6315956951792459E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002810750755186478
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002375873826716119
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 55
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.3048433174179675E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.1381422316439148E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00296978564271568
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002509270754002553
+ Difference of the energies E_n-E_{n-1} = 0.00390625
+  
+ # ITER = 56
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.531284803346199E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4996982447048229E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004356481007196702
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0038058491272569507
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 57
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6456417407489271E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5895370593223897E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0034089861444007302
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0028673590404049995
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 58
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2740131384152804E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 9.772133157111003E-16
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0020064919292034768
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001831127989044424
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 59
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 9.080066484742418E-16
+ Frobenius norm of the difference D_n-D_{n-1} = 9.144059394293123E-16
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0035141095445418787
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002764902250964403
+ Difference of the energies E_n-E_{n-1} = 0.00390625
+  
+ # ITER = 60
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.831991516382116E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4601529997746403E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00476643712481769
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.004236663036087614
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 61
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4264754223725618E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.433544171465437E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003564148633096804
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003091161773172543
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 62
+ E(D_n)= -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.833637602859573E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6646194471005038E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004849324655875754
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.004198958984630719
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 63
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.955900054169723E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.830946630440475E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002019288914371805
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0019207009360636513
+ Difference of the energies E_n-E_{n-1} = -0.0048828125
+  
+ # ITER = 64
+ E(D_n)= -6.655433555253791E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.5632716144975154E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.111210643518216E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002645470472951909
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002553361103740994
+ Difference of the energies E_n-E_{n-1} = 0.01171875
+  
+ # ITER = 65
+ E(D_n)= -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.592710489776708E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6842752631299256E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0026049211906260675
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024730272719932717
+ Difference of the energies E_n-E_{n-1} = -0.0068359375
+  
+ # ITER = 66
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3136951883572405E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.48672386825138E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0019511113348261867
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0015272045340928495
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 67
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1551958689930185E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1687394231661546E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0019015843217016699
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017097598706387934
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 68
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.412631210002455E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4043543278207775E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0031268458012144776
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023556172463693767
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 69
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3476986097419577E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1704502696437055E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0051905527262915705
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.004565177855369871
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 70
+ E(D_n)= -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4813247119246373E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4584765610637945E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0029208465830667554
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002562204567857459
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 71
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0877384846229874E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.0511999405641613E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002756386993827166
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0022480441880973045
+ Difference of the energies E_n-E_{n-1} = -0.0078125
+  
+ # ITER = 72
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4959836327848291E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2538477135955533E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0014861478555778414
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001365973744153223
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 73
+ E(D_n)= -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0436976189280442E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.712592277283486E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00319754809892909
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0029162072194423923
+ Difference of the energies E_n-E_{n-1} = 0.0068359375
+  
+ # ITER = 74
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8470478062017364E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.753276264363653E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0025453997309772512
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002409016567527777
+ Difference of the energies E_n-E_{n-1} = -0.005859375
+  
+ # ITER = 75
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.9040070832491734E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6579275021219072E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.001705028019456478
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017708412374545415
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 76
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4997181160845759E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4953187351323488E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0013240659715334205
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0012916475623317763
+ Difference of the energies E_n-E_{n-1} = -0.0048828125
+  
+ # ITER = 77
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1142754670666527E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1335156718471834E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0031900974303758103
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002862195264366883
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 78
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3141715638291024E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.398757592580672E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0019961498005620646
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017514757659158739
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 79
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1435241815638263E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1324392714531802E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0016628929319463318
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001639784354765737
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 80
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1421066212501112E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1123494235744135E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.001916895670794902
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001458214311952928
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 81
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3543739700677892E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.452703225995201E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0027214002469273814
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003052125430068439
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 82
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0707651046493513E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.907433918549225E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003836910050700292
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003296863531280521
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 83
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5790510483359209E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3751355388412595E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023568914166857257
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002453931490217884
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 84
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1557053739618588E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.972708047689577E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00357056059087677
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002549386590667836
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 85
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.2780667960426546E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.172501818766816E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0037487905196157754
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0031961277839813998
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 86
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6699484510770349E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5498684853762265E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002156252208485264
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0018683907768266958
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 87
+ E(D_n)= -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6814972515387206E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5594534533197526E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0036991533840117895
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0029876341536602164
+ Difference of the energies E_n-E_{n-1} = 0.005859375
+  
+ # ITER = 88
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.971849437835913E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8296328504580485E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003260406482465426
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003017730979476884
+ Difference of the energies E_n-E_{n-1} = -0.0048828125
+  
+ # ITER = 89
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.525975677830639E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5476645980788574E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002048749498905095
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002009595065958768
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 90
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6864162214795573E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6003951239896633E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0027214568588243516
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024899253105826044
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 91
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5504458968656368E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5116772273684845E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002981914912464864
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002562569817077016
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 92
+ E(D_n)= -6.655433555253806E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.2814919382855224E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7476155611380961E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003268918989844864
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002681015924734554
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+  
+ # ITER = 93
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6470414953947347E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5945568138796426E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028108444209749314
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002391209118894813
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 94
+ E(D_n)= -6.655433555253792E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.065797459559391E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.030604129064479E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0038565281546373838
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003529992103090322
+ Difference of the energies E_n-E_{n-1} = 0.0107421875
+  
+ # ITER = 95
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.303742259393523E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.106192420540953E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0032123976554728224
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024789197669049033
+ Difference of the energies E_n-E_{n-1} = -0.0107421875
+  
+ # ITER = 96
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7276776561520802E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.9564879447408627E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0032807758669974145
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0028683598534835616
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 97
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.9341818893456386E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.9908630939813443E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0027787047104193938
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002305954740395489
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 98
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6473792660741585E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2666849220501848E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0030291943666349345
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026056609480209366
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 99
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.929319006529513E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.76685129846894E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0019293488867166639
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0016125327238965274
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 100
+ E(D_n)= -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6811921586833488E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8584516987287646E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0021843886500936644
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0019091157492886414
+ Difference of the energies E_n-E_{n-1} = 0.005859375
+  
+ Subroutine ROOTHAAN: no convergence after 100 iteration(s).
+
+ level-shifting algorithm
+ Shift parameter value = 1.1
+  
+ # ITER = 1
+ E(D_n)= -9.073124781581628E+11
+ Infinity norm of the difference D_n-D_{n-1} = 1.2100579819673856
+ Frobenius norm of the difference D_n-D_{n-1} = 2.645751311064592
+ Infinity norm of the commutator [F(D_n),D_n] = 1.0412161960774183E+12
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.338737729383472E+12
+ Difference of the energies E_n-E_{n-1} = -9.073124781581628E+11
+  
+ # ITER = 2
+ E(D_n)= -6.624089601525219E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3009747150339233
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8684102561732538
+ Infinity norm of the commutator [F(D_n),D_n] = 2.767526807406155E+11
+ Frobenius norm of the commutator [F(D_n),D_n] = 3.210571393315542E+11
+ Difference of the energies E_n-E_{n-1} = -5.716777123367056E+12
+  
+ # ITER = 3
+ E(D_n)= -6.654187827229982E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.049501116414605965
+ Frobenius norm of the difference D_n-D_{n-1} = 0.08947695158113371
+ Infinity norm of the commutator [F(D_n),D_n] = 5.5258777703036476E+10
+ Frobenius norm of the commutator [F(D_n),D_n] = 6.4157665218067215E+10
+ Difference of the energies E_n-E_{n-1} = -3.009822570476367E+10
+  
+ # ITER = 4
+ E(D_n)= -6.655384408772794E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.009654037120011847
+ Frobenius norm of the difference D_n-D_{n-1} = 0.017852563679282285
+ Infinity norm of the commutator [F(D_n),D_n] = 1.0979032315878887E+10
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.2746523445769403E+10
+ Difference of the energies E_n-E_{n-1} = -1.1965815428115234E+9
+  
+ # ITER = 5
+ E(D_n)= -6.655431617733269E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.0019102407484366164
+ Frobenius norm of the difference D_n-D_{n-1} = 0.0035457751270254324
+ Infinity norm of the commutator [F(D_n),D_n] = 2.1800265164862604E+9
+ Frobenius norm of the commutator [F(D_n),D_n] = 2.5309528983717155E+9
+ Difference of the energies E_n-E_{n-1} = -4.7208960474609375E+7
+  
+ # ITER = 6
+ E(D_n)= -6.655433478878961E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.00037899725140389575
+ Frobenius norm of the difference D_n-D_{n-1} = 0.0007040158252919248
+ Infinity norm of the commutator [F(D_n),D_n] = 4.3283035404692334E+8
+ Frobenius norm of the commutator [F(D_n),D_n] = 5.025032415411537E+8
+ Difference of the energies E_n-E_{n-1} = -1861145.6923828125
+  
+ # ITER = 7
+ E(D_n)= -6.655433552243254E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.00007523548509428596
+ Frobenius norm of the difference D_n-D_{n-1} = 0.0001397762078094207
+ Infinity norm of the commutator [F(D_n),D_n] = 8.5934149296524E+7
+ Frobenius norm of the commutator [F(D_n),D_n] = 9.9766954112936E+7
+ Difference of the energies E_n-E_{n-1} = -73364.29296875
+  
+ # ITER = 8
+ E(D_n)= -6.65543355513513E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.000014936782321530693
+ Frobenius norm of the difference D_n-D_{n-1} = 0.000027751107462388918
+ Infinity norm of the commutator [F(D_n),D_n] = 1.706130749934471E+7
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.9807661097524144E+7
+ Difference of the energies E_n-E_{n-1} = -2891.8759765625
+  
+ # ITER = 9
+ E(D_n)= -6.655433555249124E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.000002965519959471087
+ Frobenius norm of the difference D_n-D_{n-1} = 0.000005509683451103695
+ Infinity norm of the commutator [F(D_n),D_n] = 3387337.9910368733
+ Frobenius norm of the commutator [F(D_n),D_n] = 3932596.7000326714
+ Difference of the energies E_n-E_{n-1} = -113.994140625
+  
+ # ITER = 10
+ E(D_n)= -6.655433555253616E+12
+ Infinity norm of the difference D_n-D_{n-1} = 5.887711657393514E-7
+ Frobenius norm of the difference D_n-D_{n-1} = 0.0000010938879314615626
+ Infinity norm of the commutator [F(D_n),D_n] = 672519.2125580502
+ Frobenius norm of the commutator [F(D_n),D_n] = 780774.411079779
+ Difference of the energies E_n-E_{n-1} = -4.4921875
+  
+ # ITER = 11
+ E(D_n)= -6.655433555253795E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1689409906397022E-7
+ Frobenius norm of the difference D_n-D_{n-1} = 2.1717957839266787E-7
+ Infinity norm of the commutator [F(D_n),D_n] = 133521.3884978325
+ Frobenius norm of the commutator [F(D_n),D_n] = 155014.2828856127
+ Difference of the energies E_n-E_{n-1} = -0.1787109375
+  
+ # ITER = 12
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.320805349626557E-8
+ Frobenius norm of the difference D_n-D_{n-1} = 4.311864750184879E-8
+ Infinity norm of the commutator [F(D_n),D_n] = 26509.222930308464
+ Frobenius norm of the commutator [F(D_n),D_n] = 30776.40473152775
+ Difference of the energies E_n-E_{n-1} = -0.0068359375
+  
+ # ITER = 13
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 4.607706731622199E-9
+ Frobenius norm of the difference D_n-D_{n-1} = 8.560739718093765E-9
+ Infinity norm of the commutator [F(D_n),D_n] = 5263.118375348658
+ Frobenius norm of the commutator [F(D_n),D_n] = 6110.320440499358
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 14
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 9.148104222581935E-10
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6996416835168903E-9
+ Infinity norm of the commutator [F(D_n),D_n] = 1044.9355186430712
+ Frobenius norm of the commutator [F(D_n),D_n] = 1213.1378968784766
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 15
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8162592502330366E-10
+ Frobenius norm of the difference D_n-D_{n-1} = 3.3744555067801843E-10
+ Infinity norm of the commutator [F(D_n),D_n] = 207.45925129147847
+ Frobenius norm of the commutator [F(D_n),D_n] = 240.85532711869234
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 16
+ E(D_n)= -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 3.605903299191425E-11
+ Frobenius norm of the difference D_n-D_{n-1} = 6.699598807120222E-11
+ Infinity norm of the commutator [F(D_n),D_n] = 41.18901955466283
+ Frobenius norm of the commutator [F(D_n),D_n] = 47.82028964089175
+ Difference of the energies E_n-E_{n-1} = 0.005859375
+  
+ # ITER = 17
+ E(D_n)= -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 7.1596051568532415E-12
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3301494890153703E-11
+ Infinity norm of the commutator [F(D_n),D_n] = 8.180238815883033
+ Frobenius norm of the commutator [F(D_n),D_n] = 9.496541922298254
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 18
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4220406252686916E-12
+ Frobenius norm of the difference D_n-D_{n-1} = 2.6409327976067845E-12
+ Infinity norm of the commutator [F(D_n),D_n] = 1.6228067337419174
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.8851738390098745
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 19
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.8262867957941533E-13
+ Frobenius norm of the difference D_n-D_{n-1} = 5.244351581896344E-13
+ Infinity norm of the commutator [F(D_n),D_n] = 0.3211547985404058
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.37300525022727776
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 20
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 5.617491148090747E-14
+ Frobenius norm of the difference D_n-D_{n-1} = 1.0414862129498326E-13
+ Infinity norm of the commutator [F(D_n),D_n] = 0.060407333970339046
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.07196412984553038
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 21
+ E(D_n)= -6.655433555253795E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1232815243460636E-14
+ Frobenius norm of the difference D_n-D_{n-1} = 2.060471872377559E-14
+ Infinity norm of the commutator [F(D_n),D_n] = 0.01341008195266276
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.014928866275191273
+ Difference of the energies E_n-E_{n-1} = 0.0068359375
+  
+ # ITER = 22
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.902360000199907E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 4.6102600886451914E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.005703201960379288
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.005310991241758122
+ Difference of the energies E_n-E_{n-1} = -0.005859375
+  
+ # ITER = 23
+ E(D_n)= -6.655433555253805E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7146057080235992E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.892916967947922E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004659904553633058
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.004016367705238843
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+  
+ # ITER = 24
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.34001951123745E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3886053742460349E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023779233110129833
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023952473966020286
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 25
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.3536748720251777E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.5105830161733297E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0038838205519205393
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0036562195022888755
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 26
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.948644192835776E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7568201884993077E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003695096097309196
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00362888794861616
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 27
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.723638185861969E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.349307313617425E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003627727284743582
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0029968960044416525
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 28
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.4961033352086425E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.041215865489333E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004510023951869889
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.004122942783649866
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 29
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.182135895379544E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6436307884375601E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024315854659314544
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026615730942987303
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 30
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2899229325596924E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2794397795470573E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0022543398506768984
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002056224123734628
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 31
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6407270933351559E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8770793291067013E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028187006315760306
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026995613669978684
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 32
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5277824335566373E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.664064335262989E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002129328028176386
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001991312282009049
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 33
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.766189233360975E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.217667847223501E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0012349254297945923
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001268940356554623
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 34
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3895950341975232E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5639625527847236E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0031188141469456576
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0029510141791983567
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 35
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.425294605389433E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.319114663772353E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0020649945470012465
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002134254121325441
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 36
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.177859337350941E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7593039876178453E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004028409292767199
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0031406401323786914
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 37
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.9863810052677914E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.9031196733067287E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0020431251742312473
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0018021938399267854
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 38
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.9639029475378016E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.7116587420904516E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0027224464322281147
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002778486512494355
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 39
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8612542305108104E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.680619111544433E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0013815431031834746
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0014816728825524674
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 40
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2320986052812848E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.159308243018417E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024459984740322644
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020534846235652775
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 41
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.521890703874513E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4433260003276919E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0018560580813618852
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0018052168781848576
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 42
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7512624007515045E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4610511442398246E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00309805512934904
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0028022352944337943
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 43
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 7.785367261699696E-16
+ Frobenius norm of the difference D_n-D_{n-1} = 8.821709465017456E-16
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003753893319979949
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0033000645455176416
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 44
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3969486607107209E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2883606894210518E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0016855662416790187
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0018176431477524722
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 45
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1507008549124978E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3221625385409835E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0008950759113456783
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0008069779924626556
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 46
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8633962910404734E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.9123854060490792E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0025194941156323532
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00220191956179292
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 47
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8467548131229104E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.571719303248434E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002845747123576674
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002330411956420513
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 48
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1416289099340594E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5700405541315892E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0015724586448458546
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0016725751415039938
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 49
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6560112065429575E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4076787421928584E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0019642794177996367
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017608060940645554
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 50
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8180516439737497E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5868076662087032E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0031102331813933114
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026506822993574036
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 51
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.778634585835367E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.610181023171139E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028341014837112437
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002584036544653592
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 52
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.946130449640405E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6465403251273567E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0025088987236029803
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00223284586340221
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 53
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.4981130788212554E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8945515343673254E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023412098382394374
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002221317939643421
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 54
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3221069060994256E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.0677077359565993E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0033458138659906247
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0033776794231631124
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 55
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.005726909367486E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6162037730316824E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003046040511942998
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024694235433841308
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 56
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 9.480230531364914E-16
+ Frobenius norm of the difference D_n-D_{n-1} = 9.034671662960456E-16
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0017519042095874321
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017164417603154779
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 57
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0055538702164296E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7254685102317826E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0015822869637988728
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001637981653374403
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 58
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3486145875944363E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2423678821416308E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0026276421620212206
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023440697349027878
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 59
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1451867046834924E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4641187597756003E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004559385779806142
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0040160360489173005
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 60
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.9074731996028484E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.9779992996048705E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0029534120965349236
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002805780399568268
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 61
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.920213261997042E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6783043672100237E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002236309461661207
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020344149395005095
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 62
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6989982169328257E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5966792289759508E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0017913116749688285
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001584757236708651
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 63
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.2809363551266637E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.0803063058264327E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0045862990045995805
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.004375822422634495
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 64
+ E(D_n)= -6.655433555253805E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.855940351646107E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6793241930528448E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0022617440521731846
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0019847455321155335
+ Difference of the energies E_n-E_{n-1} = -0.005859375
+  
+ # ITER = 65
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2675066252720992E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4725224166023896E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00241401867212272
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00195446814877175
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 66
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4308255124014565E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7175825163805075E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0031299457812694526
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026472264422338506
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 67
+ E(D_n)= -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1795703152864722E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.216791805586696E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0033789115790586422
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003095582884221552
+ Difference of the energies E_n-E_{n-1} = 0.0048828125
+  
+ # ITER = 68
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5340212925395138E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6897202911254319E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028555586586626195
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002329940498555879
+ Difference of the energies E_n-E_{n-1} = -0.0068359375
+  
+ # ITER = 69
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.249764030862798E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8519120153306954E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00339142187192904
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003118401415535157
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ # ITER = 70
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1394149034930833E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7006081903314902E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0018841882799569996
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001743670181623593
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 71
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2377152892194371E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2983065308260958E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003859678609773924
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0035670039833352396
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 72
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3881535354726147E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.390751411494478E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0017925905128258154
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002031283374497696
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 73
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.653478260887279E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3357825663531981E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0030120898843344723
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002635203633412092
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 74
+ E(D_n)= -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1108148602235483E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.0549367330720002E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.001821254322818507
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017191487526669693
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 75
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1630779757724153E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1136804283157341E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0015410476371945328
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0016005472358077604
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 76
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7580127225649172E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4639562940187268E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0020875660660637763
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0018789454366076185
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 77
+ E(D_n)= -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4022955261556682E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.266023893279133E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002188278766880555
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001965341848648317
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 78
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.6626515964804743E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.415527712541485E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003473540973134743
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0027565718360459865
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 79
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4901603316329465E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8152320836225484E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0020975453576018697
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0021171106108036374
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 80
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8960034297896252E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.591326018512362E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.001445053398176912
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017951097315876392
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 81
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7718470176068557E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3723520406085777E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002364765042655777
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00225204983488161
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 82
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0868130614855607E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.779977634607116E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004064847605969519
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0034693439086801907
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 83
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.818827449659671E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.9306682231125365E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002259929851134784
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020739087490510935
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 84
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 3.626354716455502E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.670362785074607E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003303978997060238
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0029696222859228122
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 85
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.475146745593262E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2791865774224873E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004075783666277635
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003627293879549404
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 86
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4981551972955885E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4915333141589496E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00198798520998066
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020164243296378545
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 87
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.0084096138252484E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3507753522589954E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00244711536003363
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024395738050744086
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+  
+ # ITER = 88
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.0888898383177666E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 9.846949868880474E-16
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0014001453977338751
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001579816799718993
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+  
+ # ITER = 89
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7317366532314776E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7112851516078085E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002879610789653731
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003117003435236781
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 90
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8516548299815686E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5192006908248988E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002047151513477929
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001913832987970602
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 91
+ E(D_n)= -6.655433555253807E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4829231374684825E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3878991060476685E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003341408632337509
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002728362131219283
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+  
+ # ITER = 92
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3887474197483944E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3667272985617038E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0017156660689294381
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017406843522517438
+ Difference of the energies E_n-E_{n-1} = 0.005859375
+  
+ # ITER = 93
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3633317551305643E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1166089378040925E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0025232389233060286
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001981367897432053
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 94
+ E(D_n)= -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1959713367546596E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6854397832146798E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0029516684449275893
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002613597946191936
+ Difference of the energies E_n-E_{n-1} = 0.005859375
+  
+ # ITER = 95
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.570802235896228E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5023677689724584E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0018839531336237918
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0019762153023678503
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+  
+ # ITER = 96
+ E(D_n)= -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.526427276320859E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4561463782848622E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004037360582274023
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0030516357682752494
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ # ITER = 97
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8492030954718437E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5174632783273863E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003388820873085592
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0028517935666603255
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+  
+ # ITER = 98
+ E(D_n)= -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6196634018587168E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.454848094045395E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024014596319193943
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024110769595258865
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+  
+ # ITER = 99
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 9.506046175984396E-16
+ Frobenius norm of the difference D_n-D_{n-1} = 8.741541436869206E-16
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0016865510892264473
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0015982881214882188
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+  
+ # ITER = 100
+ E(D_n)= -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4500508221583538E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2238105464764717E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002731237112807404
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023190683198061014
+ Difference of the energies E_n-E_{n-1} = 0.
+  
+ Subroutine LEVELSHIFTING: no convergence after 100 iteration(s).
+
+ DIIS algorithm
+  
+ # ITER = 1
+ Total energy = -9.073124781581628E+11
+ Infinity norm of the difference D_n-D_{n-1} = 1.2100579819673856
+ Frobenius norm of the difference D_n-D_{n-1} = 2.645751311064592
+ Infinity norm of the commutator [F(D_n),D_n] = 1.0412161960774183E+12
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.338737729383472E+12
+ Difference of the energies E_n-E_{n-1} = -9.073124781581628E+11
+  
+ # ITER = 2
+ Total energy = -6.624089601525484E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3009747150339748
+ Frobenius norm of the difference D_n-D_{n-1} = 1.868410256174138
+ Infinity norm of the commutator [F(D_n),D_n] = 2.767526807413616E+11
+ Frobenius norm of the commutator [F(D_n),D_n] = 3.210571393316269E+11
+ Difference of the energies E_n-E_{n-1} = -5.716777123367321E+12
+ Dimension of the density matrix simplex = 2
+  
+ # ITER = 3
+ Total energy = -6.654019855345912E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.04877947580688821
+ Frobenius norm of the difference D_n-D_{n-1} = 0.08795782490081558
+ Infinity norm of the commutator [F(D_n),D_n] = 5.853601009597538E+10
+ Frobenius norm of the commutator [F(D_n),D_n] = 6.81416960075015E+10
+ Difference of the energies E_n-E_{n-1} = -2.9930253820427734E+10
+ Dimension of the density matrix simplex = 3
+  
+ # ITER = 4
+ Total energy = -6.655433552522406E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.012785207468761746
+ Frobenius norm of the difference D_n-D_{n-1} = 0.023831544652953146
+ Infinity norm of the commutator [F(D_n),D_n] = 7.456205762817943E+7
+ Frobenius norm of the commutator [F(D_n),D_n] = 9.066507843265098E+7
+ Difference of the energies E_n-E_{n-1} = -1.4136971764941406E+9
+ Dimension of the density matrix simplex = 4
+  
+ # ITER = 5
+ Total energy = -6.655433555253611E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.000016326941907152767
+ Frobenius norm of the difference D_n-D_{n-1} = 0.00003406232785365991
+ Infinity norm of the commutator [F(D_n),D_n] = 656004.7185293536
+ Frobenius norm of the commutator [F(D_n),D_n] = 778416.4090698628
+ Difference of the energies E_n-E_{n-1} = -2731.205078125
+ Dimension of the density matrix simplex = 5
+  
+ # ITER = 6
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4355870233571942E-7
+ Frobenius norm of the difference D_n-D_{n-1} = 2.825203255449354E-7
+ Infinity norm of the commutator [F(D_n),D_n] = 34.46678266457197
+ Frobenius norm of the commutator [F(D_n),D_n] = 42.17512741861965
+ Difference of the energies E_n-E_{n-1} = -0.189453125
+ Dimension of the density matrix simplex = 6
+  
+ # ITER = 7
+ Total energy = -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.289012533945272E-10
+ Frobenius norm of the difference D_n-D_{n-1} = 2.4799800601678553E-10
+ Infinity norm of the commutator [F(D_n),D_n] = 556.7004917508897
+ Frobenius norm of the commutator [F(D_n),D_n] = 653.2140331204763
+ Difference of the energies E_n-E_{n-1} = 0.0048828125
+ Dimension of the density matrix simplex = 7
+  
+ # ITER = 8
+ Total energy = -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7285743904052028E-10
+ Frobenius norm of the difference D_n-D_{n-1} = 3.305451743890205E-10
+ Infinity norm of the commutator [F(D_n),D_n] = 236.81035795137703
+ Frobenius norm of the commutator [F(D_n),D_n] = 277.8795289022291
+ Difference of the energies E_n-E_{n-1} = -0.0078125
+ Dimension of the density matrix simplex = 8
+  
+ # ITER = 9
+ Total energy = -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 5.0411745907208905E-11
+ Frobenius norm of the difference D_n-D_{n-1} = 9.640722783743083E-11
+ Infinity norm of the commutator [F(D_n),D_n] = 5.396761381627831
+ Frobenius norm of the commutator [F(D_n),D_n] = 6.33373252916833
+ Difference of the energies E_n-E_{n-1} = 0.0068359375
+ Dimension of the density matrix simplex = 9
+  
+ # ITER = 10
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 4.838761508181621E-13
+ Frobenius norm of the difference D_n-D_{n-1} = 9.252038660724876E-13
+ Infinity norm of the commutator [F(D_n),D_n] = 3.176404252134073
+ Frobenius norm of the commutator [F(D_n),D_n] = 3.727592691113972
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 11
+ Total energy = -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2995928516896714E-13
+ Frobenius norm of the difference D_n-D_{n-1} = 2.468237686083284E-13
+ Infinity norm of the commutator [F(D_n),D_n] = 2.5809165018128732
+ Frobenius norm of the commutator [F(D_n),D_n] = 3.0308146405663154
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 12
+ Total energy = -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 5.585186061660721E-13
+ Frobenius norm of the difference D_n-D_{n-1} = 1.0681774543430009E-12
+ Infinity norm of the commutator [F(D_n),D_n] = 0.016034006252787357
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.02086706822393591
+ Difference of the energies E_n-E_{n-1} = -0.005859375
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 13
+ Total energy = -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 3.4929950674956464E-14
+ Frobenius norm of the difference D_n-D_{n-1} = 7.231870496619662E-14
+ Infinity norm of the commutator [F(D_n),D_n] = 0.17295398905924725
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.2128589959182456
+ Difference of the energies E_n-E_{n-1} = 0.0068359375
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 14
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 3.835602591347908E-14
+ Frobenius norm of the difference D_n-D_{n-1} = 8.099865410055638E-14
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002568285525000057
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001927719501975746
+ Difference of the energies E_n-E_{n-1} = -0.005859375
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 15
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1489535865976682E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7491084207283184E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028997414724857905
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026743973773011268
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 16
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.3678972843736943E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.0327667785016193E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024170259354576256
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0022181336085059637
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 17
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.2445728950519745E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8826092285836355E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0020706995684678328
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020665440881283584
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 18
+ Total energy = -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8408109274163285E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.858383922328121E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0018272708077915732
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0018260747539557197
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 19
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8348745317219723E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.92313532390882E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00266324380860071
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002501242344265213
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 20
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.551188024323511E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.815662664344447E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0021012064619609617
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020889088966869764
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 21
+ Total energy = -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5526430788974613E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5067504497708255E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.00229024750361706
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002219506319498286
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 22
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1456955565678E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.855835804369537E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0016646677517472676
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0014203564621056307
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 23
+ Total energy = -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8905238562594195E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.082700623014091E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003972874847635916
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003437559962109324
+ Difference of the energies E_n-E_{n-1} = 0.0048828125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 24
+ Total energy = -6.655433555253795E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8624620593227853E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.791320108226764E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0037949167643235235
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003436624753156349
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 25
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8130976575913653E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6779412933664262E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0027667874920006192
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0021391216299603737
+ Difference of the energies E_n-E_{n-1} = -0.0078125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 26
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.168656227467439E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2185610283073846E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002327699327876215
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020028029264791618
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 27
+ Total energy = -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4251043657612506E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5776594809171817E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0030402123552816587
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026278478547788336
+ Difference of the energies E_n-E_{n-1} = 0.0048828125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 28
+ Total energy = -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1325827349888056E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.074458507637755E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002018768567930174
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001745364573120627
+ Difference of the energies E_n-E_{n-1} = -0.0068359375
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 29
+ Total energy = -6.655433555253806E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7050697979913856E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8880384031938648E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0039579489723507895
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003635015154257328
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 30
+ Total energy = -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.36293400267495E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.19145879210979E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023165996114311396
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002249563643403169
+ Difference of the energies E_n-E_{n-1} = 0.0068359375
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 31
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5522569931882794E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7660201180543547E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002374229623803484
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002148579328496175
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 32
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.525010349769297E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7623699497861515E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0037193034393542867
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0030284943566077434
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 33
+ Total energy = -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1330321670938284E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.069967805281533E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004289712826923652
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003499198027528867
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 34
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.5825954672950273E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.425423602470132E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002136635736149523
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002144174566757923
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 35
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4455664287392514E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3490352012746833E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028776206712028433
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0025341140988557934
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 36
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.559009482525242E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.436643888812364E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002627105847923689
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0018224679610920572
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 37
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8596924481558428E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4643195693351447E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003900768943097188
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003078485213679615
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 38
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7524407242746085E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5782519872389196E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028658876812854023
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002542553555415288
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 39
+ Total energy = -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.126903550845933E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7024740225931817E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002299087667191637
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001969212467023594
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 40
+ Total energy = -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4961761592083807E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4106593683654903E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004232990380879351
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0032099082157603072
+ Difference of the energies E_n-E_{n-1} = 0.005859375
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 41
+ Total energy = -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.750336067176583E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5132082263852549E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004967913838959713
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.004328226936784717
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 42
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.2888622505306437E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.2417191483296444E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028061865907022944
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0028703830268731753
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 43
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.049005628682055E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5979886332047977E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023461260871773856
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024243591242652054
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 44
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1372958342594826E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2935554681339216E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0026919552185149295
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001972732947030798
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 45
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2427772874451654E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3803092734535917E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0033926069299956563
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0027279985236350847
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 46
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5678323186713672E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5570932128964993E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002418294604815077
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017607641990774175
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 47
+ Total energy = -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2828943962110019E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3258156027906255E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0013723061937833444
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0013642370276989047
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 48
+ Total energy = -6.655433555253799E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.581649891120042E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7223129128488529E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004748112892082949
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.004498842832260404
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 49
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 9.911407090967673E-16
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1043102437662828E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004509377769875977
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0038120515605093446
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 50
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3019256860834267E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4515178844840936E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024931054314282566
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0022320570847033754
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 51
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.780155479335872E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6577210990354214E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0029101456695090552
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002286888347721663
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 52
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.4792106175459044E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.0064354449639703E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0024660506861096006
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0019478106628359978
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 53
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.140689254658796E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1175001331765741E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023663114171881324
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0021457814083266657
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 54
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3272358648771014E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2133367961765065E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0031899571949450052
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002800133015794835
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 55
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6341452427095554E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5742778449235937E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.004208033528675369
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003887081567438868
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 56
+ Total energy = -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.466545707103043E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3458863316123054E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0038748871289885924
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003378875320375529
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 57
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3365414429654764E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2840843753088457E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0032899490286413145
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002798248170594703
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 58
+ Total energy = -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7369302058005743E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.185032609334943E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0013252485551817723
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001375030137971234
+ Difference of the energies E_n-E_{n-1} = 0.00390625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 59
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.7344269590344696E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.806336982440483E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0032252717475589115
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0029571610556980927
+ Difference of the energies E_n-E_{n-1} = -0.0048828125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 60
+ Total energy = -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3720280668933856E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5326302469729257E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0034640697633503666
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0029189854479542833
+ Difference of the energies E_n-E_{n-1} = 0.005859375
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 61
+ Total energy = -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.0936715082975114E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3244672326416996E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0030566946025930367
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002747624396120293
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 62
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.806532518908382E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.9157510097818518E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0019163438965060092
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002106023414404717
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 63
+ Total energy = -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.292777753155462E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.896661004770316E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.001518975992448728
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0017531783703775377
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 64
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.158438704702889E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.1687865949783013E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0032028844542917488
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0031476024197973486
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 65
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.9890808578251458E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.0024642394042308E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0022962627778531867
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002072355669706186
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 66
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 3.0107660144515253E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.7565278889345623E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0035929479862400857
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0031194447489706007
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 67
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.415788366996742E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.277482235582364E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002868105043805674
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002804951907786756
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 68
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4745662288355022E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4458101888894664E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0028618308434414405
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024266381413493997
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 69
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.4573823574793524E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.685075056319309E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002467740377155356
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0021641253823296044
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 70
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4505032248176799E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2442988041944105E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003305245229830404
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0032949838535013716
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 71
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8129455289572947E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6386565523129223E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002561950079140506
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0022789253444239414
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 72
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.7753901388929543E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.9715498395115108E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023054035852809497
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0020275007969110448
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 73
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.777153676693806E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.516496900240165E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0025646992209179143
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0026081415833957614
+ Difference of the energies E_n-E_{n-1} = -0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 74
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5279282033010096E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7423201914641847E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0015411863450538093
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0014384489383060175
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 75
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.8584530129483332E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6867474013250843E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0025222022269274385
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002423396192085406
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 76
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.931245295372821E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.766586548456577E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0030620692957245093
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003248799638154326
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 77
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4928134232356845E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6187783384478315E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0017441967678956936
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0015042545806426152
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 78
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.9569970989888544E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.718752982099009E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0019494747389400774
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.00159267566114545
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 79
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.96744850675812E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6096001209133589E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0015906853223574978
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0014963848757296202
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 80
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6035779246735416E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.204582448221353E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003582597614925748
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.003460992805372109
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 81
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.3522306969419936E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8596203680651683E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0020451264271007423
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0016397016911374436
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 82
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.044700501230033E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.868721958901782E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0026115996615840276
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024962536480528453
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 83
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4929025204866779E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.606027998282481E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002626681371791257
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023343589248404108
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 84
+ Total energy = -6.655433555253798E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5686102692558306E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5164126784786907E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0037037324011883204
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0031169975490401604
+ Difference of the energies E_n-E_{n-1} = 0.0048828125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 85
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.6475014730233957E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 2.193718698525185E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0021721422906340357
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.002182491035751315
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 86
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.952965269197455E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.4195218942454363E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0019185661510358915
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0018323233429454052
+ Difference of the energies E_n-E_{n-1} = -0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 87
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3146450707999106E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.31436679386038E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0012890128886380585
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0014289984822466867
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 88
+ Total energy = -6.655433555253805E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4682963165904752E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3156512841054287E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0039933710128823505
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0032831764821497815
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 89
+ Total energy = -6.655433555253804E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.01901368784709E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.8383589905144765E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0012848734213804502
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0014436892201257357
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 90
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5212866735725656E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6976795721661342E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0020941363830924153
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0016901139946892952
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 91
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.4985018371330482E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.6150414008376356E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.001259324182024846
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001569396277862994
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 92
+ Total energy = -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.410568195122474E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.2423644472193031E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003047348663397586
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023905156834826257
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 93
+ Total energy = -6.655433555253796E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.558287707469312E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5178660230941565E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0013372265537098457
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.001376626488901646
+ Difference of the energies E_n-E_{n-1} = 0.0048828125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 94
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5518910950453107E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.597334310216641E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0037791918241326084
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0033890708798628186
+ Difference of the energies E_n-E_{n-1} = -0.00390625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 95
+ Total energy = -6.655433555253803E+12
+ Infinity norm of the difference D_n-D_{n-1} = 9.324763544293792E-16
+ Frobenius norm of the difference D_n-D_{n-1} = 1.1814808370976944E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.003895802524045866
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0031918241852614574
+ Difference of the energies E_n-E_{n-1} = -0.0029296875
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 96
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.5420135408351338E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.3712476520272001E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0014807209414924548
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0014762417946500175
+ Difference of the energies E_n-E_{n-1} = 0.0009765625
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 97
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.2727435204306678E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.164909281946801E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0015524607084016306
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0011776007304338683
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 98
+ Total energy = -6.655433555253802E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.748468845689062E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.7085277243861877E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.002618846587371706
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0023651000046968143
+ Difference of the energies E_n-E_{n-1} = 0.
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 99
+ Total energy = -6.6554335552538E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.1142670416369788E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.79196234736172E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.0023882422285759833
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0024153892721062212
+ Difference of the energies E_n-E_{n-1} = 0.001953125
+ Dimension of the density matrix simplex = 10
+  
+ # ITER = 100
+ Total energy = -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.6082778045809468E-15
+ Frobenius norm of the difference D_n-D_{n-1} = 1.5595536781376775E-15
+ Infinity norm of the commutator [F(D_n),D_n] = 0.001677355738263048
+ Frobenius norm of the commutator [F(D_n),D_n] = 0.0016418030508362806
+ Difference of the energies E_n-E_{n-1} = 0.0029296875
+  
+ Subroutine DIIS: no convergence after 100 iteration(s).
+
+ Optimal damping algorithm (ODA)
+  
+ # ITER = 1
+ E(D_n)= -9.073124781581628E+11
+ Infinity norm of the difference D_n-D_{n-1} = 1.2100579819673856
+ Frobenius norm of the difference D_n-D_{n-1} = 2.645751311064592
+ Infinity norm of the commutator [F(D_n),D_n] = 1.0412161960774183E+12
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.338737729383472E+12
+ Difference of the energies E_n-E_{n-1} = -9.073124781581628E+11
+ alpha = -9.073124779781814E+11 beta = -101.24781936180648
+ lambda=1.
+ E(tilde{D}_n)= -9.073124781581628E+11
+  
+ # ITER = 2
+ E(D_n)= -6.624089601525484E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.3009747150339748
+ Frobenius norm of the difference D_n-D_{n-1} = 1.868410256174138
+ Infinity norm of the commutator [F(D_n),D_n] = 2.767526807413616E+11
+ Frobenius norm of the commutator [F(D_n),D_n] = 3.210571393316269E+11
+ Difference of the energies E_n-E_{n-1} = -5.716777123367321E+12
+ alpha = -2.1800274052363254E+12 beta = -1.7683748590654978E+12
+ lambda=1.
+ E(tilde{D}_n)= -6.624089601525484E+12
+  
+ # ITER = 3
+ E(D_n)= -6.654187827229986E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.04950111641461568
+ Frobenius norm of the difference D_n-D_{n-1} = 0.08947695158032672
+ Infinity norm of the commutator [F(D_n),D_n] = 5.525877770276561E+10
+ Frobenius norm of the commutator [F(D_n),D_n] = 6.415766521772859E+10
+ Difference of the energies E_n-E_{n-1} = -3.0098225704501953E+10
+ alpha = -5.041577546329225E+9 beta = -1.252832407908651E+10
+ lambda=1.
+ E(tilde{D}_n)= -6.654187827229986E+12
+  
+ # ITER = 4
+ E(D_n)= -6.655384408772801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.00965403711996582
+ Frobenius norm of the difference D_n-D_{n-1} = 0.017852563679180162
+ Infinity norm of the commutator [F(D_n),D_n] = 1.0979032315808683E+10
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.274652344568357E+10
+ Difference of the energies E_n-E_{n-1} = -1.1965815428144531E+9
+ alpha = -1.9838115888265717E+8 beta = -4.991001919655052E+8
+ lambda=1.
+ E(tilde{D}_n)= -6.655384408772801E+12
+  
+ # ITER = 5
+ E(D_n)= -6.655431617733268E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.0019102407484255265
+ Frobenius norm of the difference D_n-D_{n-1} = 0.003545775127000044
+ Infinity norm of the commutator [F(D_n),D_n] = 2.180026516466998E+9
+ Frobenius norm of the commutator [F(D_n),D_n] = 2.5309528983494825E+9
+ Difference of the energies E_n-E_{n-1} = -4.7208960466796875E+7
+ alpha = -7821082.474936166 beta = -1.9693938996090245E+7
+ lambda=1.
+ E(tilde{D}_n)= -6.655431617733268E+12
+  
+ # ITER = 6
+ E(D_n)= -6.655433478878964E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.0003789972514012589
+ Frobenius norm of the difference D_n-D_{n-1} = 0.0007040158252857439
+ Infinity norm of the commutator [F(D_n),D_n] = 4.3283035403956103E+8
+ Frobenius norm of the commutator [F(D_n),D_n] = 5.0250324153350693E+8
+ Difference of the energies E_n-E_{n-1} = -1861145.6962890625
+ alpha = -308306.716204242 beta = -776419.4899402597
+ lambda=1.
+ E(tilde{D}_n)= -6.655433478878964E+12
+  
+ # ITER = 7
+ E(D_n)= -6.655433552243254E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.00007523548509311476
+ Frobenius norm of the difference D_n-D_{n-1} = 0.00013977620780798253
+ Infinity norm of the commutator [F(D_n),D_n] = 8.593414929641753E+7
+ Frobenius norm of the commutator [F(D_n),D_n] = 9.97669541118814E+7
+ Difference of the energies E_n-E_{n-1} = -73364.2900390625
+ alpha = -12152.912461354432 beta = -30605.68926586127
+ lambda=1.
+ E(tilde{D}_n)= -6.655433552243254E+12
+  
+ # ITER = 8
+ E(D_n)= -6.655433555135134E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.000014936782321012737
+ Frobenius norm of the difference D_n-D_{n-1} = 0.00002775110746219737
+ Infinity norm of the commutator [F(D_n),D_n] = 1.7061307498857487E+7
+ Frobenius norm of the commutator [F(D_n),D_n] = 1.9807661096722428E+7
+ Difference of the energies E_n-E_{n-1} = -2891.8798828125
+ alpha = -479.0421063537402 beta = -1206.4185106099867
+ lambda=1.
+ E(tilde{D}_n)= -6.655433555135134E+12
+  
+ # ITER = 9
+ E(D_n)= -6.655433555249118E+12
+ Infinity norm of the difference D_n-D_{n-1} = 0.000002965519959713296
+ Frobenius norm of the difference D_n-D_{n-1} = 0.0000055096834507478994
+ Infinity norm of the commutator [F(D_n),D_n] = 3387337.9916560412
+ Frobenius norm of the commutator [F(D_n),D_n] = 3932596.7006554697
+ Difference of the energies E_n-E_{n-1} = -113.984375
+ alpha = -18.882790985723855 beta = -47.550786578673495
+ lambda=1.
+ E(tilde{D}_n)= -6.655433555249118E+12
+  
+ # ITER = 10
+ E(D_n)= -6.65543355525362E+12
+ Infinity norm of the difference D_n-D_{n-1} = 5.887711653437171E-7
+ Frobenius norm of the difference D_n-D_{n-1} = 0.000001093887931496685
+ Infinity norm of the commutator [F(D_n),D_n] = 672519.2110593879
+ Frobenius norm of the commutator [F(D_n),D_n] = 780774.4094945464
+ Difference of the energies E_n-E_{n-1} = -4.501953125
+ alpha = -0.7443179979486894 beta = -1.878891222791765
+ lambda=1.
+ E(tilde{D}_n)= -6.65543355525362E+12
+  
+ # ITER = 11
+ E(D_n)= -6.655433555253789E+12
+ Infinity norm of the difference D_n-D_{n-1} = 1.1689409969135961E-7
+ Frobenius norm of the difference D_n-D_{n-1} = 2.1717957812987995E-7
+ Infinity norm of the commutator [F(D_n),D_n] = 133521.3860332804
+ Frobenius norm of the commutator [F(D_n),D_n] = 155014.28201810445
+ Difference of the energies E_n-E_{n-1} = -0.1689453125
+ alpha = -0.029339372678813123 beta = -0.06972295463048361
+ lambda=1.
+ E(tilde{D}_n)= -6.655433555253789E+12
+  
+ # ITER = 12
+ E(D_n)= -6.655433555253801E+12
+ Infinity norm of the difference D_n-D_{n-1} = 2.3208052611859317E-8
+ Frobenius norm of the difference D_n-D_{n-1} = 4.3118647675411076E-8
+ Infinity norm of the commutator [F(D_n),D_n] = 26509.223364844573
+ Frobenius norm of the commutator [F(D_n),D_n] = 30776.404450294376
+ Difference of the energies E_n-E_{n-1} = -0.01171875
+ alpha = -0.0011564932554084648 beta = -0.005535354647492774
+ lambda=1.
+ E(tilde{D}_n)= -6.655433555253801E+12
+  
+ # ITER = 13
+ E(D_n)= -6.655433555253797E+12
+ Infinity norm of the difference D_n-D_{n-1} = 4.607707442387816E-9
+ Frobenius norm of the difference D_n-D_{n-1} = 8.560739449311445E-9
+ Infinity norm of the commutator [F(D_n),D_n] = 5263.117464205615
+ Frobenius norm of the commutator [F(D_n),D_n] = 6110.32121917598
+ Difference of the energies E_n-E_{n-1} = 0.00390625
+ Warning: internal computation error (beta>0).
+  
+ Subroutine ODA: computation stopped after 13 iteration(s).
+  
+  Elapsed CPU time is  2.484155  seconds.
