@@ -412,7 +412,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
   ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
   N=0
   ! Here the first integrals are faster to compute than the last ones : therefore, schedule
-  ! with CHUNK=2 to distribute work evenly
+  ! with CHUNK=1 to distribute work evenly
   !$OMP PARALLEL DO PRIVATE(N, J, K, L, SC, GLOBALMONOMIALDEGREE) SCHEDULE(STATIC, 1)
   DO I=NGBF(1)+1,SUM(NGBF)
      ! reinit N: we can't be sure of its value because it's parallel. This does nothing in the non-parallel case
