@@ -411,7 +411,9 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
   WRITE(*,*)'- Computing SL integrals'
   ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
   N=0
-  !$OMP PARALLEL DO PRIVATE(N, J, K, L, SC, GLOBALMONOMIALDEGREE)
+  ! Here the first integrals are faster to compute than the last ones : therefore, schedule
+  ! with CHUNK=2 to distribute work evenly
+  !$OMP PARALLEL DO PRIVATE(N, J, K, L, SC, GLOBALMONOMIALDEGREE) SCHEDULE(STATIC, 2)
   DO I=NGBF(1)+1,SUM(NGBF)
      ! reinit N: we can't be sure of its value because it's parallel. This does nothing in the non-parallel case
      ! TODO it seems calculations towards the end take more time. The code should explicitly tell that to the compiler
@@ -435,7 +437,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
  &            SSIKJL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+NGBF(2)-2)/24),   &
  &            SSILJK(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2-3*NGBF(2)+2)/24))
      M=0 ; N=0 ; O=0
-     !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L,SC,GLOBALMONOMIALDEGREE)
+     !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC, 2)
      DO I=NGBF(1)+1,SUM(NGBF)
         ! reinit M N O: we can't be sure of their values because it's parallel. This does nothing in the non-parallel case
         M = (I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)*(I-NGBF(1)+2)/24
