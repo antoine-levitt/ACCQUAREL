@@ -411,7 +411,12 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
   WRITE(*,*)'- Computing SL integrals'
   ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
   N=0
-  DO I=NGBF(1)+1,SUM(NGBF) ; DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
+  !$OMP PARALLEL DO PRIVATE(N, J, K, L, SC, GLOBALMONOMIALDEGREE)
+  DO I=NGBF(1)+1,SUM(NGBF)
+     ! reinit N: we can't be sure of its value because it's parallel
+     N = NGBF(1)*(NGBF(1)+1)/2 * (I-NGBF(1)-1)*(I-NGBF(1))/2
+     ! this takes N(N+1)/2*(I-N) iters
+     DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
      SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
      GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
 ! parity check (one center case)
@@ -421,6 +426,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
         N=N+1 ; SLIJKL(N)=(0.D0,0.D0)
      END IF
   END DO ; END DO ; END DO ; END DO
+  !$OMP END PARALLEL DO
   IF (SSINTEGRALS) THEN
 ! (SS|SS) integrals
      WRITE(*,*)'- Computing SS integrals'
