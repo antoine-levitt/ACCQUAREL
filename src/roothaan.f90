@@ -69,7 +69,6 @@ SUBROUTINE ROOTHAAN_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME
      WRITE(9,'(i4,e22.14)')I,EIG(I)
   END DO
   CLOSE(9)
-  CALL EXPORT_DENSITY(PDM,PHI,NBAST,-3.D0,3.D0,50,'density','cube')
   GO TO 5
 3 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine ROOTHAAN: no convergence after',ITER,'iteration(s).'
   OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
@@ -154,7 +153,6 @@ SUBROUTINE ROOTHAAN_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      WRITE(9,'(i4,e22.14)')I,EIG(I)
   END DO
   CLOSE(9)
-  CALL EXPORT_DENSITY(PDM,PHI,NBAST,-3.D0,3.D0,50,'density','cube')
   GO TO 5
 3 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine ROOTHAAN: no convergence after',ITER,'iteration(s).'
   OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
