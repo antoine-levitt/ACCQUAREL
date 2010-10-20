@@ -1,3 +1,4 @@
+# This file is for a reference calculation documented (table 3.13, page 192) in Szabo & Ostlund, Modern quantum chemistry: introduction to advanced electronic structure theory, 1989.
 ## CASE
 NONRELATIVISTIC
 ## APPROXIMATION
@@ -8,17 +9,16 @@ RHF
 * The first entry is the number of atoms in the system.
 * For each atom, the nucleus charge and position are given.
 * The last entry is the total number of electrons in the system
-H2O molecule
-3
-1 1.109411446 1.431533951 0.
-1 1.109411446 -1.431533951 0.
-8 0. 0. 0.
+FH molecule
+2
+9 0. 0. 0.
+1 1.733 0. 0.
 10
 ## BASIS DEFINITION
 * The first entry is the keyword 'BASIS' followed by the name of the basis set contained in the basis/ directory or the keywords 'EVEN-TEMPERED BASIS'.
 * The second entry is the choice of CONTRACTED or UNCONTRACTED basis functions for the calculation or the number of exponents for the even-tempered basis set. In the last case, the first term and the common ratio of the geometric series must be given, in this order, as two separate entries.
 * The next two entries are are for the relativistic case: application or not of the Kinetic Balance scheme (KINBAL/NOTKINBAL) and, if so, choice between the RESTRICTED or UNRESTRICTED scheme.
-BASIS 3-21G
+BASIS 6-31G*
 CONTRACTED
 ## SCF PARAMETERS OF THE COMPUTATION
 * They are:

@@ -1,9 +1,9 @@
+# This file is for a reference calculation documented (table 3.13, page 192) in Szabo & Ostlund, Modern quantum chemistry: introduction to advanced electronic structure theory, 1989.
 ## CASE
-RELATIVISTIC
+NONRELATIVISTIC
 ## APPROXIMATION
 HARTREE-FOCK
 ## MODEL
-CSDHF
 RHF
 ## DESCRIPTION OF THE MOLECULAR SYSTEM
 * The first entry is the number of atoms in the system.
@@ -11,18 +11,16 @@ RHF
 * The last entry is the total number of electrons in the system
 H2O molecule
 3
-1 1.109411446 1.431533951 0.
-1 1.109411446 -1.431533951 0.
+1 1.10725139824749 1.43055071251563 0.
+1 1.10725139824749 -1.43055071251563 0.
 8 0. 0. 0.
 10
 ## BASIS DEFINITION
 * The first entry is the keyword 'BASIS' followed by the name of the basis set contained in the basis/ directory or the keywords 'EVEN-TEMPERED BASIS'.
 * The second entry is the choice of CONTRACTED or UNCONTRACTED basis functions for the calculation or the number of exponents for the even-tempered basis set. In the last case, the first term and the common ratio of the geometric series must be given, in this order, as two separate entries.
 * The next two entries are are for the relativistic case: application or not of the Kinetic Balance scheme (KINBAL/NOTKINBAL) and, if so, choice between the RESTRICTED or UNRESTRICTED scheme.
-BASIS 3-21G
+BASIS 6-31G*
 CONTRACTED
-KINBAL
-RESTRICTED
 ## SCF PARAMETERS OF THE COMPUTATION
 * They are:
 * - the number of different scf algorithms to be used on the considered case,
@@ -35,19 +33,14 @@ RESTRICTED
 1
 2
 3
-5
+4
 1.E-6
 100
 NOTDIRECT
 MEMORY
-DISK
-SS
 ## LEVEL-SHIFTING ALGORITHM PARAMETERS
 * Value of the shift
 1.1
 ## DIIS ALGORITHM PARAMETERS
 * Maximum dimension of the density matrix simplex
 8
-## SERE'S ALGORITHM PARAMETERS
-* Choice of the method for the computation of the function $\Theta$
-DIAG
