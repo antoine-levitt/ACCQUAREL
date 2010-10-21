@@ -1,5 +1,4 @@
 SUBROUTINE DRIVER_relativistic
-  !$ USE omp_lib
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools
   USE metric_relativistic ; USE scf_algorithms
@@ -161,7 +160,6 @@ SUBROUTINE DRIVER_relativistic
 END SUBROUTINE DRIVER_relativistic
 
 SUBROUTINE DRIVER_nonrelativistic
-  !$ USE omp_lib
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE metric_nonrelativistic
   USE scf_algorithms
@@ -218,7 +216,7 @@ SUBROUTINE DRIVER_nonrelativistic
      IF (USEDISK) THEN
         ALLOCATE(BILIST(1:1,1:4))
         OPEN(LUNIT,form='UNFORMATTED') ; OPEN(BIUNIT,form='UNFORMATTED')
-	!$OMP PARALLEL DO SCHEDULE(STATIC,1)
+	!$OMP PARALLEL DO SCHEDULE(STATIC,1) NUM_THREADS(NUMBER_OF_THREADS)
         DO I=1,BINMBR
            READ(LUNIT)BILIST(1,:)
            WRITE(BIUNIT)BILIST(1,:),COULOMBVALUE(PHI(BILIST(1,1)),PHI(BILIST(1,2)),PHI(BILIST(1,3)),PHI(BILIST(1,4)))
@@ -230,7 +228,7 @@ SUBROUTINE DRIVER_nonrelativistic
      ELSE
         ALLOCATE(BILIST(1:BINMBR,1:4),RBIVALUES(1:BINMBR))
         OPEN(LUNIT,form='UNFORMATTED')
-	!$OMP PARALLEL DO SCHEDULE(STATIC,1)
+	!$OMP PARALLEL DO SCHEDULE(STATIC,1) NUM_THREADS(NUMBER_OF_THREADS)
         DO I=1,BINMBR
            READ(LUNIT)BILIST(I,:)
            RBIVALUES(I)=COULOMBVALUE(PHI(BILIST(I,1)),PHI(BILIST(I,2)),PHI(BILIST(I,3)),PHI(BILIST(I,4)))

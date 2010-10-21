@@ -370,7 +370,6 @@ END SUBROUTINE BUILDBILIST_relativistic
 
 SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
 ! Routine that computes the values of the bielectronic integrals over a cartesian gaussian basis, taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974). These values are next used to compute more efficiently the bielectronic integrals over a cartesian 2-spinor-type orbital basis in the relativistic case (see the GETPRECOMPUTEDCOULOMBVALUE function).
-  !$ USE omp_lib
   USE basis_parameters ; USE scf_parameters
   INTEGER,DIMENSION(2),INTENT(IN) :: NGBF  
   TYPE(gaussianbasisfunction),DIMENSION(SUM(NGBF)),INTENT(IN) :: GBF
@@ -413,7 +412,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
   ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
   N=0
 ! Here the first integrals are faster to compute than the last ones: therefore, schedule with CHUNK=1 to distribute work evenly.
-  !$OMP PARALLEL DO PRIVATE(N,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1)
+  !$OMP PARALLEL DO PRIVATE(N,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1) NUM_THREADS(NUMBER_OF_THREADS)
   DO I=NGBF(1)+1,SUM(NGBF)
      ! TODO it seems calculations towards the end take more time. The code should explicitly tell that to the compiler.
 ! Note: the value of N needs to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
@@ -437,7 +436,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
  &            SSIKJL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+NGBF(2)-2)/24),   &
  &            SSILJK(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2-3*NGBF(2)+2)/24))
      M=0 ; N=0 ; O=0
-     !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1)
+     !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1) NUM_THREADS(NUMBER_OF_THREADS)
      DO I=NGBF(1)+1,SUM(NGBF)
 ! Note: the values of M, N and O need to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
         M=(I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)*(I-NGBF(1)+2)/24
