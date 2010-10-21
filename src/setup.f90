@@ -619,7 +619,8 @@ MODULE scf_parameters
 CONTAINS
 
 SUBROUTINE SETUP_SCF
-  USE case_parameters ; USE setup_tools ; USE omp_lib
+  USE case_parameters ; USE setup_tools
+  !$ USE omp_lib
   CHARACTER :: METHOD
   CHARACTER(4) :: CHAR
   INTEGER :: I,INFO,MXSET,STAT,NUMBER_OF_THREADS
@@ -727,15 +728,14 @@ SUBROUTINE SETUP_SCF
         IF ((METHOD/='D').AND.(METHOD/='S')) GO TO 4
      END IF
   END DO
-  ! determination of the number of threads to be used by OpenMP
-  CALL LOOKFOR(100,'PARALLELIZATION PARAMETERS',INFO)
-  IF (INFO==0) THEN
-     READ(100,'(/,i3)')NUMBER_OF_THREADS
-     WRITE(*,*) 'SALUT'
-     CALL OMP_SET_NUM_THREADS(NUMBER_OF_THREADS)
-  END IF
-  WRITE(*,'(a,i2,a)') ' Using ', OMP_GET_MAX_THREADS(), ' thread(s)'
-  CLOSE(100)
+  !$ ! determination of the number of threads to be used by OpenMP
+  !$ CALL LOOKFOR(100,'PARALLELIZATION PARAMETERS',INFO)
+  !$ IF (INFO==0) THEN
+  !$    READ(100,'(/,i3)')NUMBER_OF_THREADS
+  !$    CALL OMP_SET_NUM_THREADS(NUMBER_OF_THREADS)
+  !$ END IF
+  !$ WRITE(*,'(a,i2,a)') ' Using ', OMP_GET_MAX_THREADS(), ' thread(s)'
+  !$ CLOSE(100)
   RETURN
 ! MESSAGES
 1 STOP'No shift parameter given for the level-shifting algorithm.'
