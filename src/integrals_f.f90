@@ -414,7 +414,6 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
 ! Here the first integrals are faster to compute than the last ones: therefore, schedule with CHUNK=1 to distribute work evenly.
   !$OMP PARALLEL DO PRIVATE(N,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1)
   DO I=NGBF(1)+1,SUM(NGBF)
-     ! TODO it seems calculations towards the end take more time. The code should explicitly tell that to the compiler.
 ! Note: the value of N needs to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
      N=NGBF(1)*(NGBF(1)+1)/2*(I-NGBF(1)-1)*(I-NGBF(1))/2
      ! this takes N(N+1)/2*(I-N) iters
