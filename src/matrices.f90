@@ -864,11 +864,11 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
   PEM=PACK(EM,NBAST)
 END SUBROUTINE BUILDEXCHANGE_nonrelativistic
 
-SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
-! Computation and assembly of the matrix associated to one of the three components of the total angular momentum operator J (only the upper triangular part of the matrix is stored in packed format).
+SUBROUTINE BUILDSCM(PSCM,PHI,NBAST,NBAS,COMPONENT)
+! Computation and assembly of the matrix associated to one of the three components of the spin angular momentum operator S (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
   INTEGER,INTENT(IN) :: NBAST
-  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTAMCM
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PSCM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
   INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
   INTEGER :: COMPONENT
@@ -876,7 +876,127 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
   INTEGER :: I,J,K,L,M
   DOUBLE COMPLEX :: VALUE
 
-  PTAMCM=(0.D0,0.D0)
+  PSCM=(0.D0,0.D0)
+  SELECT CASE (COMPONENT)
+  CASE (1)
+  DO J=1,NBAS(1)
+     DO I=1,J
+        VALUE=(0.D0,0.D0)
+        DO L=1,PHI(I)%nbrofcontractions(1)
+           DO M=1,PHI(J)%nbrofcontractions(2)
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
+ &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
+           END DO
+        END DO
+        DO L=1,PHI(I)%nbrofcontractions(2)
+           DO M=1,PHI(J)%nbrofcontractions(1)
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
+ &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))
+           END DO
+        END DO
+        PSCM(I+(J-1)*J/2)=VALUE
+     END DO
+  END DO
+  DO J=NBAS(1)+1,SUM(NBAS)
+     DO I=NBAS(1)+1,J
+        VALUE=(0.D0,0.D0)
+        DO L=1,PHI(I)%nbrofcontractions(1)
+           DO M=1,PHI(J)%nbrofcontractions(2)
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
+ &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
+           END DO
+        END DO
+        DO L=1,PHI(I)%nbrofcontractions(2)
+           DO M=1,PHI(J)%nbrofcontractions(1)
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
+ &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))   
+           END DO
+        END DO
+        PSCM(I+(J-1)*J/2)=VALUE
+     END DO
+  END DO
+  CASE (2)
+  DO J=1,NBAS(1)
+     DO I=1,J
+        VALUE=(0.D0,0.D0)
+        DO L=1,PHI(I)%nbrofcontractions(1)
+           DO M=1,PHI(J)%nbrofcontractions(2)
+              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
+ &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
+           END DO
+        END DO
+        DO L=1,PHI(I)%nbrofcontractions(2)
+           DO M=1,PHI(J)%nbrofcontractions(1)
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
+ &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
+           END DO
+        END DO
+        PSCM(I+(J-1)*J/2)=VALUE
+     END DO
+  END DO
+  DO J=NBAS(1)+1,SUM(NBAS)
+     DO I=NBAS(1)+1,J
+        VALUE=(0.D0,0.D0)
+        DO L=1,PHI(I)%nbrofcontractions(1)
+           DO M=1,PHI(J)%nbrofcontractions(2)
+              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
+ &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
+           END DO
+        END DO
+        DO L=1,PHI(I)%nbrofcontractions(2)
+           DO M=1,PHI(J)%nbrofcontractions(1)
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
+ &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
+           END DO
+        END DO
+        PSCM(I+(J-1)*J/2)=VALUE
+     END DO
+  END DO
+  CASE (3)
+  DO J=1,NBAS(1)
+     DO I=1,J
+        VALUE=(0.D0,0.D0)
+        DO K=1,2
+           DO L=1,PHI(I)%nbrofcontractions(K)
+              DO M=1,PHI(J)%nbrofcontractions(K)
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                                 &
+ &                           *.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
+              END DO
+           END DO
+        END DO
+        PSCM(I+(J-1)*J/2)=VALUE
+     END DO
+  END DO
+  DO J=NBAS(1)+1,SUM(NBAS)
+     DO I=NBAS(1)+1,J
+        VALUE=(0.D0,0.D0)
+        DO K=1,2
+           DO L=1,PHI(I)%nbrofcontractions(K)
+              DO M=1,PHI(J)%nbrofcontractions(K)
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                                 &
+ &                           *.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
+              END DO
+           END DO
+        END DO
+        PSCM(I+(J-1)*J/2)=VALUE
+     END DO
+  END DO
+  END SELECT
+END SUBROUTINE BUILDSCM
+
+SUBROUTINE BUILDLCM(PLCM,PHI,NBAST,NBAS,COMPONENT)
+! Computation and assembly of the matrix associated to one of the three components of the angular momentum operator L (only the upper triangular part of the matrix is stored in packed format).
+  USE basis_parameters ; USE integrals
+  INTEGER,INTENT(IN) :: NBAST
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PLCM
+  TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+  INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
+  INTEGER :: COMPONENT
+
+  INTEGER :: I,J,K,L,M
+  DOUBLE COMPLEX :: VALUE
+
+  PLCM=(0.D0,0.D0)
   SELECT CASE (COMPONENT)
   CASE (1)
   DO J=1,NBAS(1)
@@ -891,19 +1011,7 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
               END DO
            END DO
         END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
- &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
- &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))
-           END DO
-        END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
+        PLCM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
   DO J=NBAS(1)+1,SUM(NBAS)
@@ -918,19 +1026,7 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
               END DO
            END DO
         END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
- &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
- &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))   
-           END DO
-        END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
+        PLCM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
   CASE (2)
@@ -946,19 +1042,7 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
               END DO
            END DO
         END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
- &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
- &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
-           END DO
-        END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
+        PLCM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
   DO J=NBAS(1)+1,SUM(NBAS)
@@ -973,19 +1057,7 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
               END DO
            END DO
         END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
- &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
- &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
-           END DO
-        END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
+        PLCM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
   CASE (3)
@@ -996,13 +1068,13 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
                  VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                                 &
- &                           *DCMPLX(.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L)), &
+ &                           *DCMPLX(0.D0,                                                                            &
  &                                   XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)               &
  &                                   -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,2))
               END DO
            END DO
         END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
+        PLCM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
   DO J=NBAS(1)+1,SUM(NBAS)
@@ -1012,16 +1084,37 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
                  VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                                 &
- &                           *DCMPLX(.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L)), &
+ &                           *DCMPLX(0.D0,                                                                            &
  &                                   XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)               &
  &                                   -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,2))
               END DO
            END DO
         END DO
-        PTAMCM(I+(J-1)*J/2)=VALUE
+        PLCM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
   END SELECT
+END SUBROUTINE BUILDLCM
+
+SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
+! Computation and assembly of the matrix associated to one of the three components of the total angular momentum operator J = L + S (only the upper triangular part of the matrix is stored in packed format).
+  USE basis_parameters ; USE integrals
+  INTEGER,INTENT(IN) :: NBAST
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTAMCM
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PSCM,PLCM
+  TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+  INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
+  INTEGER :: COMPONENT
+
+  INTEGER :: I,J,K,L,M
+  DOUBLE COMPLEX :: VALUE
+
+  PTAMCM=(0.D0,0.D0)
+
+  CALL BUILDSCM(PSCM,PHI,NBAST,NBAS,COMPONENT)
+  CALL BUILDLCM(PLCM,PHI,NBAST,NBAS,COMPONENT)
+
+  PTAMCM=PSCM+PLCM
 END SUBROUTINE BUILDTAMCM
 
 MODULE matrices
