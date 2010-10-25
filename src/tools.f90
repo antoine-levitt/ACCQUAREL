@@ -2,6 +2,34 @@ MODULE constants
   DOUBLE PRECISION,PARAMETER :: PI=3.14159265358979323846D0
 END MODULE
 
+MODULE random
+CONTAINS
+  ! call this once
+  SUBROUTINE INIT_RANDOM()
+    ! initialises random generator
+    ! based on http://gcc.gnu.org/onlinedocs/gfortran/RANDOM_005fSEED.html#RANDOM_005fSEED
+    INTEGER :: i, n, clock
+    INTEGER, DIMENSION(:), ALLOCATABLE :: seed
+
+    CALL RANDOM_SEED(size = n)
+    ALLOCATE(seed(n))
+
+    CALL SYSTEM_CLOCK(COUNT=clock)
+
+    seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+    CALL RANDOM_SEED(PUT = seed)
+
+    DEALLOCATE(seed)
+  END SUBROUTINE INIT_RANDOM
+
+  ! returns an array of random numbers of size N in (0, 1)
+  FUNCTION GET_RANDOM(N) RESULT(r)
+    REAL, DIMENSION(N) :: r
+    INTEGER :: N
+    CALL RANDOM_NUMBER(r)
+  END FUNCTION get_random
+END MODULE random
+
 MODULE matrix_tools
 INTERFACE PACK
   MODULE PROCEDURE PACK_symmetric,PACK_hermitian
