@@ -865,11 +865,7 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
 END SUBROUTINE BUILDEXCHANGE_nonrelativistic
 
 SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
-<<<<<<< HEAD
 ! Computation and assembly of the matrix associated to one of the three components of the spin angular momentum operator S=-i/4\alpha^\alpha (only the upper triangular part of the matrix is stored in packed format).
-=======
-! Computation and assembly of the matrix associated to one of the three components of the spin angular momentum operator S (only the upper triangular part of the matrix is stored in packed format).
->>>>>>> d6f48020670cd2b68963523b04763bd79f4c6f90
   USE basis_parameters ; USE integrals
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PSAMCM
@@ -989,11 +985,7 @@ SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
 END SUBROUTINE BUILDSAMCM
 
 SUBROUTINE BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
-<<<<<<< HEAD
 ! Computation and assembly of the matrix associated to one of the three components of the orbital angular momentum operator L=x^p (only the upper triangular part of the matrix is stored in packed format).
-=======
-! Computation and assembly of the matrix associated to one of the three components of the orbital angular momentum operator L (only the upper triangular part of the matrix is stored in packed format).
->>>>>>> d6f48020670cd2b68963523b04763bd79f4c6f90
   USE basis_parameters ; USE integrals
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POAMCM
@@ -1107,29 +1099,14 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
   USE basis_parameters ; USE integrals
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTAMCM
-<<<<<<< HEAD
-=======
-  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PSAMCM,POAMCM
->>>>>>> d6f48020670cd2b68963523b04763bd79f4c6f90
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
   INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
   INTEGER :: COMPONENT
 
-<<<<<<< HEAD
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PSAMCM,POAMCM
 
   CALL BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
   CALL BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
-=======
-  INTEGER :: I,J,K,L,M
-  DOUBLE COMPLEX :: VALUE
-
-  PTAMCM=(0.D0,0.D0)
-
-  CALL BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
-  CALL BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
-
->>>>>>> d6f48020670cd2b68963523b04763bd79f4c6f90
   PTAMCM=PSAMCM+POAMCM
 END SUBROUTINE BUILDTAMCM
 
