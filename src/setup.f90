@@ -619,8 +619,8 @@ MODULE scf_parameters
 CONTAINS
 
 SUBROUTINE SETUP_SCF
-  USE case_parameters ; USE setup_tools
   !$ USE omp_lib
+  USE case_parameters ; USE setup_tools
   CHARACTER :: METHOD
   CHARACTER(4) :: CHAR
   INTEGER :: I,INFO,MXSET,STAT,NUMBER_OF_THREADS
@@ -734,7 +734,7 @@ SUBROUTINE SETUP_SCF
   !$    READ(100,'(/,i3)')NUMBER_OF_THREADS
   !$    CALL OMP_SET_NUM_THREADS(NUMBER_OF_THREADS)
   !$ END IF
-  !$ WRITE(*,'(a,i2,a)') ' The maximum number of threads to be used is ', OMP_GET_MAX_THREADS(), '.'
+  !$ WRITE(*,'(a,i2,a)') ' The number of thread(s) to be used is ',OMP_GET_MAX_THREADS(),'.'
   !$ CLOSE(100)
   RETURN
 ! MESSAGES
