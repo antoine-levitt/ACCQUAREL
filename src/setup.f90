@@ -734,7 +734,11 @@ SUBROUTINE SETUP_SCF
   !$    READ(100,'(/,i3)')NUMBER_OF_THREADS
   !$    CALL OMP_SET_NUM_THREADS(NUMBER_OF_THREADS)
   !$ END IF
+<<<<<<< HEAD
   !$ WRITE(*,'(a,i2,a)') ' The number of thread(s) to be used is ',OMP_GET_MAX_THREADS(),'.'
+=======
+  !$ WRITE(*,'(a,i2,a)') ' The maximum number of threads to be used is ', OMP_GET_MAX_THREADS(), '.'
+>>>>>>> d6f48020670cd2b68963523b04763bd79f4c6f90
   !$ CLOSE(100)
   RETURN
 ! MESSAGES
