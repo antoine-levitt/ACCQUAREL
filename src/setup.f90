@@ -640,7 +640,7 @@ SUBROUTINE SETUP_SCF
   END DO
   READ(100,*) TRSHLD
   WRITE(*,*)'Threshold =',TRSHLD
-  READ(100,'(i3)') MAXITR
+  READ(100,'(i5)') MAXITR
   WRITE(*,*)'Maximum number of iterations =',MAXITR
   READ(100,'(a3)') CHAR
   IF (RELATIVISTIC) THEN
