@@ -186,26 +186,22 @@ SUBROUTINE SETUP_DATA
      READ(100,'(i3)') NBE
      WRITE(*,'(a,i3)')' * Total number of electrons in the system = ',NBE
      IF (RELATIVISTIC) THEN
-        IF ((MODEL==1).AND.(MODULO(NBE,2)/=0)) THEN
-!           STOP' Closed-shell Dirac-Hartree-Fock model: the number of electrons must be even!'
-        ELSE IF (MODEL==2) THEN
-           READ(100,'(i3)')NBECS
+        IF (MODEL==2) THEN
+           READ(100,'(3(i3))')NBECS,NBEOS,NBOOS
            WRITE(*,'(a,i3)')'   - number of closed shell electrons = ',NBECS
-           READ(100,'(i3)')NBEOS
            WRITE(*,'(a,i3)')'   - number of open shell electrons = ',NBEOS
-           IF (NBEOS==0) STOP
-           READ(100,'(i3)')NBOOS
            WRITE(*,'(a,i3)')'   - number of open shell orbitals = ',NBOOS
-           IF (NBE/=NBECS+NBEOS) STOP' Open-shell Dirac-Hartree-Fock formalism: problem with the total number of electrons'
+           IF (NBE/=NBECS+NBEOS) STOP' Problem with the total number of electrons'
+           IF (NBOOS<=NBEOS) STOP' Problem with the number of open shell orbitals!'
         END IF
      ELSE
-        IF ((MODEL==1).AND.(MODULO(NBE,2)/=0)) THEN
-           STOP' Restricted closed-shell Hartree-Fock formalism: the number of electrons must be even!'
+        IF (MODEL==1) THEN
+           IF (MODULO(NBE,2)/=0) STOP' Problem: the number of electrons must be even!'
         ELSE IF (MODEL==2) THEN
            READ(100,'(2(i3))')NBEA,NBEB
            WRITE(*,'(a,i3)')'   - number of electrons of $\alpha$ spin = ',NBEA
            WRITE(*,'(a,i3)')'   - number of electrons of $\beta$ spin = ',NBEB
-           IF (NBE/=NBEA+NBEB) STOP' Unrestricted open-shell Hartree-Fock formalism: problem with the total number of electrons!'
+           IF (NBE/=NBEA+NBEB) STOP' Problem with the total number of electrons!'
 !        ELSE IF (MODEL==3) THEN
         END IF
      END IF

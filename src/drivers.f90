@@ -2,6 +2,7 @@ SUBROUTINE DRIVER_relativistic
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools
   USE metric_relativistic ; USE scf_algorithms
+  IMPLICIT NONE
   INTEGER :: NBAST
   TYPE(twospinor),DIMENSION(:),ALLOCATABLE :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
@@ -108,11 +109,11 @@ SUBROUTINE DRIVER_relativistic
         CASE (1)
         WRITE(*,'(/,a)')' Roothaan''s algorithm'
         SELECT CASE (MODEL)
-        CASE (1)
-        CALL ROOTHAAN(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-!        CALL ROOTHAAN_test(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
-        CASE (2)
-        CALL ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
+           CASE (1)
+           CALL ROOTHAAN(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+!           CALL ROOTHAAN_test(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
+           CASE (2)
+           CALL ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
         END SELECT
         CASE (2)
         WRITE(*,'(/,a)')' level-shifting algorithm'

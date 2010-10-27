@@ -3,7 +3,6 @@ SUBROUTINE ROOTHAAN_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME
 ! Reference: C. C. J. Roothaan, New developments in molecular orbital theory, Rev. Modern Phys., 23(2), 69-89, 1951.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools
-  USE graphics_tools
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -75,7 +74,6 @@ SUBROUTINE ROOTHAAN_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME
      WRITE(9,'(i4,e22.14)')I,EIG(I)
   END DO
   CLOSE(9)
-  CALL EXPORT_DENSITY(PDM,PHI,NBAST,-3.D0,3.D0,50,'density','cube')
   GO TO 5
 4 WRITE(*,*)'(called from subroutine ROOTHAAN)'
 5 DEALLOCATE(PDM,PDM1,PTEFM,PFM)
@@ -88,6 +86,7 @@ SUBROUTINE ROOTHAAN_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools
   USE graphics_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -251,13 +250,12 @@ SUBROUTINE ROOTHAAN_UHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 5 DEALLOCATE(PDMA,PDMB,PTDM,PSDM,PTDM1,PTEFM,PEMS,PFMA,PFMB)
 END SUBROUTINE ROOTHAAN_UHF
 
-! NON WORKING PART!!!!!!!
-
 SUBROUTINE ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
 ! Roothaan's algorithm (average-of-configuration open-shell Dirac-Hartree-Fock formalism).
-! Reference?
+! Reference(s)?
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -276,11 +274,11 @@ SUBROUTINE ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
   ALLOCATE(PDMC(1:NBAST*(NBAST+1)/2),PDMO(1:NBAST*(NBAST+1)/2),PDMC1(1:NBAST*(NBAST+1)/2),PDMO1(1:NBAST*(NBAST+1)/2))
   ALLOCATE(PTEFMC(1:NBAST*(NBAST+1)/2),PTEFMO(1:NBAST*(NBAST+1)/2),PFMC(1:NBAST*(NBAST+1)/2),PFMO(1:NBAST*(NBAST+1)/2))
 
-  f=REAL(NBEOS)/REAL(NBOOS) ; a=NBOOS*(NBEOS-1.D0)/(NBEOS*(NBOOS-1.D0)) ; alpha=(1.D0-a)/(1.D0-f)
+  f=REAL(NBEOS)/REAL(NBOOS) ; a=REAL(NBOOS*(NBEOS-1))/REAL(NBEOS*(NBOOS-1)) ; alpha=(1.D0-a)/(1.D0-f)
 
   ITER=0
   PDMC=(0.D0,0.D0) ; PDMO=(0.D0,0.D0)
-  PTEFMC=(0.D0,0.D0) ; PTEFMO=(0.D0,0.D0)
+  PFMC=POEFM ; PFMO=POEFM
   ETOT1=0.D0
 
 ! LOOP
@@ -289,31 +287,30 @@ SUBROUTINE ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
   WRITE(*,'(a)')' '
   WRITE(*,'(a,i3)')'# ITER = ',ITER
 
-! Assembly and diagonalization of the Fock matrix for closed-shell orbitals
-  PFMC=POEFM+PTEFMC+PTEFMO+alpha*ABC_CBA(PS,PDMO,PTEFMO,NBAST)
+! Diagonalization of the Fock matrix for closed-shell orbitals
   CALL EIGENSOLVER(PFMC,PCFS,NBAST,EIG,EIGVEC,INFO)
   IF (INFO/=0) GO TO 4
 ! Assembly of the density matrix for closed-shell orbitals according to the aufbau principle
   CALL CHECKORB(EIG,NBAST,LOON)
   PDMC1=PDMC
   CALL FORMDM(PDMC,EIGVEC,NBAST,LOON,LOON+NBECS-1)
-! Assembly and diagonalization of the Fock matrix for open-shell orbitals
-  PFMO=POEFM+PTEFMC+a*PTEFMO+alpha*ABC_CBA(PS,PDMC,PTEFMO,NBAST)
+! Diagonalization of the Fock matrix for open-shell orbitals
   CALL EIGENSOLVER(PFMO,PCFS,NBAST,EIG,EIGVEC,INFO)
   IF (INFO/=0) GO TO 4
 ! Assembly of the density matrix for open-shell orbitals according to the aufbau principle
   CALL CHECKORB(EIG,NBAST,LOON)
   PDMO1=PDMO
-  CALL FORMDM(PDMO,EIGVEC,NBAST,LOON+NBECS,LOON+NBECS+NBOOS-1)
+  CALL FORMDM(PDMO,EIGVEC,NBAST,LOON,LOON+NBOOS-1)
   PDMO=f*PDMO
-! Computation of the energy associated to the closed- and open-shell density matrices
+! Computation of the energy associated to the closed and open-shell density matrices
   CALL BUILDTEFM(PTEFMC,NBAST,PHI,PDMC)
   CALL BUILDTEFM(PTEFMO,NBAST,PHI,PDMO)
   ETOT=ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,NBAST)
   WRITE(*,*)'E(D_n)=',ETOT
-! Numerical convergence check
+! Assembly of the Fock matrices for closed and open-shell orbitals
   PFMC=POEFM+PTEFMC+PTEFMO+alpha*ABC_CBA(PS,PDMO,PTEFMO,NBAST)
   PFMO=POEFM+PTEFMC+a*PTEFMO+alpha*ABC_CBA(PS,PDMC,PTEFMO,NBAST)
+! Numerical convergence check
   CALL CHECKNUMCONV(PDMC,PDMO,PDMC1,PDMO1,PFMC,PFMO,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
   IF (NUMCONV) THEN
 ! Convergence reached
