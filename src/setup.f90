@@ -93,6 +93,8 @@ SUBROUTINE SETUP_FORMALISM
            MODEL=1
            WRITE(*,'(a)')' Restricted closed-shell formalism'
         ELSE IF (CHAR=='UHF') THEN
+! Unrestricted open-shell Hartree-Fock (UHF) formalism (DODS method)
+! Reference: J. A. Pople and R. K. Nesbet, Self-consistent orbitals for radicals, J. Chem. Phys., 22(3), 571-572, 1954.
            MODEL=2
            WRITE(*,'(a)')' Unrestricted open-shell formalism'
         ELSE IF (CHAR=='ROH') THEN
