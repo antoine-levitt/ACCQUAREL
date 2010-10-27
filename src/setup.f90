@@ -90,16 +90,19 @@ SUBROUTINE SETUP_FORMALISM
         END IF
      ELSE IF (APPROXIMATION==2) THEN
         IF (CHAR=='RHF') THEN
+! Restricted (closed-shell) Hartree-Fock (RHF) formalism (doubly occupied orbitals)
            MODEL=1
-           WRITE(*,'(a)')' Restricted closed-shell formalism'
+           WRITE(*,'(a)')' Restricted (closed-shell) Hartree-Fock (RHF) formalism'
         ELSE IF (CHAR=='UHF') THEN
-! Unrestricted open-shell Hartree-Fock (UHF) formalism (DODS method)
+! Unrestricted (open-shell) Hartree-Fock (UHF) formalism (different orbitals for different spins (DODS method))
 ! Reference: J. A. Pople and R. K. Nesbet, Self-consistent orbitals for radicals, J. Chem. Phys., 22(3), 571-572, 1954.
            MODEL=2
-           WRITE(*,'(a)')' Unrestricted open-shell formalism'
+           WRITE(*,'(a)')' Unrestricted (open-shell) Hartree-Fock (UHF) formalism'
         ELSE IF (CHAR=='ROH') THEN
+! Restricted Open-shell Hartree-Fock (ROHF) formalism
+! Reference: C. C. J. Roothaan, Self-consistent field theory for open shells of electronic systems, Rev. Modern Phys., 32(2), 179-185, 1960.
            MODEL=3
-           WRITE(*,'(a)')' Restricted open-shell formalism'
+           WRITE(*,'(a)')' Restricted Open-shell Hartree-Fock (ROHF) formalism'
            WRITE(*,*)'Option not implemented yet!'
            STOP
         ELSE

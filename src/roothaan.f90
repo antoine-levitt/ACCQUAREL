@@ -255,8 +255,7 @@ END SUBROUTINE ROOTHAAN_UHF
 
 SUBROUTINE ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
 ! Roothaan's algorithm (average-of-configuration open-shell Dirac-Hartree-Fock formalism).
-! References: C. C. J. Roothaan, Self-consistent field theory for open shells of electronic systems, Rev. Modern Phys., 32(2), 179-185, 1960.
-! ref average-of-configuration?
+! Reference?
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools
   INTEGER,INTENT(IN) :: NBAST
