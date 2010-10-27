@@ -147,6 +147,7 @@ CONTAINS
 
 SUBROUTINE SETUP_DATA
   USE case_parameters ; USE setup_tools
+  IMPLICIT NONE
   CHARACTER(30) :: NAME
   INTEGER :: INFO,N
 
@@ -173,7 +174,7 @@ SUBROUTINE SETUP_DATA
         WRITE(*,'(a,i2)')' * Nucleus #',N
         READ(100,*) Z(N),CENTER(:,N)
         WRITE(*,'(a,i3,a,a,a)')'   Charge Z=',Z(N),' (element: ',IDENTIFYZ(Z(N)),')'
-        WRITE(*,'(a,3(f16.8,1x))')'   Center position = ',CENTER(:,N)
+        WRITE(*,'(a,3(f16.8))')'   Center position = ',CENTER(:,N)
      END DO
      CALL INTERNUCLEAR_REPULSION_ENERGY
      WRITE(*,'(a,f16.8)')' * Internuclear repulsion energy of the system = ',INTERNUCLEAR_ENERGY
@@ -196,9 +197,10 @@ SUBROUTINE SETUP_DATA
         IF ((MODEL==1).AND.(MODULO(NBE,2)/=0)) THEN
            STOP' Restricted closed-shell Hartree-Fock formalism: the number of electrons must be even!'
         ELSE IF (MODEL==2) THEN
-           READ(100,'(i3)')NBEA
-           READ(100,'(i3)')NBEB
-           IF (NBE/=NBEA+NBEB) STOP' Unrestricted open-shell Hartree-Fock formalism: problem with the total number of electrons'
+           READ(100,'(2(i3))')NBEA,NBEB
+           WRITE(*,'(a,i3)')'   - number of electrons of $\alpha$ spin = ',NBEA
+           WRITE(*,'(a,i3)')'   - number of electrons of $\beta$ spin = ',NBEB
+           IF (NBE/=NBEA+NBEB) STOP' Unrestricted open-shell Hartree-Fock formalism: problem with the total number of electrons!'
 !        ELSE IF (MODEL==3) THEN
         END IF
      END IF

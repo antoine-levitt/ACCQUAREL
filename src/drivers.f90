@@ -163,6 +163,7 @@ SUBROUTINE DRIVER_nonrelativistic
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE metric_nonrelativistic
   USE scf_algorithms
+  IMPLICIT NONE
   INTEGER :: NBAST
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS

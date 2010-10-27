@@ -70,7 +70,7 @@ FUNCTION ENERGY_HF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
 END FUNCTION ENERGY_HF
 
 FUNCTION ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
-! Function that computes the restricted closed-shell Hartree-Fock total energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
+! Function that computes the restricted closed-shell Hartree-Fock total energy associated to a density matrix (whose upper triangular parts are stored in packed form) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
   USE data_parameters
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
@@ -79,14 +79,15 @@ FUNCTION ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
   ETOT=ELECTRONIC_ENERGY_RHF(POEFM,PTEFM,PDM,N)+INTERNUCLEAR_ENERGY
 END FUNCTION ENERGY_RHF
 
-FUNCTION ENERGY_UHF(POEFM,PTEFMA,PTEFMB,PDMA,PDMB,N) RESULT(ETOT)
-! Function that computes the unrestricted open-shell Hartree-Fock total energy associated to the $\alpha$ and $\beta$ spin density matrices (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
+FUNCTION ENERGY_UHF(POEFM,PTEFM,PEMS,PTDM,PSDM,N) RESULT(ETOT)
+! Function that computes the unrestricted open-shell Hartree-Fock total energy associated to the total and spin density matrices (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM, PTEFM and PEMS containing respectively the core hamiltonian matrix, the two-electron part of the Fock matrix associated to the total density matrix and the exchange matrix associated to the spin density matrix (all stored similarly).
   USE data_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFMA,PTEFMB,PDMA,PDMB
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PEMS,PTDM,PSDM
   DOUBLE PRECISION :: ETOT
 
-  ETOT=ELECTRONIC_ENERGY_UHF(POEFM,PTEFMA,PTEFMB,PDMA,PDMB,N)+INTERNUCLEAR_ENERGY
+  ETOT=ELECTRONIC_ENERGY_UHF(POEFM,PTEFM,PEMS,PTDM,PSDM,N)+INTERNUCLEAR_ENERGY
 END FUNCTION ENERGY_UHF
 
 FUNCTION ELECTRONIC_ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
@@ -165,25 +166,26 @@ FUNCTION ELECTRONIC_ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
   END DO
 END FUNCTION ELECTRONIC_ENERGY_RHF
 
-FUNCTION ELECTRONIC_ENERGY_UHF(POEFM,PTEFMA,PTEFMB,PDMA,PDMB,N) RESULT(ENERGY)
-! Function that computes the unrestricted open-shell Hartree-Fock electronic energy associated to the $\alpha$ and $\beta$ spin density matrices (whose upper triangular parts are stored in packed form).
+FUNCTION ELECTRONIC_ENERGY_UHF(POEFM,PTEFM,PEMS,PTDM,PSDM,N) RESULT(ENERGY)
+! Function that computes the unrestricted open-shell Hartree-Fock electronic energy associated to the total and spin density matrices (whose upper triangular parts are stored in packed form) of a given molecular system, POEFM, PTEFM and PEMS containing respectively the core hamiltonian matrix, the two-electron part of the Fock matrix associated to the total density matrix and the exchange matrix associated to the spin density matrix (all stored similarly).
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFMA,PTEFMB,PDMA,PDMB
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PEMS,PTDM,PSDM
   DOUBLE PRECISION :: ENERGY
 
   INTEGER :: I,J,IJ
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PEMA,PEMB
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PM
 
-  PEMA=POEFM+0.5D0*PTEFMA ; PEMB=POEFM+0.5D0*PTEFMB
+  PM=POEFM+0.25D0*PTEFM
   ENERGY=0.D0
   IJ=0
   DO J=1,N
      DO I=1,J
         IJ=IJ+1
         IF (I.NE.J) THEN
-           ENERGY=ENERGY+2.D0*PEMA(IJ)*PDMA(IJ)+PEMB(IJ)*PDMB(IJ)
+           ENERGY=ENERGY+2.D0*(PM(IJ)*PTDM(IJ)-0.25D0*PEMS(IJ)*PSDM(IJ))
         ELSE
-           ENERGY=ENERGY+PEMA(IJ)*PDMA(IJ)+PEMB(IJ)*PDMB(IJ)
+           ENERGY=ENERGY+PM(IJ)*PTDM(IJ)-0.25D0*PEMS(IJ)*PSDM(IJ)
         END IF
      END DO
   END DO

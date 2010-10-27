@@ -118,6 +118,48 @@ SUBROUTINE CHECKNUMCONV_RHF(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
   END IF
 END SUBROUTINE CHECKNUMCONV_RHF
 
+SUBROUTINE CHECKNUMCONV_UHF(PDMA,PDMB,PTDMO,PFMA,PFMB,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
+! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock type equations (unrestricted open-shell Hartree-Fock formalism).
+  USE matrix_tools ; USE metric_nonrelativistic
+  IMPLICIT NONE
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PDMA,PDMB,PTDMO,PFMA,PFMB
+  INTEGER,INTENT(IN) :: N
+  DOUBLE PRECISION,INTENT(IN) :: ETOTN,ETOTO,TRSHLD
+  LOGICAL,INTENT(OUT) :: NUMCONV
+
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PDIFF
+  DOUBLE PRECISION,DIMENSION(N,N) :: CMT,ISRS
+  DOUBLE PRECISION :: FNDFDN,FNCMTA,FNCMTB
+  LOGICAL :: CONVD,CONVC
+
+  CONVD=.FALSE. ; CONVC=.FALSE.
+
+  PDIFF=ABA(PSRS,PDMA+PDMB-PTDMO,N)
+  WRITE(*,*)'Infinity norm of the difference D_n-D_{n-1} =',NORM(PDIFF,N,'I')
+  FNDFDN=NORM(PDIFF,N,'F')
+  WRITE(*,*)'Frobenius norm of the difference D_n-D_{n-1} =',FNDFDN
+  IF (FNDFDN<=TRSHLD) CONVD=.TRUE.
+
+  ISRS=UNPACK(PISRS,N)
+  CMT=MATMUL(ISRS,MATMUL(COMMUTATOR(PFMA,PDMA,PS,N),ISRS))
+  WRITE(*,*)'Infinity norm of the commutator [F(D_n^a),D_n^a] =',NORM(CMT,N,'I')
+  FNCMTA=NORM(CMT,N,'F')
+  WRITE(*,*)'Frobenius norm of the commutator [F(D_n^a),D_n^a] =',FNCMTA
+  CMT=MATMUL(ISRS,MATMUL(COMMUTATOR(PFMB,PDMB,PS,N),ISRS))
+  WRITE(*,*)'Infinity norm of the commutator [F(D_n^b),D_n^b] =',NORM(CMT,N,'I')
+  FNCMTB=NORM(CMT,N,'F')
+  WRITE(*,*)'Frobenius norm of the commutator [F(D_n^b),D_n^b] =',FNCMTB
+  IF ((FNCMTA<=TRSHLD).AND.(FNCMTB<=TRSHLD)) CONVC=.TRUE.
+! This criterion is not used to assert convergence
+  WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
+
+  IF (CONVD.AND.CONVC) THEN
+     NUMCONV=.TRUE.
+  ELSE
+     NUMCONV=.FALSE.
+  END IF
+END SUBROUTINE CHECKNUMCONV_UHF
+
 SUBROUTINE CHECKNUMCONV_AOCOSDHF(PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 ! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock type equations (average-of-configuration open-shell Dirac-Hartree-Fock formalism).
   USE matrix_tools ; USE metric_relativistic
@@ -160,35 +202,6 @@ SUBROUTINE CHECKNUMCONV_AOCOSDHF(PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO,N,ETOTN,ETOTO
      NUMCONV=.FALSE.
   END IF
 END SUBROUTINE CHECKNUMCONV_AOCOSDHF
-
-SUBROUTINE CHECKNUMCONV_UHF(PDMN,PDMO,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
-! Subroutine that checks several numerical convergence criteria for the SCF solutions of Hartree-Fock type equations (unrestricted open-shell Hartree-Fock formalism).
-  USE matrix_tools ; USE metric_nonrelativistic
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PDMN,PDMO
-  INTEGER,INTENT(IN) :: N
-  DOUBLE PRECISION,INTENT(IN) :: ETOTN,ETOTO,TRSHLD
-  LOGICAL,INTENT(OUT) :: NUMCONV
-
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PDIFF
-  DOUBLE PRECISION :: MXDFDN
-  LOGICAL :: CONVD
-
-  CONVD=.FALSE.
-
-  PDIFF=ABA(PSRS,PDMN-PDMO,N)
-  MXDFDN=NORM(PDIFF,N,'I')
-  WRITE(*,*)'Infinity norm of the difference D_n-D_{n-1} =',MXDFDN
-  WRITE(*,*)'Frobenius norm of the difference D_n-D_{n-1} =',NORM(PDIFF,N,'F')
-  IF (MXDFDN<=TRSHLD) CONVD=.TRUE.
-! This criterion is not used to assert convergence
-  WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
-
-  IF (CONVD) THEN
-     NUMCONV=.TRUE.
-  ELSE
-     NUMCONV=.FALSE.
-  END IF
-END SUBROUTINE CHECKNUMCONV_UHF
 END MODULE
 
 MODULE graphics_tools
@@ -251,16 +264,22 @@ SUBROUTINE EXPORT_DENSITY_relativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENAME,
   CHARACTER(*),INTENT(IN) :: FILEFORMAT
 
   INTEGER :: I,J,K
+  DOUBLE PRECISION :: GRID_STEPSIZE
   DOUBLE PRECISION,DIMENSION(3) :: X
 
+  IF (NPOINTS/=1) THEN
+     GRID_STEPSIZE=(RMAX-RMIN)/(NPOINTS-1)
+  ELSE
+     STOP
+  END IF
   IF ((FILEFORMAT=='matlab').OR.(FILEFORMAT=='MATLAB')) THEN
      OPEN(UNIT=42,FILE='plots/'//FILENAME)
-     DO I=1,NPOINTS
-        DO J=1,NPOINTS
-           DO K=1,NPOINTS
-              X(1)=RMIN+(RMAX-RMIN)*(I-1)/(NPOINTS-1)
-              X(2)=RMIN+(RMAX-RMIN)*(J-1)/(NPOINTS-1)
-              X(3)=RMIN+(RMAX-RMIN)*(K-1)/(NPOINTS-1)
+     DO I=0,NPOINTS-1
+        DO J=0,NPOINTS-1
+           DO K=0,NPOINTS-1
+              X(1)=RMIN+REAL(I)*GRID_STEPSIZE
+              X(2)=RMIN+REAL(J)*GRID_STEPSIZE
+              X(3)=RMIN+REAL(K)*GRID_STEPSIZE
               WRITE(42,*)X(:),DENSITY_POINTWISE_VALUE(PDM,PHI,NBAST,X)
            END DO
         END DO
@@ -277,12 +296,12 @@ SUBROUTINE EXPORT_DENSITY_relativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENAME,
      DO I=1,NBN
         WRITE(42,*)Z(I),0.D0,CENTER(:,I)
      END DO
-     DO I=1,NPOINTS
-        DO J=1,NPOINTS
-           DO K=1,NPOINTS
-              X(1)=RMIN+(RMAX-RMIN)*(I-1)/(NPOINTS-1)
-              X(2)=RMIN+(RMAX-RMIN)*(J-1)/(NPOINTS-1)
-              X(3)=RMIN+(RMAX-RMIN)*(K-1)/(NPOINTS-1)
+     DO I=0,NPOINTS-1
+        DO J=0,NPOINTS-1
+           DO K=0,NPOINTS-1
+              X(1)=RMIN+REAL(I)*GRID_STEPSIZE
+              X(2)=RMIN+REAL(J)*GRID_STEPSIZE
+              X(3)=RMIN+REAL(K)*GRID_STEPSIZE
               WRITE(42,*)DENSITY_POINTWISE_VALUE(PDM,PHI,NBAST,X)
            END DO
         END DO
@@ -301,16 +320,17 @@ SUBROUTINE EXPORT_DENSITY_nonrelativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENA
   CHARACTER(*),INTENT(IN) :: FILEFORMAT
 
   INTEGER :: I,J,K
+  DOUBLE PRECISION :: GRID_STEPSIZE
   DOUBLE PRECISION,DIMENSION(3) :: X
 
   IF ((FILEFORMAT=='matlab').OR.(FILEFORMAT=='MATLAB')) THEN
      OPEN(UNIT=42,FILE='plots/'//FILENAME)
-     DO I=1,NPOINTS
-        DO J=1,NPOINTS
-           DO K=1,NPOINTS
-              X(1)=RMIN+(RMAX-RMIN)*(I-1)/(NPOINTS-1)
-              X(2)=RMIN+(RMAX-RMIN)*(J-1)/(NPOINTS-1)
-              X(3)=RMIN+(RMAX-RMIN)*(K-1)/(NPOINTS-1)
+     DO I=0,NPOINTS-1
+        DO J=0,NPOINTS-1
+           DO K=0,NPOINTS-1
+              X(1)=RMIN+REAL(I)*GRID_STEPSIZE
+              X(2)=RMIN+REAL(J)*GRID_STEPSIZE
+              X(3)=RMIN+REAL(K)*GRID_STEPSIZE
               WRITE(42,*)X(:),DENSITY_POINTWISE_VALUE(PDM,PHI,NBAST,X)
            END DO
         END DO
@@ -327,12 +347,12 @@ SUBROUTINE EXPORT_DENSITY_nonrelativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENA
      DO I=1,NBN
         WRITE(42,*)Z(I),0.D0,CENTER(:,I)
      END DO
-     DO I=1,NPOINTS
-        DO J=1,NPOINTS
-           DO K=1,NPOINTS
-              X(1)=RMIN+(RMAX-RMIN)*(I-1)/(NPOINTS-1)
-              X(2)=RMIN+(RMAX-RMIN)*(J-1)/(NPOINTS-1)
-              X(3)=RMIN+(RMAX-RMIN)*(K-1)/(NPOINTS-1)
+     DO I=0,NPOINTS-1
+        DO J=0,NPOINTS-1
+           DO K=0,NPOINTS-1
+              X(1)=RMIN+REAL(I)*GRID_STEPSIZE
+              X(2)=RMIN+REAL(J)*GRID_STEPSIZE
+              X(3)=RMIN+REAL(K)*GRID_STEPSIZE
               WRITE(42,*)DENSITY_POINTWISE_VALUE(PDM,PHI,NBAST,X)
            END DO
         END DO

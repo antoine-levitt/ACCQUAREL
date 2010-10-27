@@ -211,7 +211,7 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAS,LISTSIZE)
      END IF
   END DO ; END DO ; END DO ; END DO
   CLOSE(LUNIT)
-  WRITE(*,*)' Number of GBF bielectronic integrals to be computed:',LISTSIZE
+  WRITE(*,*)' Number of GBF bielectronic integrals to be computed =',LISTSIZE
 END SUBROUTINE BUILDBILIST_nonrelativistic
 
 FUNCTION COULOMBVALUE_relativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
@@ -365,7 +365,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
   END IF
   LISTSIZE=SUM(SUBSIZE)
   CLOSE(LUNIT)
-  WRITE(*,*)' Number of 2-spinor-type orbital bielectronic integrals to be computed:',LISTSIZE
+  WRITE(*,*)' Number of 2-spinor-type orbital bielectronic integrals to be computed =',LISTSIZE
 END SUBROUTINE BUILDBILIST_relativistic
 
 SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
