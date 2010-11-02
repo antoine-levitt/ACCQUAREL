@@ -368,3 +368,93 @@ SUBROUTINE EXPORT_DENSITY_nonrelativistic(PDM,PHI,NBAST,RMIN,RMAX,NPOINTS,FILENA
   END IF
 END SUBROUTINE EXPORT_DENSITY_nonrelativistic
 END MODULE
+
+MODULE output
+  DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: ALL_EIG
+  INTERFACE OUTPUT_ITER
+     MODULE PROCEDURE OUTPUT_ITER_nonrelativistic, OUTPUT_ITER_relativistic
+  END INTERFACE OUTPUT_ITER
+  INTERFACE OUTPUT_FINALIZE
+     MODULE PROCEDURE OUTPUT_FINALIZE_nonrelativistic, OUTPUT_FINALIZE_relativistic
+  END INTERFACE OUTPUT_FINALIZE
+
+  CONTAINS
+  
+  SUBROUTINE OUTPUT_ITER_nonrelativistic(ITER,MAXITR,PDM,PHI,NBAST,EIG,EIGVEC,ETOT)
+    USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
+    USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools
+
+    INTEGER :: NBAST,ITER,MAXITR
+    DOUBLE PRECISION :: ETOT
+    DOUBLE PRECISION,DIMENSION(NBAST) :: EIG
+    DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EIGVEC
+    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2) :: PDM
+    TYPE(gaussianbasisfunction),DIMENSION(NBAST) :: PHI
+    
+    IF(ITER == 1) THEN
+       ! Init
+       ALLOCATE(ALL_EIG(NBAST,MAXITR))
+    END IF
+    ALL_EIG(:,ITER) = EIG
+  END SUBROUTINE OUTPUT_ITER_nonrelativistic
+
+
+  
+  SUBROUTINE OUTPUT_FINALIZE_nonrelativistic(ITER,MAXITR,PDM,PHI,NBAST,EIG,EIGVEC,ETOT)
+    USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
+    USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE graphics_tools
+
+    INTEGER :: NBAST,ITER,MAXITR,I
+    DOUBLE PRECISION :: ETOT
+    DOUBLE PRECISION,DIMENSION(NBAST) :: EIG
+    DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EIGVEC
+    DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2) :: PDM
+    TYPE(gaussianbasisfunction),DIMENSION(NBAST) :: PHI
+    
+    OPEN(42,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
+    DO I=1,ITER
+       WRITE(42,*) ALL_EIG(:,I)
+    END DO
+    CLOSE(42)
+
+    CALL EXPORT_DENSITY_nonrelativistic(PDM,PHI,NBAST,-12.D0,12.D0,20,'density','matlab')
+  END SUBROUTINE OUTPUT_FINALIZE_nonrelativistic
+
+  
+  SUBROUTINE OUTPUT_ITER_relativistic(ITER,MAXITR,PDM,PHI,NBAST,EIG,EIGVEC,ETOT)
+    USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
+    USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools
+
+    INTEGER :: NBAST,ITER,MAXITR
+    DOUBLE PRECISION :: ETOT
+    DOUBLE PRECISION,DIMENSION(NBAST) :: EIG
+    DOUBLE COMPLEX,DIMENSION(NBAST,NBAST) :: EIGVEC
+    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PDM
+    TYPE(twospinor),DIMENSION(NBAST) :: PHI
+    
+    IF(ITER == 1) THEN
+       ! Init
+       ALLOCATE(ALL_EIG(NBAST,MAXITR))
+    END IF
+    ALL_EIG(:,ITER) = EIG
+  END SUBROUTINE OUTPUT_ITER_relativistic
+  SUBROUTINE OUTPUT_FINALIZE_relativistic(ITER,MAXITR,PDM,PHI,NBAST,EIG,EIGVEC,ETOT)
+    USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
+    USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE graphics_tools
+
+    INTEGER :: NBAST,ITER,MAXITR,I
+    DOUBLE PRECISION :: ETOT
+    DOUBLE PRECISION,DIMENSION(NBAST) :: EIG
+    DOUBLE COMPLEX,DIMENSION(NBAST,NBAST) :: EIGVEC
+    DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PDM
+    TYPE(twospinor),DIMENSION(NBAST) :: PHI
+    
+    OPEN(42,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
+    DO I=1,ITER
+       WRITE(42,*) ALL_EIG(:,I)
+    END DO
+    CLOSE(42)
+
+    CALL EXPORT_DENSITY_relativistic(PDM,PHI,NBAST,-12.D0,12.D0,20,'density','matlab')
+  END SUBROUTINE OUTPUT_FINALIZE_relativistic
+END MODULE output
