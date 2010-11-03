@@ -1,6 +1,6 @@
 ### MAKEFILE PREAMBLE ###
-#F95 = g95
-F95 = gfortran
+F95 = g95
+#F95 = gfortran
 #F95 = ifort
 
 # common to compilers and linker
@@ -54,7 +54,7 @@ ifeq ($(shell uname),Darwin)
 endif
 ifeq ($(shell uname),Linux)
 ## linux ubuntu
-   ASPICLIBS = $(ASPICLIBPATH) -lgIntegrals -lchemics -lxmlParser -lgaussian -lpolynome -lcontainor -laspicUtils $(XERCESCLIBPATH) -lxerces-c -L/usr/lib/gcc/i486-linux-gnu/4.4/ -lstdc++
+   ASPICLIBS = $(ASPICLIBPATH) -lgIntegrals -lchemics -lxmlParser -lgaussian -lpolynome -lcontainor -laspicUtils $(XERCESCLIBPATH) -lxerces-c -L/usr/lib/gcc/i686-linux-gnu/4.4/ -lstdc++
 endif
 
 ## ACCQUAREL code ##

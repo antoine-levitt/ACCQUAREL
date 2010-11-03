@@ -159,6 +159,7 @@ SUBROUTINE SETUP_DATA
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   IF (.NOT.RELATIVISTIC.AND.APPROXIMATION==1) THEN
      CALL LOOKFOR(100,'## DESCRIPTION OF THE BOSON STAR',INFO)
+     IF (INFO/=0) STOP
      WRITE(*,'(a)')' --- **** ---'
      READ(100,*) NAME
      READ(100,*) MASS
@@ -426,7 +427,6 @@ MODULE basis_parameters
   USE iso_c_binding
 ! flag for the choice of the basis set type (either existing in the library or even-tempered)
   LOGICAL :: LIBRARY
-
 ! PARAMETERS FOR A GIVEN BASIS SET
   CHARACTER(26) :: BASISFILE
   INTEGER,PARAMETER :: MAQN=4,MNOP=38,MNOC=38,MNOGBF=4
@@ -738,7 +738,7 @@ SUBROUTINE SETUP_SCF
   !$    CALL OMP_SET_NUM_THREADS(NUMBER_OF_THREADS)
   !$ END IF
   !$ WRITE(*,'(a,i2,a)') ' The number of thread(s) to be used is ',OMP_GET_MAX_THREADS(),'.'
-  !$ CLOSE(100)
+  CLOSE(100)
   RETURN
 ! MESSAGES
 1 STOP'No shift parameter given for the level-shifting algorithm.'
