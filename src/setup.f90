@@ -123,7 +123,7 @@ MODULE data_parameters
 ! number of nuclei in the molecular system (at most 10)
   INTEGER :: NBN
 ! atomic numbers of the nuclei
-  INTEGER,DIMENSION(10) :: Z
+  REAL,DIMENSION(10) :: Z
 ! positions of the nucleii
   DOUBLE PRECISION,DIMENSION(3,10) :: CENTER
 ! total number of electrons in the molecular system
@@ -178,7 +178,7 @@ SUBROUTINE SETUP_DATA
      DO N=1,NBN
         WRITE(*,'(a,i2)')' * Nucleus #',N
         READ(100,*) Z(N),CENTER(:,N)
-        WRITE(*,'(a,i3,a,a,a)')'   Charge Z=',Z(N),' (element: ',IDENTIFYZ(Z(N)),')'
+        WRITE(*,'(a,f16.8,a,a,a)')'   Charge Z=',Z(N),' (element: ',IDENTIFYZ(FLOOR(Z(N))),')'
         WRITE(*,'(a,3(f16.8))')'   Center position = ',CENTER(:,N)
      END DO
      CALL INTERNUCLEAR_REPULSION_ENERGY
