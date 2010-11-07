@@ -1,3 +1,4 @@
+* From Expokit, used under a free license, see http://www.maths.uq.edu.au/expokit/copyright
 *----------------------------------------------------------------------|
       subroutine DGPADM( ideg,m,t,H,ldh,wsp,lwsp,ipiv,iexph,ns,iflag )
 
