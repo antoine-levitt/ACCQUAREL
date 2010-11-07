@@ -83,6 +83,10 @@ INTERFACE COMMUTATOR
    MODULE PROCEDURE COMMUTATOR_symmetric,COMMUTATOR_hermitian
 END INTERFACE
 
+INTERFACE EXPONENTIAL
+   MODULE PROCEDURE EXPONENTIAL_real,EXPONENTIAL_complex
+END INTERFACE EXPONENTIAL
+
 INTERFACE PRINTMATRIX
    MODULE PROCEDURE PRINTMATRIX_symmetric,PRINTMATRIX_hermitian
 END INTERFACE
@@ -818,6 +822,52 @@ FUNCTION COMMUTATOR_hermitian(PA,PB,PS,N) RESULT (C)
   A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; S=UNPACK(PS,N)
   C=MATMUL(MATMUL(A,B),S)-MATMUL(S,MATMUL(B,A))
 END FUNCTION COMMUTATOR_hermitian
+
+function EXPONENTIAL_real(t, H) result(expH)
+! Calculate exp(t*H) for an N-by-N matrix H using Expokit.
+! from http://fortranwiki.org/fortran/show/Expokit
+  DOUBLE PRECISION, intent(in) :: t
+  DOUBLE PRECISION, dimension(:,:), intent(in) :: H
+  DOUBLE PRECISION, dimension(size(H,1),size(H,2)) :: expH
+  
+  ! Expokit variables
+  external :: ZGPADM
+  integer, parameter :: ideg = 6
+  DOUBLE PRECISION, dimension(4*size(H,1)*size(H,2) + ideg + 1) :: wsp
+  integer, dimension(size(H,1))  :: iwsp
+  integer :: iexp, ns, iflag, n
+  
+  if (size(H,1) /= size(H,2)) then
+     stop 'expm: matrix must be square'
+  end if
+  
+  n = size(H,1)
+  call DGPADM(ideg, n, t, H, n, wsp, size(wsp,1), iwsp, iexp, ns, iflag)
+  expH = reshape(wsp(iexp:iexp+n*n-1), shape(expH))
+end function
+
+function EXPONENTIAL_complex(t, H) result(expH)
+! Calculate exp(t*H) for an N-by-N matrix H using Expokit.
+! from http://fortranwiki.org/fortran/show/Expokit
+  DOUBLE PRECISION, intent(in) :: t
+  DOUBLE COMPLEX, dimension(:,:), intent(in) :: H
+  DOUBLE COMPLEX, dimension(size(H,1),size(H,2)) :: expH
+  
+  ! Expokit variables
+  external :: ZGPADM
+  integer, parameter :: ideg = 6
+  DOUBLE COMPLEX, dimension(4*size(H,1)*size(H,2) + ideg + 1) :: wsp
+  integer, dimension(size(H,1))  :: iwsp
+  integer :: iexp, ns, iflag, n
+  
+  if (size(H,1) /= size(H,2)) then
+     stop 'expm: matrix must be square'
+  end if
+  
+  n = size(H,1)
+  call ZGPADM(ideg, n, t, H, n, wsp, size(wsp,1), iwsp, iexp, ns, iflag)
+  expH = reshape(wsp(iexp:iexp+n*n-1), shape(expH))
+end function
 
 SUBROUTINE PRINTMATRIX_symmetric(PMAT,N,LOGUNIT)
 ! Subroutine that prints in the file LOGUNIT a symmetric matrix of size N*N stored in packed format.

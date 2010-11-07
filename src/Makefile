@@ -59,6 +59,8 @@ endif
 
 ## ACCQUAREL code ##
 OBJ =				\
+ $(OBJDIR)zgpadm.o		\
+ $(OBJDIR)dgpadm.o		\
  $(OBJDIR)optimization.o	\
  $(OBJDIR)rootfinding.o		\
  $(OBJDIR)tools.o		\
@@ -85,6 +87,9 @@ $(TARGET) :  $(OBJ)
 	@echo " ----------- $(TARGET) created ----------- "
 
 $(OBJDIR)%.o : $(SRCDIR)%.f90
+	$(F95) $(F95FLAGS) -o $@ $<
+
+$(OBJDIR)%.o : $(SRCDIR)%.f
 	$(F95) $(F95FLAGS) -o $@ $<
 
 $(OBJDIR)%.o : $(SRCDIR)%.cpp
