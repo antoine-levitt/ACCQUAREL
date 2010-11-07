@@ -1,4 +1,4 @@
 all:
-	make -C src
+	$(MAKE) -C src
 clean:
-	cd src && make clean
+	cd src && $(MAKE) clean
