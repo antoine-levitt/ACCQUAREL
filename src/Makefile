@@ -59,8 +59,7 @@ endif
 
 ## ACCQUAREL code ##
 OBJ =				\
- $(OBJDIR)zgpadm.o		\
- $(OBJDIR)dgpadm.o		\
+ $(OBJDIR)expokit.o		\
  $(OBJDIR)optimization.o	\
  $(OBJDIR)rootfinding.o		\
  $(OBJDIR)tools.o		\
