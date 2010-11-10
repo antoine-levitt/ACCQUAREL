@@ -75,6 +75,7 @@ OBJ =				\
  $(OBJDIR)diis.o		\
  $(OBJDIR)oda.o			\
  $(OBJDIR)esa.o			\
+ $(OBJDIR)gradient.o		\
  $(OBJDIR)algorithms.o		\
  $(OBJDIR)drivers.o		\
  $(OBJDIR)main.o

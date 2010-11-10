@@ -124,6 +124,9 @@ SUBROUTINE DRIVER_relativistic
         CASE (5)
         WRITE(*,'(/,a)')' Eric Sere''s algorithm'
         CALL ESA(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+        CASE (6)
+        WRITE(*,'(/,a)')' Roothaan/Gradient algorithm'
+        CALL GRADIENT(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      END SELECT
   END DO
   IF (DIRECT) THEN
@@ -286,6 +289,17 @@ SUBROUTINE DRIVER_nonrelativistic
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
         END SELECT
+        CASE(6)
+        WRITE(*,*)' Roothaan/Gradient algorithm'
+        SELECT CASE (MODEL)
+           CASE (1)
+           CALL GRADIENT(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+           CASE (2)
+           WRITE(*,*)' Not implemented yet!'
+           CASE (3)
+           WRITE(*,*)' Not implemented yet!'
+        END SELECT
+
      END SELECT
   END DO
   IF (DIRECT) THEN
