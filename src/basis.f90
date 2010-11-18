@@ -10,7 +10,8 @@ CONTAINS
 
 SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
 ! Subroutine that builds the 2-spinor basis functions and related contracted cartesian Gaussian-type orbital functions for the molecular system considered, from the coefficients read in a file.
-  USE basis_parameters ; USE data_parameters ; USE mathematical_functions ; USE constants
+  USE basis_parameters ; USE data_parameters ; USE case_parameters ; USE mathematical_functions ; USE constants
+  IMPLICIT NONE
   TYPE(twospinor),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: NBAS
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: GBF
@@ -179,7 +180,8 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contractions(1,1)=GBF(IDX+3) ; PHI(ILA)%contractions(2,1:2)=(/GBF(IDX+1),GBF(IDX+2)/)
         PHI(ILA)%contidx(1,1)=IDX+3 ; PHI(ILA)%contidx(2,1:2)=(/IDX+1,IDX+2/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:2)=(/(0.D0,2.D0),(-2.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees is equal to 1, so there is nothing more to do here.
+! NOTE: the part of the normalization coefficient depending only the monomial degrees is equal to 1.
+        PHI(ILA)%coefficients(:,:)=C*PHI(ILA)%coefficients(:,:)
      CASE (2)
      SELECT CASE (K)
         CASE (1)
@@ -187,19 +189,22 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contractions(1,1)=GBF(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+1),GBF(IDX+2),GBF(IDX+7)/)
         PHI(ILA)%contidx(1,1)=IDX+3 ; PHI(ILA)%contidx(2,1:3)=(/IDX+1,IDX+2,IDX+7/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-1.D0)/)
-! part of the normalization coefficient depending only the monomial degrees is equal to 1, so there is nothing more to do here.
+! Note: the part of the normalization coefficient depending only the monomial degrees is equal to 1.
+        PHI(ILA)%coefficients(:,:)=C*PHI(ILA)%coefficients(:,:)
         CASE (2)
         PHI(ILA)%nbrofcontractions=(/1,3/)
         PHI(ILA)%contractions(1,1)=GBF(IDX+5) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+2),GBF(IDX+4),GBF(IDX+7)/)
         PHI(ILA)%contidx(1,1)=IDX+5 ; PHI(ILA)%contidx(2,1:3)=(/IDX+2,IDX+4,IDX+7/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees is equal to 1, so there is nothing more to do here.
+! Note: the part of the normalization coefficient depending only the monomial degrees is equal to 1.
+        PHI(ILA)%coefficients(:,:)=C*PHI(ILA)%coefficients(:,:)
         CASE (3)
         PHI(ILA)%nbrofcontractions=(/2,2/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+6),GBF(IDX+7)/) ; PHI(ILA)%contractions(2,1:2)=(/GBF(IDX+3),GBF(IDX+5)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+6,IDX+7/) ; PHI(ILA)%contidx(2,1:2)=(/IDX+3,IDX+5/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/) ; PHI(ILA)%coefficients(2,1:2)=(/(0.D0,2.D0),(-2.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees is equal to 1, so there is nothing more to do here.
+! Note: the part of the normalization coefficient depending only the monomial degrees is equal to 1.
+        PHI(ILA)%coefficients(:,:)=C*PHI(ILA)%coefficients(:,:)
      END SELECT
      CASE (3)
      SELECT CASE (K)
@@ -208,15 +213,15 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contractions(1,1)=GBF(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+1),GBF(IDX+2),GBF(IDX+11)/)
         PHI(ILA)%contidx(1,1)=IDX+3 ; PHI(ILA)%contidx(2,1:3)=(/IDX+1,IDX+2,IDX+11/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-2.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (2)
         PHI(ILA)%nbrofcontractions=(/1,4/)
         PHI(ILA)%contractions(1,1)=GBF(IDX+6) ; PHI(ILA)%contractions(2,1:4)=(/GBF(IDX+2),GBF(IDX+4),GBF(IDX+11),GBF(IDX+12)/)
         PHI(ILA)%contidx(1,1)=IDX+6 ; PHI(ILA)%contidx(2,1:4)=(/IDX+2,IDX+4,IDX+11,IDX+12/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:4)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0),(0.D0,-1.D0)/)
-! part of the normalization coefficient depending only the monomial degrees is equal to 1, so there is nothing more to do here.
+! Note: the part of the normalization coefficient depending only the monomial degrees is equal to 1.
+        PHI(ILA)%coefficients(:,:)=C*PHI(ILA)%coefficients(:,:)
         CASE (3)
         PHI(ILA)%nbrofcontractions=(/2,3/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+5),GBF(IDX+11)/)
@@ -224,15 +229,15 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contidx(1,1:2)=(/IDX+5,IDX+11/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+3,IDX+6,IDX+13/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-1.D0)/)
-! part of the normalization coefficient depending only the monomial degrees is equal to 1, so there is nothing more to do here.
+! Note: the part of the normalization coefficient depending only the monomial degrees is equal to 1.
+        PHI(ILA)%coefficients(:,:)=C*PHI(ILA)%coefficients(:,:)
         CASE (4)
         PHI(ILA)%nbrofcontractions=(/1,3/)
         PHI(ILA)%contractions(1,1)=GBF(IDX+8) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+4),GBF(IDX+7),GBF(IDX+12)/)
         PHI(ILA)%contidx(1,1)=IDX+8 ; PHI(ILA)%contidx(2,1:3)=(/IDX+4,IDX+7,IDX+12/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(2.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (5)
         PHI(ILA)%nbrofcontractions=(/2,3/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+9),GBF(IDX+12)/)
@@ -240,15 +245,15 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contidx(1,1:2)=(/IDX+9,IDX+12/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+6,IDX+8,IDX+13/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees is equal to 1, so there is nothing more to do here.
+! Note: the part of the normalization coefficient depending only the monomial degrees is equal to 1.
+        PHI(ILA)%coefficients(:,:)=C*PHI(ILA)%coefficients(:,:)
         CASE (6)
         PHI(ILA)%nbrofcontractions=(/2,2/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+10),GBF(IDX+13)/) ; PHI(ILA)%contractions(2,1:2)=(/GBF(IDX+5),GBF(IDX+9)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+10,IDX+13/) ; PHI(ILA)%contidx(2,1:2)=(/IDX+5,IDX+9/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-2.D0)/) ; PHI(ILA)%coefficients(2,1:2)=(/(0.D0,2.D0),(-2.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
      END SELECT
      CASE (4)
      SELECT CASE (K)
@@ -257,9 +262,8 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contractions(1,1)=GBF(IDX+3) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+1),GBF(IDX+2),GBF(IDX+16)/)
         PHI(ILA)%contidx(1,1)=IDX+3 ; PHI(ILA)%contidx(2,1:3)=(/IDX+1,IDX+2,IDX+16/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-3.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=15**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (2)
         PHI(ILA)%nbrofcontractions=(/1,4/)
         PHI(ILA)%contractions(1,1)=GBF(IDX+5)
@@ -267,9 +271,8 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contidx(1,1)=IDX+5 ; PHI(ILA)%contidx(2,1:4)=(/IDX+2,IDX+4,IDX+16,IDX+17/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0)
         PHI(ILA)%coefficients(2,1:4)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0),(0.D0,-2.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (3)
         PHI(ILA)%nbrofcontractions=(/2,3/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+6),GBF(IDX+16)/)
@@ -277,17 +280,15 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contidx(1,1:2)=(/IDX+6,IDX+16/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+3,IDX+5,IDX+18/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-2.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (4)
         PHI(ILA)%nbrofcontractions=(/1,4/)
         PHI(ILA)%contractions(1,1)=GBF(IDX+8) ; PHI(ILA)%contractions(2,1:4)=(/GBF(IDX+4),GBF(IDX+7),GBF(IDX+17),GBF(IDX+19)/)
         PHI(ILA)%contidx(1,1)=IDX+8 ; PHI(ILA)%contidx(2,1:4)=(/IDX+4,IDX+7,IDX+17,IDX+19/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:4)=(/(0.D0,2.D0),(-2.D0,0.D0),(2.D0,0.D0),(0.D0,-1.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (5)
         PHI(ILA)%nbrofcontractions=(/2,3/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+10),GBF(IDX+18)/)
@@ -295,9 +296,8 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contidx(1,1:2)=(/IDX+10,IDX+18/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+6,IDX+9,IDX+21/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-2.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(0.D0,-1.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (6)
         PHI(ILA)%nbrofcontractions=(/2,4/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+9),GBF(IDX+17)/)
@@ -305,15 +305,15 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contidx(1,1:2)=(/IDX+9,IDX+17/) ; PHI(ILA)%contidx(2,1:4)=(/IDX+5,IDX+8,IDX+18,IDX+20/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:4)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0),(0.D0,-1.D0)/)
-! part of the normalization coefficient depending only the monomial degrees is equal to 1, so there is nothing more to do here.
+! Note: the part of the normalization coefficient depending only the monomial degrees is equal to 1.
+        PHI(ILA)%coefficients(:,:)=C*PHI(ILA)%coefficients(:,:)
         CASE (7)
         PHI(ILA)%nbrofcontractions=(/1,3/)
         PHI(ILA)%contractions(1,1)=GBF(IDX+12) ; PHI(ILA)%contractions(2,1:3)=(/GBF(IDX+10),GBF(IDX+11),GBF(IDX+19)/)
         PHI(ILA)%contidx(1,1)=IDX+12 ; PHI(ILA)%contidx(2,1:3)=(/IDX+10,IDX+11,IDX+19/)
         PHI(ILA)%coefficients(1,1)=(0.D0,2.D0) ; PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(3.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=15**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (8)
         PHI(ILA)%nbrofcontractions=(/2,3/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+13),GBF(IDX+19)/)
@@ -321,9 +321,8 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contidx(1,1:2)=(/IDX+13,IDX+19/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+8,IDX+12,IDX+20/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-1.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(2.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (9)
         PHI(ILA)%nbrofcontractions=(/2,3/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+14),GBF(IDX+20)/)
@@ -331,17 +330,15 @@ SUBROUTINE FORMBASIS_relativistic(PHI,NBAS,GBF,NGBF)
         PHI(ILA)%contidx(1,1:2)=(/IDX+14,IDX+20/) ; PHI(ILA)%contidx(2,1:3)=(/IDX+9,IDX+13,IDX+21/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-2.D0)/)
         PHI(ILA)%coefficients(2,1:3)=(/(0.D0,2.D0),(-2.D0,0.D0),(1.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=3**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
         CASE (10)
         PHI(ILA)%nbrofcontractions=(/2,2/)
         PHI(ILA)%contractions(1,1:2)=(/GBF(IDX+15),GBF(IDX+21)/) ; PHI(ILA)%contractions(2,1:2)=(/GBF(IDX+10),GBF(IDX+14)/)
         PHI(ILA)%contidx(1,1:2)=(/IDX+15,IDX+21/) ; PHI(ILA)%contidx(2,1:2)=(/IDX+10,IDX+14/)
         PHI(ILA)%coefficients(1,1:2)=(/(0.D0,2.D0),(0.D0,-3.D0)/) ; PHI(ILA)%coefficients(2,1:2)=(/(0.D0,2.D0),(-2.D0,0.D0)/)
-! part of the normalization coefficient depending only the monomial degrees.
         NCOEF=15**(-0.5D0)
-        PHI(ILA)%coefficients(:,:)=NCOEF*PHI(ILA)%coefficients(:,:)
+        PHI(ILA)%coefficients(:,:)=C*NCOEF*PHI(ILA)%coefficients(:,:)
      END SELECT
   END SELECT
   PHI(ILB)%nbrofcontractions(1)=PHI(ILA)%nbrofcontractions(2)
@@ -363,6 +360,7 @@ END SUBROUTINE FORMBASIS_relativistic
 SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
 ! Subroutine that builds the gaussian basis functions for the molecular system considered, from coefficients either read in a file (basis set from the existing literature) or depending on some given parameters (even-tempered basis set).
   USE basis_parameters ; USE data_parameters ; USE mathematical_functions ; USE constants
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: PHI
   INTEGER,DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: NBAS
 
@@ -459,6 +457,7 @@ SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NGBF)
 ! ALPHA : array containing the exponents of the primitives for each type of basis functions
 ! CCOEF : array containing the contraction coefficients for each type of basis functions
   USE case_parameters ; USE basis_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: Z
   INTEGER,INTENT(OUT) :: HAQN
   INTEGER,DIMENSION(MAQN),INTENT(OUT) :: NOP,NOC
@@ -557,6 +556,7 @@ SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NGBF)
 END SUBROUTINE READBASIS
 
 SUBROUTINE FINDELM(Z,BASNAM,LUBAS)
+  IMPLICIT NONE
   INTEGER :: Z,LUBAS
   CHARACTER(*) :: BASNAM
   CHARACTER(20) :: STRING
@@ -586,6 +586,7 @@ SUBROUTINE FINDELM(Z,BASNAM,LUBAS)
 END SUBROUTINE FINDELM
 
 SUBROUTINE READPCN(CHKNELM,PRINUM,CONNUM,INTISG,BASNAM,LUBAS)
+  IMPLICIT NONE
   LOGICAL :: CHKNELM
   INTEGER :: PRINUM,CONNUM,INTISG,LUBAS
   CHARACTER(*) :: BASNAM
@@ -619,6 +620,7 @@ SUBROUTINE READPCN(CHKNELM,PRINUM,CONNUM,INTISG,BASNAM,LUBAS)
 END SUBROUTINE READPCN
 
 SUBROUTINE READECC(MNOP,MNOC,NOP,NOC,ALPHA,CCOEF,BASNAM,LUBAS)
+  IMPLICIT NONE
   INTEGER :: MNOP,MNOC,NOP,NOC,LUBAS
   DOUBLE PRECISION,DIMENSION(MNOP) :: ALPHA
   DOUBLE PRECISION,DIMENSION(MNOP,MNOC) :: CCOEF
@@ -696,6 +698,7 @@ END SUBROUTINE READECC
 
 SUBROUTINE CHBLANK(BLANK,STRING)
 ! Subroutine that checks whether a line is a blank one or not.
+  IMPLICIT NONE
   LOGICAL :: BLANK
   CHARACTER*(*) :: STRING
   INTEGER :: J
@@ -709,6 +712,7 @@ END SUBROUTINE CHBLANK
 
 SUBROUTINE CONLIN(NOC,NUMLIN)
 ! Subroutine that finds out on how many lines the contraction coefficients are written in a given block (knowing there at most NUMCCA coefficients on the first line and NUMCCB on the following ones), and returns that number.
+  IMPLICIT NONE
   INTEGER :: NOC,NUMLIN
   INTEGER,PARAMETER :: NUMCCA=6,NUMCCB=7
 
@@ -723,6 +727,7 @@ END SUBROUTINE CONLIN
 
 FUNCTION MDUSC(I,J) RESULT (MONOMIALDEGREE)
 ! Function that returns the monomial degree of each cartesian gaussian primitive function of shell type "I" (where "I=1" means "s", "I=2" means "p", "I=3" means "d", etc...) appearing in the components of the upper 2-spinor basis functions.
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J
   INTEGER,DIMENSION(3) :: MONOMIALDEGREE
 
@@ -767,6 +772,7 @@ END FUNCTION MDUSC
 FUNCTION MDLSC(I,J) RESULT (MONOMIALDEGREE)
 ! Function that returns the monomial degree of each cartesian gaussian primitive function appearing in the components of the lower 2-spinor basis functions when a kinetic balance scheme is applied on the upper 2-spinor basis functions.
 ! Note: the integer I refers to the shell type of the gaussian basis functions appearing in the components of the upper 2-spinor basis function to which the (R/U)KB scheme is applied (see the function MDUSC above).
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J
   INTEGER,DIMENSION(3) :: MONOMIALDEGREE
 
