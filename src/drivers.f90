@@ -40,6 +40,8 @@ SUBROUTINE DRIVER_relativistic
   PCFOM=POM
   CALL ZPPTRF('U',NBAST,PCFOM,INFO) ; PCFS=>PCFOM
   IF (INFO/=0) GOTO 1
+! Condition number
+  WRITE(*,'(a,f16.2)')'* Condition number of the overlap matrix:', NORM(PS,NBAST,'1')*NORM(PIS,NBAST,'1')
 ! Computation and assembly of the core hamiltonian matrix
   WRITE(*,'(a)')'* Computation and assembly of the core hamiltonian matrix'
   ALLOCATE(POEFM(1:NBAST*(NBAST+1)/2))
