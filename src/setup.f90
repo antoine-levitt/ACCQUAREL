@@ -3,7 +3,7 @@ MODULE case_parameters
   LOGICAL :: RELATIVISTIC
 ! speed of light in the vacuum in atomic units (for the relativistic case)
 ! Note : One has $c=\frac{e^2h_e}{\hbar\alpha}$, where $\alpha$ is the fine structure constant, $c$ is the speed of light in the vacuum, $e$ is the elementary charge, $\hbar$ is the reduced Planck constant and $k_e$ is the Coulomb constant. In Hartree atomic units, the numerical values of the electron mass, the elementary charge, the reduced Planck constant and the Coulomb constant are all unity by definition, so that $c=\alpha^{-1}$. The value chosen here is the one recommended in: P. J. Mohr, B. N. Taylor, and D. B. Newell, CODATA recommended values of the fundamental physical constants: 2006.
-  DOUBLE PRECISION,PARAMETER :: C=137.035999967994D0
+  DOUBLE PRECISION :: C=137.035999967994D0
 ! scaling factor for the study of the non-relativistic limit
   DOUBLE PRECISION :: SCALING_FACTOR
 ! approximation index (1 is Hartree, 2 is Hartree-Fock) 
@@ -24,6 +24,10 @@ SUBROUTINE SETUP_CASE
   IF (CHAR=='RE') THEN
      RELATIVISTIC=.TRUE.
      WRITE(*,'(a)')' Relativistic case'
+     CALL LOOKFOR(100,'## SPEED OF LIGHT',INFO)
+     IF (INFO==0) THEN
+        READ(100,*) C
+     END IF
      WRITE(*,'(a,f16.8)')' Speed of light c = ',C
      SCALING_FACTOR=1.D0
   ELSE IF (CHAR=='NO') THEN
