@@ -650,6 +650,8 @@ IF (CHAR=='F') THEN
      NORM=DLANGE('F',N,N,M,N,WORK)
   ELSE IF (CHAR=='I') THEN
      NORM=DLANGE('I',N,N,M,N,WORK)
+  ELSE IF (CHAR=='1') THEN
+     NORM=DLANGE('1',N,N,M,N,WORK)
   ELSE
      STOP'undefined matrix norm'
   END IF  
@@ -669,6 +671,8 @@ IF (CHAR=='F') THEN
      NORM=ZLANGE('F',N,N,M,N,WORK)
   ELSE IF (CHAR=='I') THEN
      NORM=ZLANGE('I',N,N,M,N,WORK)
+  ELSE IF (CHAR=='1') THEN
+     NORM=ZLANGE('1',N,N,M,N,WORK)
   ELSE
      STOP'undefined matrix norm'
   END IF  
