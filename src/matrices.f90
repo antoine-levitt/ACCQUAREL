@@ -124,11 +124,8 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
   INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
 
   INTEGER :: I,J,K,L,M,N
-  DOUBLE PRECISION :: AC
   DOUBLE COMPLEX :: TMP,VALUE
-
-  AC=SCALING_FACTOR*C
-
+  
   POEFM=(0.D0,0.D0)
   DO J=1,NBAS(1)
      DO I=1,J
@@ -151,27 +148,27 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         VALUE=(0.D0,0.D0)
         DO L=1,PHI(I)%nbrofcontractions(1)
            DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE-AC*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(1,L))                   &
+              VALUE=VALUE-C*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(1,L))                   &
  &                        *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(1,L),3))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(1)
            DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE-AC*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))               &
+              VALUE=VALUE-C*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))               &
  &                        *DCMPLX(DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),2),  &
  &                                DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),1))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(2)
            DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE-AC*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
+              VALUE=VALUE-C*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
  &                        *DCMPLX(-DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),2),  &
  &                                DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),1))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(2)
            DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE+AC*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(2,L))                   &
+              VALUE=VALUE+C*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(2,L))                   &
  &                        *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(2,L),3))
            END DO 
         END DO
@@ -184,7 +181,7 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K) 
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 TMP=2.D0*AC*AC*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
+                 TMP=2.D0*C*C*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
                  DO N=1,NBN
                     TMP=TMP+Z(N)*POTENTIALVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),CENTER(:,N))
                  END DO

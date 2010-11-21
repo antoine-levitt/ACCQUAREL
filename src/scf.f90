@@ -15,12 +15,9 @@ SUBROUTINE CHECKORB(EIG,N,LOON)
   INTEGER,INTENT(OUT) :: LOON
 
   INTEGER :: HGEN
-  DOUBLE PRECISION :: AC
-
-  AC=SCALING_FACTOR*C
 
 ! Determination of the number of the lowest occupied orbital (i.e., the one relative to the first eigenvalue associated to an electronic state in the gap)
-  LOON=MINLOC(EIG,DIM=1,MASK=EIG>-AC*AC)
+  LOON=MINLOC(EIG,DIM=1,MASK=EIG>-C*C)
   IF (LOON.EQ.0) THEN
      STOP'Subroutine CHECKORB: no eigenvalue associated to an electronic state.'
   ELSE
