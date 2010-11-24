@@ -89,7 +89,7 @@ FUNCTION SIGN(PA,N) RESULT (SA)
   DOUBLE COMPLEX,DIMENSION(N,N) :: A,ISRS
 
   INTEGER,PARAMETER :: ITERMAX=50
-  DOUBLE PRECISION,PARAMETER :: TOL=1.D-8
+  DOUBLE PRECISION,PARAMETER :: TOL=1.D-15
   INTEGER :: I,ITER
 
   A=UNPACK(PA,N) ; ISRS=UNPACK(PISRS,N)
@@ -100,7 +100,6 @@ FUNCTION SIGN(PA,N) RESULT (SA)
      A=SA
      SA=(3.D0*SA-MATMUL(SA,MATMUL(SA,SA)))/2.D0
      IF (NORM(SA-A,N,'F')<TOL) THEN
-!        WRITE(*,*)' Function SIGN: convergence after ',ITER,' iteration(s).' 
         RETURN
      ELSE IF (ITER==ITERMAX) THEN
         WRITE(*,*)'Function SIGN: no convergence after ',ITER,' iteration(s).'
