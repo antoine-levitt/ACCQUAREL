@@ -636,6 +636,17 @@ FUNCTION FROBENIUSINNERPRODUCT_complex(A,B,N) RESULT (FIP)
   END DO
 END FUNCTION FROBENIUSINNERPRODUCT_complex
 
+SUBROUTINE NORM_check_norm(CHAR)
+  CHARACTER(1),INTENT(IN) :: CHAR
+  IF((CHAR /= 'F') .AND. &
+       &(CHAR /= 'I') .AND. &
+       &(CHAR /= '1') .AND. &
+       &(CHAR /= 'M')) THEN
+     WRITE(*,*) 'Invalid norm'
+     STOP
+  END IF
+END SUBROUTINE NORM_check_norm
+
 FUNCTION NORM_real(M,N,CHAR) RESULT (NORM)
 ! Function that computes the Frobenius or infinity norm of a square real matrix (i.e., $\|M\|_F=\sqrt{\sum_{i,j=1}^n|m_{ij}|^2}$).
   INTEGER,INTENT(IN) :: N
@@ -646,15 +657,8 @@ FUNCTION NORM_real(M,N,CHAR) RESULT (NORM)
   DOUBLE PRECISION,DIMENSION(N) :: WORK
   DOUBLE PRECISION,EXTERNAL :: DLANGE
 
-IF (CHAR=='F') THEN
-     NORM=DLANGE('F',N,N,M,N,WORK)
-  ELSE IF (CHAR=='I') THEN
-     NORM=DLANGE('I',N,N,M,N,WORK)
-  ELSE IF (CHAR=='1') THEN
-     NORM=DLANGE('1',N,N,M,N,WORK)
-  ELSE
-     STOP'undefined matrix norm'
-  END IF  
+  CALL NORM_check_norm(CHAR)
+  NORM = DLANGE(CHAR,N,N,M,N,WORK)
 END FUNCTION NORM_real
 
 FUNCTION NORM_complex(M,N,CHAR) RESULT (NORM)
@@ -667,15 +671,8 @@ FUNCTION NORM_complex(M,N,CHAR) RESULT (NORM)
   DOUBLE PRECISION,DIMENSION(N) :: WORK
   DOUBLE PRECISION,EXTERNAL :: ZLANGE
 
-IF (CHAR=='F') THEN
-     NORM=ZLANGE('F',N,N,M,N,WORK)
-  ELSE IF (CHAR=='I') THEN
-     NORM=ZLANGE('I',N,N,M,N,WORK)
-  ELSE IF (CHAR=='1') THEN
-     NORM=ZLANGE('1',N,N,M,N,WORK)
-  ELSE
-     STOP'undefined matrix norm'
-  END IF  
+  CALL NORM_check_norm(CHAR)
+  NORM = ZLANGE(CHAR,N,N,M,N,WORK)
 END FUNCTION NORM_complex
 
 FUNCTION NORM_symmetric(PM,N,CHAR) RESULT (NORM)
@@ -688,15 +685,8 @@ FUNCTION NORM_symmetric(PM,N,CHAR) RESULT (NORM)
   DOUBLE PRECISION,DIMENSION(N) :: WORK
   DOUBLE PRECISION,EXTERNAL :: DLANSP
 
-  IF (CHAR=='F') THEN
-     NORM=DLANSP('F','U',N,PM,WORK)
-  ELSE IF (CHAR=='I') THEN
-     NORM=DLANSP('I','U',N,PM,WORK)
-    ELSE IF (CHAR=='1') THEN
-     NORM=DLANSP('1','U',N,PM,WORK)
-  ELSE
-     STOP'Function NORM: undefined matrix norm.'
-  END IF
+  CALL NORM_check_norm(CHAR)
+  NORM = DLANSP(CHAR,'U',N,PM,WORK)
 END FUNCTION NORM_symmetric
 
 FUNCTION NORM_hermitian(PM,N,CHAR) RESULT (NORM)
@@ -709,18 +699,12 @@ FUNCTION NORM_hermitian(PM,N,CHAR) RESULT (NORM)
   DOUBLE PRECISION,DIMENSION(N) :: WORK
   DOUBLE PRECISION,EXTERNAL :: ZLANHP
 
-  IF (CHAR=='F') THEN
-     NORM=ZLANHP('F','U',N,PM,WORK)
-  ELSE IF (CHAR=='I') THEN
-     NORM=ZLANHP('I','U',N,PM,WORK)
-  ELSE IF (CHAR=='1') THEN
-     NORM=ZLANHP('1','U',N,PM,WORK)
-  ELSE
-     STOP'Function NORM: undefined matrix norm.'
-  END IF
+  CALL NORM_check_norm(CHAR)
+  NORM = ZLANHP(CHAR,'U',N,PM,WORK)
 END FUNCTION NORM_hermitian
 
 SUBROUTINE EIGENSOLVER_symmetric_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
+  USE random
 ! Subroutine that computes all the eigenvalues and the eigenvectors of a real generalized symmetric-definite eigenproblem, of the form A*x=(lambda)*B*x. Here A and B are assumed to be symmetric, their upper triangular part being stored in packed format, and B is also positive definite. It is also assumed that the Cholesky factorization of B has previously been computed and stored in packed format.
 ! Note: it is a simplification of LAPACK's DSPGV subroutine.
    INTEGER,INTENT(IN) :: N
