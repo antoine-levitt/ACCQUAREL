@@ -108,7 +108,7 @@ FUNCTION PACK_symmetric(A,N) RESULT (PA)
   DO J=1,N
      DO I=1,J
         IJ=IJ+1
-        PA(IJ)=A(I,J)
+        PA(IJ)=(A(I,J)+A(J,I))/2.D0
      END DO
   END DO
 END FUNCTION PACK_symmetric
@@ -127,6 +127,7 @@ FUNCTION PACK_hermitian(A,N) RESULT (PA)
      DO I=1,J
         IJ=IJ+1
         PA(IJ)=A(I,J)
+        PA(IJ)=(A(I,J)+conjg(A(J,I)))/2.D0
      END DO
   END DO
 END FUNCTION PACK_hermitian
