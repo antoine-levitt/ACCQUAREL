@@ -1,12 +1,45 @@
-SUBROUTINE GRADIENT_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! Roothaan's algorithm (closed-shell Dirac-Hartree-Fock formalism).
-! Reference: C. C. J. Roothaan, New developments in molecular orbital theory, Rev. Modern Phys., 23(2), 69-89, 1951.
+MODULE gradient_mod
+CONTAINS
+! performs a linesearch about PDM
+FUNCTION LINESEARCH(CMT,PDM,NBAST,POEFM,PHI) RESULT(PDMNEW)
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE output
   USE esa_mod
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
-  DOUBLE PRECISION :: EPS
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: POEFM
+  DOUBLE COMPLEX,DIMENSION(NBAST,NBAST) :: CMT
+  TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
+  INTEGER :: I
+  DOUBLE PRECISION :: ETOT,EPS
+  DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2) :: PTEFM,PFM,PDM,PDMNEW
+
+  DOUBLE PRECISION,PARAMETER :: EPS_FINDIFF = 0.001
+  CHARACTER(1),PARAMETER :: ALGORITHM = 'F'
+
+  ! compute EPS
+  IF(ALGORITHM == 'F') THEN
+     ! fixed 
+     EPS = 0.1
+  ELSEIF(ALGORITHM == 'Q') THEN
+     ! quadratic model
+  END IF
+  
+  PDMNEW=PACK(MATMUL(MATMUL(MATMUL(MATMUL(EXPONENTIAL(EPS,CMT,NBAST),UNPACK(PDM,NBAST)),&
+       &UNPACK(PS,NBAST)),EXPONENTIAL(-EPS,CMT,NBAST)),UNPACK(PIS,NBAST)),NBAST)
+
+  PDMNEW = THETA(PDMNEW,POEFM,NBAST,PHI,'D')
+END FUNCTION LINESEARCH
+END MODULE gradient_mod
+
+SUBROUTINE GRADIENT_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+! Roothaan's algorithm (closed-shell Dirac-Hartree-Fock formalism).
+! Reference: C. C. J. Roothaan, New developments in molecular orbital theory, Rev. Modern Phys., 23(2), 69-89, 1951.
+  USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
+  USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE output
+  USE esa_mod ; USE gradient_mod
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: POEFM
@@ -100,17 +133,13 @@ SUBROUTINE GRADIENT_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME
   IF (INFO/=0) GO TO 4
 
   ! computation of the commutator
-  EPS = .1
-  PDM1 = PDM
   ! CMT in ON basis = DF - Sm1 F D S
   CMT = MATMUL(UNPACK(PDM,NBAST),UNPACK(PFM,NBAST)) - &
        MATMUL(MATMUL(MATMUL(UNPACK(PIS,NBAST),UNPACK(PFM,NBAST)),UNPACK(PDM,NBAST)),UNPACK(PS,NBAST))
-  PDM = PACK(MATMUL(MATMUL(MATMUL(MATMUL(EXPONENTIAL(EPS,CMT,NBAST),UNPACK(PDM,NBAST)),&
-       UNPACK(PS,NBAST)),EXPONENTIAL(-EPS,CMT,NBAST)),UNPACK(PIS,NBAST)),NBAST)
-
-  PPM = THETA(PDM,POEFM,NBAST,PHI,'D')
-  PDM = PPM
-  
+  PDM1 = PDM
+  ! PDM by line search
+  PDM = LINESEARCH(CMT,PDM,NBAST,POEFM,PHI)
+    
 ! Computation of the energy associated to the density matrix
   CALL BUILDTEFM(PTEFM,NBAST,PHI,PDM)
   ETOT=ENERGY(POEFM,PTEFM,PDM,NBAST)
