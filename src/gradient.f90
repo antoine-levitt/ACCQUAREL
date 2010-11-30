@@ -169,6 +169,7 @@ SUBROUTINE GRADIENT_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME
 6 WRITE(*,*) ' '
   WRITE(*,*) 'Switching to gradient algorithm'
   WRITE(*,*) ' '
+  PDM = THETA(PDM,POEFM,NBAST,PHI,'D')
   ITER = 0
 7 ITER=ITER+1
   WRITE(*,'(a)')' '
@@ -296,7 +297,6 @@ SUBROUTINE GRADIENT_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 6 WRITE(*,*) ' '
   WRITE(*,*) 'Switching to gradient algorithm'
   WRITE(*,*) ' '
-  PDM = THETA(PDM,POEFM,NBAST,PHI,'D')
   ITER = 0
 7 ITER=ITER+1
   WRITE(*,'(a)')' '
