@@ -774,7 +774,6 @@ FUNCTION NORM_hermitian(PM,N,CHAR) RESULT (NORM)
 END FUNCTION NORM_hermitian
 
 SUBROUTINE EIGENSOLVER_symmetric_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
-  USE random
 ! Subroutine that computes all the eigenvalues and the eigenvectors of a real generalized symmetric-definite eigenproblem, of the form A*x=(lambda)*B*x. Here A and B are assumed to be symmetric, their upper triangular part being stored in packed format, and B is also positive definite. It is also assumed that the Cholesky factorization of B has previously been computed and stored in packed format.
 ! Note: it is a simplification of LAPACK's DSPGV subroutine.
   IMPLICIT NONE
