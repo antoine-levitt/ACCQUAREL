@@ -209,7 +209,7 @@ SUBROUTINE DRIVER_nonrelativistic
   CALL BUILDOEFM(POEFM,PHI,NBAST)
 ! Creation of the list of the nonzero bielectronic integrals
   WRITE(*,'(a)')'* Creation of the list of nonzero bielectronic integrals'
-  CALL BUILDBILIST(PHI,NBAS,BINMBR)
+  CALL BUILDBILIST(PHI,NBAST,BINMBR)
   IF (DIRECT) THEN
 ! Computation of the bielectronic integrals will be done "on the fly"
 ! storage of the list of nonzero bielectronic integrals in memory
@@ -388,7 +388,7 @@ SUBROUTINE DRIVER_boson_star
   CALL BUILDKPFM(POEFM,PHI,NBAST)
 ! Creation of the list of nonzero bielectronic integrals
   WRITE(*,'(a)')'* Creation of the list of nonzero bielectronic integrals'
-  CALL BUILDBILIST(PHI,NBAS,BINMBR)
+  CALL BUILDBILIST(PHI,NBAST,BINMBR)
 ! Computation of the Coulomb integrals
   WRITE(*,'(a)')'* Computation of the bielectronic integrals'
   IF (USEDISK) THEN

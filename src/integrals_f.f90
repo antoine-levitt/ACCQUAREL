@@ -181,12 +181,12 @@ FUNCTION COULOMBVALUE_nonrelativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
  &                    PHI_D%nbrofexponents,PHI_D%center,PHI_D%exponents,PHI_D%coefficients,PHI_D%monomialdegree)
 END FUNCTION COULOMBVALUE_nonrelativistic
 
-SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAS,LISTSIZE)
+SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)
 ! Subroutine that generates the list (without redundancy as symmetries are taken into account) of the bielectronic integrals with nonzero value.
 ! Reference: R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974.
   USE case_parameters ; USE basis_parameters
   TYPE(gaussianbasisfunction),DIMENSION(:),INTENT(IN) :: PHI
-  INTEGER,DIMENSION(1),INTENT(IN) :: NBAS
+  INTEGER,INTENT(IN) :: NBAST
   INTEGER,INTENT(OUT) :: LISTSIZE
 
   INTEGER :: I,J,K,L
@@ -196,7 +196,7 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAS,LISTSIZE)
   OPEN(LUNIT,form='UNFORMATTED')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
   LISTSIZE=0
-  DO I=1,NBAS(1) ; DO J=1,I ; DO K=1,J ; DO L=1,K
+  DO I=1,NBAST ; DO J=1,I ; DO K=1,J ; DO L=1,K
      SC=((PHI(I)%center_id==PHI(J)%center_id).AND.(PHI(J)%center_id==PHI(K)%center_id).AND.(PHI(K)%center_id==PHI(L)%center_id))
      GLOBALMONOMIALDEGREE=PHI(I)%monomialdegree+PHI(J)%monomialdegree+PHI(K)%monomialdegree+PHI(L)%monomialdegree
 ! parity check on the product of the monomials if the four functions share the same center
