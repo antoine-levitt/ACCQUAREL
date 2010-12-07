@@ -502,7 +502,6 @@
          hnorm = MAX( hnorm,wsp(i) )
       enddo
       hnorm = ABS( t*hnorm )
-      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of DGPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale = t / DBLE(2**ns)
       scale2 = scale*scale
@@ -672,7 +671,6 @@
          hnorm = MAX( hnorm,wsp(i) )
       enddo
       hnorm = ABS( t*hnorm )
-      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of DSPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale = t / DBLE(2**ns)
       scale2 = scale*scale
@@ -845,7 +843,6 @@
          hnorm = MAX( hnorm,DBLE(wsp(i)) )
       enddo
       hnorm = ABS( t*hnorm )
-      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of ZGPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale =  CMPLX( t/DBLE(2**ns),0.0d0 )
       scale2 = scale*scale
@@ -1017,7 +1014,6 @@
          hnorm = MAX( hnorm,DBLE(wsp(i)) )
       enddo
       hnorm = ABS( t*hnorm )
-      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of ZHPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale =  CMPLX( t/DBLE(2**ns),0.0d0 )
       scale2 = scale*scale
