@@ -110,6 +110,10 @@ SUBROUTINE SETUP_FORMALISM
            WRITE(*,'(a)')' Restricted Open-shell Hartree-Fock (ROHF) formalism'
            WRITE(*,*)'Option not implemented yet!'
            STOP
+        ELSE IF (CHAR=='GHF') THEN
+           ! General  Hartree-Fock (ROHF) formalism
+           MODEL=4
+           WRITE(*,'(a)')' General Hartree-Fock formalism'
         ELSE
            GO TO 1
         END IF

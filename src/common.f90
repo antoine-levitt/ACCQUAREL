@@ -114,6 +114,15 @@ FUNCTION ELECTRONIC_ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
   END DO
 END FUNCTION ELECTRONIC_ENERGY_relativistic
 
+FUNCTION ENERGY_GHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
+  USE data_parameters
+  INTEGER,INTENT(IN) :: N
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
+  DOUBLE PRECISION :: ETOT
+
+  ETOT=ENERGY_HF(POEFM,PTEFM,PDM,N)+INTERNUCLEAR_ENERGY
+END FUNCTION ENERGY_GHF
+
 FUNCTION ELECTRONIC_ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ENERGY)
 ! Function that computes average-of-configuration Dirac-Hartree-Fock electronic energy associated the closed- and open-shell density matrices (whose upper triangular parts are stored in packed form).
   USE data_parameters

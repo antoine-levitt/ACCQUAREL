@@ -180,13 +180,22 @@ SUBROUTINE DRIVER_nonrelativistic
   LOGICAL :: RESUME
 
 ! Computation of the discretization basis
-  CALL FORMBASIS(PHI,NBAS)
+  IF(MODEL == 4) THEN
+     CALL FORMBASIS_GHF(PHI,NBAS)
+  ELSE
+     CALL FORMBASIS(PHI,NBAS)
+  END IF
   NBAST=SUM(NBAS)
 ! Computations of the tensors relative to the metric
 ! - computation and assembly of the overlap matrix
   WRITE(*,'(/,a)')'* Computation and assembly of the overlap matrix'
   ALLOCATE(POM(1:NBAST*(NBAST+1)/2))
-  CALL BUILDOM(POM,PHI,NBAST) ; PS=>POM
+  IF(MODEL == 4) THEN
+     CALL BUILDOM_GHF(POM,PHI,NBAST)
+  ELSE
+     CALL BUILDOM(POM,PHI,NBAST)
+  END IF
+  PS=>POM
 ! - computation of the inverse of the overlap matrix
   ALLOCATE(PIOM(1:NBAST*(NBAST+1)/2))
   PIOM=INVERSE(POM,NBAST) ; PIS=>PIOM
@@ -206,7 +215,11 @@ SUBROUTINE DRIVER_nonrelativistic
 ! Computation and assembly of the matrix of the free hamiltonian
   WRITE(*,'(a)')'* Computation and assembly of the core hamiltonian matrix'
   ALLOCATE(POEFM(1:NBAST*(NBAST+1)/2))
-  CALL BUILDOEFM(POEFM,PHI,NBAST)
+  IF(MODEL == 4) THEN
+     CALL BUILDOEFM_GHF(POEFM,PHI,NBAST)
+  ELSE
+     CALL BUILDOEFM(POEFM,PHI,NBAST)
+  END IF
 ! Creation of the list of the nonzero bielectronic integrals
   WRITE(*,'(a)')'* Creation of the list of nonzero bielectronic integrals'
   CALL BUILDBILIST(PHI,NBAST,BINMBR)
@@ -260,6 +273,8 @@ SUBROUTINE DRIVER_nonrelativistic
            CALL ROOTHAAN_UHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
+           CASE (4)
+           CALL ROOTHAAN_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE (2)
         WRITE(*,'(/,a)')' level-shifting algorithm'
@@ -269,6 +284,8 @@ SUBROUTINE DRIVER_nonrelativistic
            CASE (2)
            WRITE(*,*)' Not implemented yet!'
            CASE (3)
+           WRITE(*,*)' Not implemented yet!'
+           CASE (4)
            WRITE(*,*)' Not implemented yet!'
         END SELECT
         CASE (3)
@@ -280,6 +297,8 @@ SUBROUTINE DRIVER_nonrelativistic
            WRITE(*,*)' Not implemented yet!'
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
+           CASE (4)
+           WRITE(*,*)' Not implemented yet!'
         END SELECT
         CASE (4)
         WRITE(*,'(/,a)')' Optimal damping algorithm (ODA)'
@@ -290,6 +309,8 @@ SUBROUTINE DRIVER_nonrelativistic
            WRITE(*,*)' Not implemented yet!'
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
+           CASE (4)
+           WRITE(*,*)' Not implemented yet!'
         END SELECT
         CASE(6)
         WRITE(*,*)' Roothaan/Gradient algorithm'
@@ -299,6 +320,8 @@ SUBROUTINE DRIVER_nonrelativistic
            CASE (2)
            WRITE(*,*)' Not implemented yet!'
            CASE (3)
+           WRITE(*,*)' Not implemented yet!'
+           CASE (4)
            WRITE(*,*)' Not implemented yet!'
         END SELECT
 

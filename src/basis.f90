@@ -436,6 +436,30 @@ SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
   WRITE(*,'(a,i4)')' Total number of basis functions =',SUM(NBAS)
 END SUBROUTINE FORMBASIS_nonrelativistic
 
+SUBROUTINE FORMBASIS_GHF(PHI,NBAS)
+! Subroutine that builds the gaussian basis functions for the molecular system considered, from coefficients either read in a file (basis set from the existing literature) or depending on some given parameters (even-tempered basis set).
+  USE basis_parameters ; USE data_parameters ; USE mathematical_functions ; USE constants
+  IMPLICIT NONE
+  TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: PHI
+  TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE :: PHI_nonrelativistic
+  INTEGER,DIMENSION(:),ALLOCATABLE,INTENT(OUT) :: NBAS
+  INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS_nonrelativistic
+
+  ! build GHF basis from spinless basis
+  CALL FORMBASIS_nonrelativistic(PHI_nonrelativistic,NBAS_nonrelativistic)
+
+  ALLOCATE(PHI(1:2*NBAS_nonrelativistic(1)))
+  ALLOCATE(NBAS(1:2))
+
+  NBAS(1) = NBAS_nonrelativistic(1)
+  NBAS(2) = NBAS_nonrelativistic(1)
+  PHI(1:NBAS_nonrelativistic(1)) = PHI_nonrelativistic
+  PHI(NBAS_nonrelativistic(1)+1:2*NBAS_nonrelativistic(1)) = PHI_nonrelativistic
+
+  DEALLOCATE(PHI_nonrelativistic)
+  DEALLOCATE(NBAS_nonrelativistic)
+END SUBROUTINE FORMBASIS_GHF
+
 SUBROUTINE READBASIS(Z,HAQN,NOP,NOC,ALPHA,CCOEF,NBAS,NGBF)
 ! Subroutine that reads (for a given chemical element) the coefficients of the functions of a chosen basis in the DALTON library and computes the number of basis functions (and related cartesian gaussian-type orbital functions) for the components of the upper and lower 2-spinors with respect to the indicated options (contracted basis or not, use of the "kinetic balance" process or not, etc...)
 ! Note: the name (and path) of the file containing the basis name is stored in the variable BASISFILE from the module basis_parameters.

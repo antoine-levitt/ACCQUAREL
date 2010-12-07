@@ -191,21 +191,32 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)
 
   INTEGER :: I,J,K,L
   INTEGER,DIMENSION(3) :: GLOBALMONOMIALDEGREE
-  LOGICAL :: SC
+  LOGICAL :: SC,SS
+
+  ! same spin check. Not used outside GHF
+  SS = .TRUE.
 
   OPEN(LUNIT,form='UNFORMATTED')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
   LISTSIZE=0
   DO I=1,NBAST ; DO J=1,I ; DO K=1,J ; DO L=1,K
+     ! same center?
      SC=((PHI(I)%center_id==PHI(J)%center_id).AND.(PHI(J)%center_id==PHI(K)%center_id).AND.(PHI(K)%center_id==PHI(L)%center_id))
      GLOBALMONOMIALDEGREE=PHI(I)%monomialdegree+PHI(J)%monomialdegree+PHI(K)%monomialdegree+PHI(L)%monomialdegree
+     ! same spin? i must have same spin as j, same for k and l
+     IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (J <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (J > NBAST/2))).AND.&
+          &(((K <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((K > NBAST/2) .AND. (L > NBAST/2)))
 ! parity check on the product of the monomials if the four functions share the same center
-     IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+     IF (((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)).AND.SS) THEN
         LISTSIZE=LISTSIZE+1 ; WRITE(LUNIT)I,J,K,L
-        IF (K<J) THEN
+        IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (K <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (K > NBAST/2))).AND.&
+             &(((J <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((J > NBAST/2) .AND. (L > NBAST/2)))
+        IF ((K<J).AND.SS) THEN
            LISTSIZE=LISTSIZE+1 ; WRITE(LUNIT)I,K,J,L
         END IF
-        IF ((J<I).AND.(L<K)) THEN
+        IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (L > NBAST/2))).AND.&
+             &(((J <= NBAST/2) .AND. (K <= NBAST/2)) .OR. ((J > NBAST/2) .AND. (K > NBAST/2)))
+        IF ((J<I).AND.(L<K).AND.SS) THEN
            LISTSIZE=LISTSIZE+1 ; WRITE(LUNIT)I,L,J,K
         END IF
      END IF
