@@ -140,6 +140,7 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
   DOUBLE COMPLEX :: TMP,VALUE
   
   POEFM=(0.D0,0.D0)
+  ! potential energy for L spinors
   DO J=1,NBAS(1)
      DO I=1,J
         VALUE=(0.D0,0.D0)
@@ -156,6 +157,24 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
+  IF(MODEL == 3) THEN
+  ! schrodinger kinetic energy
+  DO J=1,NBAS(1)
+     DO I=1,J
+        VALUE=(0.D0,0.D0)
+        DO K=1,2
+           DO L=1,PHI(I)%nbrofcontractions(K)
+              DO M=1,PHI(J)%nbrofcontractions(K)
+                 VALUE=VALUE+PHI(I)%coefficients(K,M)*PHI(J)%coefficients(K,L)*&
+                      &KINETICVALUE(PHI(I)%contractions(K,M),PHI(J)%contractions(K,L))/2
+              END DO
+           END DO
+        END DO
+        POEFM(I+(J-1)*J/2)=POEFM(I+(J-1)*J/2) + VALUE
+     END DO
+  END DO
+  ELSE
+  ! kinetic energy alpha.p
   DO J=NBAS(1)+1,SUM(NBAS)
      DO I=1,NBAS(1)
         VALUE=(0.D0,0.D0)
@@ -188,6 +207,7 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
+  !potential energy for S spinors
   DO J=NBAS(1)+1,SUM(NBAS)
      DO I=NBAS(1)+1,J
         VALUE=(0.D0,0.D0)
@@ -205,6 +225,7 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
+  END IF
 END SUBROUTINE BUILDOEFM_relativistic
 
 SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)

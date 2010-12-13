@@ -18,6 +18,12 @@ SUBROUTINE DRIVER_relativistic
 ! POUR L'INSTANT
   RESUME=.FALSE.
 
+  ! complex GHF
+  IF(MODEL == 3) THEN
+     SSINTEGRALS = .FALSE.
+     SLINTEGRALS = .FALSE.
+  END IF
+  
 ! Computation of the discretization basis
   CALL FORMBASIS(PHI,NBAS,GBF,NGBF)
   NBAST=SUM(NBAS)
@@ -116,6 +122,8 @@ SUBROUTINE DRIVER_relativistic
 !           CALL ROOTHAAN_test(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
            CASE (2)
            CALL ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
+           CASE (3)
+           CALL ROOTHAAN(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE (2)
         WRITE(*,'(/,a)')' level-shifting algorithm'

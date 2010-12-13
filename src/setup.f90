@@ -81,6 +81,9 @@ SUBROUTINE SETUP_FORMALISM
         ELSE IF (CHAR=='OSD') THEN
            MODEL=2
            WRITE(*,'(a)')' Average-of-configuration open-shell formalism'
+        ELSE IF (CHAR=='CGH') THEN
+           MODEL=3
+           WRITE(*,'(a)')' Complex general hartree-fock'
         ELSE
            GO TO 1
         END IF
