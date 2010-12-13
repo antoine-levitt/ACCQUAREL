@@ -631,6 +631,8 @@ MODULE scf_parameters
   LOGICAL :: USEDISK
 ! use of the SS-bielectronic integrals
   LOGICAL :: SSINTEGRALS
+! resume EIG and EIGVEC from last computation
+  LOGICAL :: RESUME
   ! use of the SL-bielectronic integrals. Should not be set by the user directly
   LOGICAL :: SLINTEGRALS = .TRUE.
 CONTAINS
@@ -745,6 +747,15 @@ SUBROUTINE SETUP_SCF
         IF ((METHOD/='D').AND.(METHOD/='S')) GO TO 4
      END IF
   END DO
+  
+  RESUME = .FALSE.
+  CALL LOOKFOR(100,'RESUME',INFO)
+  IF(INFO == 0) THEN
+     READ(100,'(a)')CHAR
+     IF(CHAR == 'YES') THEN
+        RESUME = .TRUE.
+     END IF
+  END IF
   !$ ! determination of the number of threads to be used by OpenMP
   !$ CALL LOOKFOR(100,'PARALLELIZATION PARAMETERS',INFO)
   !$ IF (INFO==0) THEN
