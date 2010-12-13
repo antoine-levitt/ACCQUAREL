@@ -317,6 +317,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
      END IF
   END DO ; END DO ; END DO ; END DO
 ! SSLL-type integrals
+  IF(SLINTEGRALS) THEN
   DO I=NBAS(1)+1,SUM(NBAS) ; DO J=NBAS(1)+1,SUM(NBAS) ; DO K=1,NBAS(1) ; DO L=1,NBAS(1)
      DO I1=1,2
         DO I2=1,PHI(I)%nbrofcontractions(I1)
@@ -341,7 +342,8 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
         END DO
      END DO
 2    CONTINUE
-  END DO ; END DO ; END DO ; END DO
+  END DO; END DO ; END DO ; END DO
+  END IF
   IF (SSINTEGRALS) THEN
 ! SSSS-type integrals
      DO I=NBAS(1)+1,SUM(NBAS) ; DO J=NBAS(1)+1,SUM(NBAS) ; DO K=NBAS(1)+1,SUM(NBAS) ; DO L=NBAS(1)+1,SUM(NBAS)
@@ -418,27 +420,30 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
         END IF
      END IF
   END DO ; END DO ; END DO ; END DO
-! (SS|LL) integrals
-  WRITE(*,*)'- Computing SL integrals'
-  ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
-  N=0
-! Here the first integrals are faster to compute than the last ones: therefore, schedule with CHUNK=1 to distribute work evenly.
-  !$OMP PARALLEL DO PRIVATE(N,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1)
-  DO I=NGBF(1)+1,SUM(NGBF)
-! Note: the value of N needs to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
-     N=NGBF(1)*(NGBF(1)+1)/2*(I-NGBF(1)-1)*(I-NGBF(1))/2
-     ! this takes N(N+1)/2*(I-N) iters
-     DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
-     SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
-     GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
-! parity check (one center case)
-     IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
-        N=N+1 ; SLIJKL(N)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
-     ELSE
-        N=N+1 ; SLIJKL(N)=(0.D0,0.D0)
-     END IF
-  END DO ; END DO ; END DO ; END DO
-  !$OMP END PARALLEL DO
+  IF(SLINTEGRALS) THEN
+     ! (SS|LL) integrals
+     WRITE(*,*)'- Computing SL integrals'
+     ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
+     N=0
+     ! Here the first integrals are faster to compute than the last ones: therefore, schedule with CHUNK=1 to distribute work evenly.
+     !$OMP PARALLEL DO PRIVATE(N,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1)
+     DO I=NGBF(1)+1,SUM(NGBF)
+        ! Note: the value of N needs to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
+        N=NGBF(1)*(NGBF(1)+1)/2*(I-NGBF(1)-1)*(I-NGBF(1))/2
+        ! this takes N(N+1)/2*(I-N) iters
+        DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
+           SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.&
+                &(GBF(K)%center_id==GBF(L)%center_id))
+           GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
+           ! parity check (one center case)
+           IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+              N=N+1 ; SLIJKL(N)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
+           ELSE
+              N=N+1 ; SLIJKL(N)=(0.D0,0.D0)
+           END IF
+        END DO; END DO ; END DO ; END DO
+        !$OMP END PARALLEL DO
+  END IF
   IF (SSINTEGRALS) THEN
 ! (SS|SS) integrals
      WRITE(*,*)'- Computing SS integrals'
@@ -552,7 +557,8 @@ END FUNCTION PRECOMPUTEDCOULOMBVALUE
 SUBROUTINE DEALLOCATE_INTEGRALS
   USE scf_parameters
 ! Routine that deallocate the arrays containing the values of the bielectronic integrals over a cartesian gaussian basis.
-  DEALLOCATE(LLIJKL,LLIKJL,LLILJK,SLIJKL)
+  DEALLOCATE(LLIJKL,LLIKJL,LLILJK)
   IF (SSINTEGRALS) DEALLOCATE(SSIJKL,SSIKJL,SSILJK)
+  IF (SLINTEGRALS) DEALLOCATE(SLIJKL)
 END SUBROUTINE DEALLOCATE_INTEGRALS
 END MODULE

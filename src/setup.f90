@@ -628,6 +628,8 @@ MODULE scf_parameters
   LOGICAL :: USEDISK
 ! use of the SS-bielectronic integrals
   LOGICAL :: SSINTEGRALS
+  ! use of the SL-bielectronic integrals. Should not be set by the user directly
+  LOGICAL :: SLINTEGRALS = .TRUE.
 CONTAINS
 
 SUBROUTINE SETUP_SCF
