@@ -311,13 +311,13 @@ SUBROUTINE DRIVER_nonrelativistic
         WRITE(*,'(/,a)')' level-shifting algorithm'
         SELECT CASE (MODEL)
            CASE (1)
-           CALL LEVELSHIFTING(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+           CALL LEVELSHIFTING_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
            CASE (2)
            WRITE(*,*)' Not implemented yet!'
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
            CASE (4)
-           WRITE(*,*)' Not implemented yet!'
+           CALL LEVELSHIFTING_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE (3)
         WRITE(*,'(/,a)')' DIIS algorithm'
