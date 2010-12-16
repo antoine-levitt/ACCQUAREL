@@ -335,13 +335,13 @@ SUBROUTINE DRIVER_nonrelativistic
         WRITE(*,'(/,a)')' Optimal damping algorithm (ODA)'
         SELECT CASE (MODEL)
            CASE (1)
-           CALL ODA(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+           CALL ODA_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
            CASE (2)
            WRITE(*,*)' Not implemented yet!'
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
            CASE (4)
-           WRITE(*,*)' Not implemented yet!'
+           CALL ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE(6)
         WRITE(*,*)' Roothaan/Gradient algorithm'
