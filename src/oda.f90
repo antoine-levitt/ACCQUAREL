@@ -149,11 +149,14 @@ SUBROUTINE ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 ! Assembly and diagonalization of the Fock matrix associated to the pseudo-density matrix
   CALL BUILDTEFM_GHF(PTTEFM,NBAST,PHI,PTDM)
   PFM=POEFM+PTTEFM
-  CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
-  IF (INFO/=0) GO TO 5
+  IF(.NOT.(RESUME .AND. ITER == 1)) THEN
+     CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
+     IF (INFO/=0) GO TO 5
+  END IF
+  
 ! Assembly of the density matrix according to the aufbau principle
   PDM1=PDM
-  CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE/2)
+  CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE)
 ! Computation of the energy associated to the density matrix
   CALL BUILDTEFM_GHF(PTEFM,NBAST,PHI,PDM)
   ETOT=ENERGY_GHF(POEFM,PTEFM,PDM,NBAST)
