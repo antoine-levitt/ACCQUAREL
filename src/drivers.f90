@@ -323,13 +323,13 @@ SUBROUTINE DRIVER_nonrelativistic
         WRITE(*,'(/,a)')' DIIS algorithm'
         SELECT CASE (MODEL)
            CASE (1)
-           CALL DIIS(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+           CALL DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
            CASE (2)
            WRITE(*,*)' Not implemented yet!'
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
            CASE (4)
-           WRITE(*,*)' Not implemented yet!'
+           CALL DIIS_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE (4)
         WRITE(*,'(/,a)')' Optimal damping algorithm (ODA)'
