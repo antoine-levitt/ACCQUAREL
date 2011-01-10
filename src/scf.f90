@@ -53,7 +53,6 @@ SUBROUTINE CHECKNUMCONV_relativistic(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
   CONVD=.FALSE. ; CONVC=.FALSE.
 
   PDIFF=ABA(PSRS,PDMN-PDMO,N)
-  WRITE(*,*)'Infinity norm of the difference D_n-D_{n-1} =',NORM(PDIFF,N,'I')
   FNDFDN=NORM(PDIFF,N,'F')
   WRITE(*,*)'Frobenius norm of the difference D_n-D_{n-1} =',FNDFDN
   WRITE(17,'(e22.14)')FNDFDN
@@ -61,7 +60,6 @@ SUBROUTINE CHECKNUMCONV_relativistic(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 
   ISRS=UNPACK(PISRS,N)
   CMT=MATMUL(ISRS,MATMUL(COMMUTATOR(PFM,PDMN,PS,N),ISRS))
-  WRITE(*,*)'Infinity norm of the commutator [F(D_n),D_n] =',NORM(CMT,N,'I')
   FNCMT=NORM(CMT,N,'F')
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n),D_n] =',FNCMT
   WRITE(18,'(e22.14)')FNCMT
@@ -95,7 +93,6 @@ SUBROUTINE CHECKNUMCONV_RHF(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
   CONVD=.FALSE. ; CONVC=.FALSE.
 
   PDIFF=ABA(PSRS,PDMN-PDMO,N)
-  WRITE(*,*)'Infinity norm of the difference D_n-D_{n-1} =',NORM(PDIFF,N,'I')
   FNDFDN=NORM(PDIFF,N,'F')
   WRITE(*,*)'Frobenius norm of the difference D_n-D_{n-1} =',FNDFDN
   WRITE(17,'(e22.14)')FNDFDN
@@ -103,7 +100,6 @@ SUBROUTINE CHECKNUMCONV_RHF(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
 
   ISRS=UNPACK(PISRS,N)
   CMT=MATMUL(ISRS,MATMUL(COMMUTATOR(PFM,PDMN,PS,N),ISRS))
-  WRITE(*,*)'Infinity norm of the commutator [F(D_n),D_n] =',NORM(CMT,N,'I')
   FNCMT=NORM(CMT,N,'F')
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n),D_n] =',FNCMT
   WRITE(18,'(e22.14)')FNCMT
@@ -136,18 +132,15 @@ SUBROUTINE CHECKNUMCONV_UHF(PDMA,PDMB,PTDMO,PFMA,PFMB,N,ETOTN,ETOTO,TRSHLD,NUMCO
   CONVD=.FALSE. ; CONVC=.FALSE.
 
   PDIFF=ABA(PSRS,PDMA+PDMB-PTDMO,N)
-  WRITE(*,*)'Infinity norm of the difference D_n-D_{n-1} =',NORM(PDIFF,N,'I')
   FNDFDN=NORM(PDIFF,N,'F')
   WRITE(*,*)'Frobenius norm of the difference D_n-D_{n-1} =',FNDFDN
   IF (FNDFDN<=TRSHLD) CONVD=.TRUE.
 
   ISRS=UNPACK(PISRS,N)
   CMT=MATMUL(ISRS,MATMUL(COMMUTATOR(PFMA,PDMA,PS,N),ISRS))
-  WRITE(*,*)'Infinity norm of the commutator [F(D_n^a),D_n^a] =',NORM(CMT,N,'I')
   FNCMTA=NORM(CMT,N,'F')
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n^a),D_n^a] =',FNCMTA
   CMT=MATMUL(ISRS,MATMUL(COMMUTATOR(PFMB,PDMB,PS,N),ISRS))
-  WRITE(*,*)'Infinity norm of the commutator [F(D_n^b),D_n^b] =',NORM(CMT,N,'I')
   FNCMTB=NORM(CMT,N,'F')
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n^b),D_n^b] =',FNCMTB
   IF ((FNCMTA<=TRSHLD).AND.(FNCMTB<=TRSHLD)) CONVC=.TRUE.
@@ -179,22 +172,18 @@ SUBROUTINE CHECKNUMCONV_AOCOSDHF(PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO,N,ETOTN,ETOTO
 
   PDIFF=PDMCN-PDMCO
   FNDFDNC=NORM(PDIFF,N,'F')
-  WRITE(*,*)'Infinity norm of the difference D_n^c-DC_{n-1}^c =',NORM(PDIFF,N,'I')
   WRITE(*,*)'Frobenius norm of the difference D_n^c-DC_{n-1}^c =',FNDFDNC
   PDIFF=PDMON-PDMOO
   FNDFDNO=NORM(PDIFF,N,'F')
-  WRITE(*,*)'Infinity norm of the difference D_n^o-DC_{n-1}^o =',NORM(PDIFF,N,'I')
   WRITE(*,*)'Frobenius norm of the difference D_n^o-DC_{n-1}^o =',FNDFDNO
   IF ((FNDFDNC<=TRSHLD).AND.(FNDFDNO<=TRSHLD)) CONVD=.TRUE.
 
   ISRS=UNPACK(PISRS,N)
   CMT=MATMUL(ISRS,MATMUL(COMMUTATOR(PFMC,PDMCN,PS,N),ISRS))
   FNCMTC=NORM(CMT,N,'F')
-  WRITE(*,*)'Infinity norm of the commutator [F(D_n^c),D_n^c] =',NORM(CMT,N,'I')
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n^c),D_n^c] =',FNCMTC
   CMT=MATMUL(ISRS,MATMUL(COMMUTATOR(PFMO,PDMON,PS,N),ISRS))
   FNCMTO=NORM(CMT,N,'F')
-  WRITE(*,*)'Infinity norm of the commutator [F(D_n^o),D_n^o] =',NORM(CMT,N,'I')
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n^o),D_n^o] =',FNCMTO
   IF ((FNCMTC<=TRSHLD).AND.(FNCMTO<=TRSHLD)) CONVC=.TRUE.
 ! This criterion is not used to assert convergence
