@@ -12,6 +12,30 @@ SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
   END DO
 END SUBROUTINE FORMDM_relativistic
 
+SUBROUTINE FORMDM_nonrelativistic_nonorthogonal(PDM,EIGVEC,NBAST,LOON,HOON)
+! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format). Same as FORMDM_nonrelativistic, but does not expect orthogonal eigenvectors
+  USE metric_nonrelativistic ; USE matrix_tools
+  INTEGER,INTENT(IN) :: NBAST,LOON,HOON
+  DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EIGVEC_GS,S
+
+  INTEGER :: I,J
+
+  EIGVEC_GS = EIGVEC
+  S = UNPACK(PS,NBAST)
+
+  PDM=0.D0
+  DO I=LOON,HOON
+     DO J=LOON,I-1
+        EIGVEC_GS(:,I) = EIGVEC_GS(:,I) - dot_product(EIGVEC_GS(:,J),MATMUL(S,EIGVEC_GS(:,I))) * EIGVEC_GS(:,J)
+     END DO
+     EIGVEC_GS(:,I) = EIGVEC_GS(:,I) / SQRT(dot_product(EIGVEC_GS(:,I),MATMUL(S,EIGVEC_GS(:,I))))
+     CALL DSPR('U',NBAST,1.D0,EIGVEC(:,I),1,PDM)
+  END DO
+END SUBROUTINE FORMDM_nonrelativistic_nonorthogonal
+
+
 SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
 ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
   INTEGER,INTENT(IN) :: NBAST,LOON,HOON
