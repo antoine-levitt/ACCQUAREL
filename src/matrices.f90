@@ -572,6 +572,7 @@ END SUBROUTINE BUILDCOULOMB_relativistic
 
 SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! The formula is CM(I,J) = sum over k,l of (IJ|KL) D(I,J)
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
@@ -716,6 +717,7 @@ END SUBROUTINE BUILDEXCHANGE_relativistic
 
 SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! The formula is EM(I,K) = sum over J,L of (IJ|KL) D(L,J)
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
