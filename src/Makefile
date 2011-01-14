@@ -86,6 +86,9 @@ $(TARGET) :  $(OBJ)
 	$(LD) $(LDFLAGS) $(OBJ) -o $(EXEDIR)$(TARGET) $(FLIBS) $(ASPICLIBS)
 	@echo " ----------- $(TARGET) created ----------- "
 
+$(OBJDIR)%.o : $(SRCDIR)%.F90
+	$(F95) $(F95FLAGS) -o $@ $<
+
 $(OBJDIR)%.o : $(SRCDIR)%.f90
 	$(F95) $(F95FLAGS) -o $@ $<
 
