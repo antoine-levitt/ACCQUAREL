@@ -921,6 +921,81 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
   PTAMCM=PSAMCM+POAMCM
 END SUBROUTINE BUILDTAMCM
 
+SUBROUTINE BUILDA(PA,NBAST,NBO,PHI,EIGVEC,EIG)
+  ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! The formula is EM(I,K) = sum over J,L of (IJ|KL) D(L,J)
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
+  USE case_parameters ; USE data_parameters ; USE basis_parameters
+  INTEGER,INTENT(IN) :: NBAST,NBO
+  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO),NBO*(NBAST-NBO)) :: A
+  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO)*(NBO*(NBAST-NBO)+1)/2) :: PA
+  TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
+  DOUBLE PRECISION,DIMENSION(NBAST),INTENT(IN) :: EIG
+
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EM,DM
+  INTEGER :: I,J,K,L,N,OI,OJ,VA,VB
+  DOUBLE PRECISION :: INTGRL
+
+  A = 0
+
+  DO OI=1,NBO
+     DO VA=1,NBAST-NBO
+        A((OI-1)*(NBAST-NBO)+VA,(OI-1)*(NBAST-NBO)+VA)=(EIG(NBO+VA)-EIG(OI))
+     END DO
+  END DO
+
+#define ACTION(I,J,K,L) \
+  DO OI=1,NBO ;\
+     DO VA=1,NBAST-NBO ;\
+        DO OJ=1,NBO ;\
+           DO VB=1,NBAST-NBO ;\
+              A((OI-1)*(NBAST-NBO)+VA,(OJ-1)*(NBAST-NBO)+VB)=A((OI-1)*(NBAST-NBO)+VA,(OJ-1)*(NBAST-NBO)+VB)+INTGRL*(EIGVEC(J,OI)*EIGVEC(I,NBO+VA)*EIGVEC(K,OJ)*EIGVEC(L,NBO+VB) -EIGVEC(L,OI)*EIGVEC(I,NBO+VA)*EIGVEC(K,OJ)*EIGVEC(J,NBO+VB));\
+           END DO ;\
+        END DO ;\
+     END DO ;\
+  END DO
+
+#include "forall.f90"
+#undef ACTION
+  
+  PA = PACK(A,(NBAST-NBO)*NBO)
+  
+END SUBROUTINE BUILDA
+
+SUBROUTINE BUILDB(PB,NBAST,NBO,PHI,EIGVEC,EIG)
+  ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+  ! The formula is EM(I,K) = sum over J,L of (IJ|KL) D(L,J)
+  USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
+  USE case_parameters ; USE data_parameters ; USE basis_parameters
+  INTEGER,INTENT(IN) :: NBAST,NBO
+  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO),NBO*(NBAST-NBO)) :: B
+  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO)*(NBO*(NBAST-NBO)+1)/2) :: PB
+  TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
+  DOUBLE PRECISION,DIMENSION(NBAST),INTENT(IN) :: EIG
+
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EM,DM
+  INTEGER :: I,J,K,L,N,OI,OJ,VA,VB
+  DOUBLE PRECISION :: INTGRL
+
+#define ACTION(I,J,K,L) \
+  DO OI=1,NBO ;\
+     DO VA=1,NBAST-NBO ;\
+        DO OJ=1,NBO ;\
+           DO VB=1,NBAST-NBO ;\
+              B((OI-1)*(NBAST-NBO)+VA,(OJ-1)*(NBAST-NBO)+VB)=B((OI-1)*(NBAST-NBO)+VA,(OJ-1)*(NBAST-NBO)+VB)+INTGRL*(EIGVEC(J,OI)*EIGVEC(I,NBO+VA)*EIGVEC(L,OJ)*EIGVEC(K,NBO+VB) -EIGVEC(L,OI)*EIGVEC(I,NBO+VA)*EIGVEC(J,OJ)*EIGVEC(K,NBO+VB));\
+           END DO ;\
+        END DO ;\
+     END DO ;\
+  END DO
+
+#include "forall.f90"
+#undef ACTION
+
+  PB = PACK(B,NBO*(NBAST-NBO))
+END SUBROUTINE BUILDB
+
 MODULE matrices
 INTERFACE FORMDM
   SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
