@@ -274,6 +274,10 @@ FUNCTION ABA_hermitian(PA,PB,N) RESULT (PC)
         END DO
      END DO
   END DO
+
+  DO I=1,N
+     PC(I*(I+1)/2) = REAL(PC(I*(I+1)/2))
+  END DO
 END FUNCTION ABA_hermitian
 
 FUNCTION ABCBA_symmetric(PA,PB,PC,N) RESULT (PD)
