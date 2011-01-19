@@ -722,13 +722,6 @@ SUBROUTINE SETUP_SCF
            SLINTEGRALS=.TRUE.
         END IF
      END IF
-     READ(100,'(a4)') CHAR
-     IF (CHAR=='NOSL') THEN
-        SLINTEGRALS=.FALSE.
-        WRITE(*,'(a)')' (SL-integrals are not used in the computation)'
-     ELSE
-        SLINTEGRALS=.TRUE.
-     END IF
 
      CALL LOOKFOR(100,'SYMMETRY SX',INFO)
      IF (INFO==0) THEN
