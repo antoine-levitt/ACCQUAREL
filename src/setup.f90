@@ -1,7 +1,7 @@
 MODULE case_parameters
 ! relativistic or non-relativistic case flag
   LOGICAL :: RELATIVISTIC
-! speed of light. Might be defined by the user via a scale factor 
+! apparent speed of light (can be defined by the user via a scaling factor) 
   DOUBLE PRECISION :: C
 ! approximation index (1 is Hartree, 2 is Hartree-Fock) 
   INTEGER :: APPROXIMATION
@@ -10,27 +10,27 @@ MODULE case_parameters
 CONTAINS
 
 SUBROUTINE SETUP_CASE
-  USE setup_tools
-! speed of light in the vacuum in atomic units (for the relativistic case)
-! Note : One has $c=\frac{e^2h_e}{\hbar\alpha}$, where $\alpha$ is the fine structure constant, $c$ is the speed of light in the vacuum, $e$ is the elementary charge, $\hbar$ is the reduced Planck constant and $k_e$ is the Coulomb constant. In Hartree atomic units, the numerical values of the electron mass, the elementary charge, the reduced Planck constant and the Coulomb constant are all unity by definition, so that $c=\alpha^{-1}$. The value chosen here is the one recommended in: P. J. Mohr, B. N. Taylor, and D. B. Newell, CODATA recommended values of the fundamental physical constants: 2006.
-  DOUBLE PRECISION,PARAMETER :: SPEED_OF_LIGHT=137.035999967994D0
-  DOUBLE PRECISION :: SCALING_FACTOR=1.D0
+  USE constants ; USE setup_tools
+  DOUBLE PRECISION :: SCALING_FACTOR
   CHARACTER(2) :: CHAR
   INTEGER :: INFO
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## CASE',INFO)
-  IF (INFO/=0) STOP
+  IF (INFO/=0) STOP' The computational case is not given.'
   READ(100,'(a2)') CHAR
   IF (CHAR=='RE') THEN
      RELATIVISTIC=.TRUE.
      WRITE(*,'(a)')' Relativistic case'
-     CALL LOOKFOR(100,'## SPEED OF LIGHT SCALE FACTOR',INFO)
+     REWIND(100)
+     CALL LOOKFOR(100,'## SPEED OF LIGHT SCALING FACTOR',INFO)
      IF (INFO==0) THEN
         READ(100,*) SCALING_FACTOR
+     ELSE
+        SCALING_FACTOR=1.D0
      END IF
-     C = SCALING_FACTOR*SPEED_OF_LIGHT
-     WRITE(*,'(a,f16.8)')' Speed of light c = ',C
+     C=SCALING_FACTOR*SPEED_OF_LIGHT
+     WRITE(*,'(a,f20.12)')' Speed of light c = ',C
   ELSE IF (CHAR=='NO') THEN
      RELATIVISTIC=.FALSE.
      WRITE(*,'(a)')' Non-relativistic case'
@@ -48,7 +48,7 @@ SUBROUTINE SETUP_APPROXIMATION
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## APPROXIMATION',INFO)
-  IF (INFO/=0) STOP
+  IF (INFO/=0) STOP' The approximation type is not given.'
   READ(100,'(a12)') CHAR
   IF (LEN_TRIM(CHAR)==7) THEN
      APPROXIMATION=1
@@ -71,7 +71,7 @@ SUBROUTINE SETUP_FORMALISM
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## MODEL',INFO)
-  IF (INFO/=0) STOP
+  IF (INFO/=0) STOP' The formalism is not given.'
   READ(100,'(a3)') CHAR
   IF (RELATIVISTIC) THEN
      IF (APPROXIMATION==2) THEN
@@ -83,7 +83,7 @@ SUBROUTINE SETUP_FORMALISM
            WRITE(*,'(a)')' Average-of-configuration open-shell formalism'
         ELSE IF (CHAR=='CGH') THEN
            MODEL=3
-           WRITE(*,'(a)')' Complex general hartree-fock'
+           WRITE(*,'(a)')' Complex General Hartree-Fock'
         ELSE
            GO TO 1
         END IF
@@ -98,14 +98,14 @@ SUBROUTINE SETUP_FORMALISM
         END IF
      ELSE IF (APPROXIMATION==2) THEN
         IF (CHAR=='RHF') THEN
-! Restricted (closed-shell) Hartree-Fock (RHF) formalism (doubly occupied orbitals)
+! Restricted Hartree-Fock (RHF) formalism (doubly occupied orbitals)
            MODEL=1
-           WRITE(*,'(a)')' Restricted (closed-shell) Hartree-Fock (RHF) formalism'
+           WRITE(*,'(a)')' (Real) Restricted Hartree-Fock (RHF) formalism'
         ELSE IF (CHAR=='UHF') THEN
-! Unrestricted (open-shell) Hartree-Fock (UHF) formalism (different orbitals for different spins (DODS method))
+! Unrestricted Hartree-Fock (UHF) formalism (different orbitals for different spins (DODS method))
 ! Reference: J. A. Pople and R. K. Nesbet, Self-consistent orbitals for radicals, J. Chem. Phys., 22(3), 571-572, 1954.
            MODEL=2
-           WRITE(*,'(a)')' Unrestricted (open-shell) Hartree-Fock (UHF) formalism'
+           WRITE(*,'(a)')' (Real) Unrestricted (open-shell) Hartree-Fock (UHF) formalism'
         ELSE IF (CHAR=='ROH') THEN
 ! Restricted Open-shell Hartree-Fock (ROHF) formalism
 ! Reference: C. C. J. Roothaan, Self-consistent field theory for open shells of electronic systems, Rev. Modern Phys., 32(2), 179-185, 1960.
@@ -114,9 +114,9 @@ SUBROUTINE SETUP_FORMALISM
            WRITE(*,*)'Option not implemented yet!'
            STOP
         ELSE IF (CHAR=='GHF') THEN
-           ! General  Hartree-Fock (ROHF) formalism
+           ! General Hartree-Fock (GHF) formalism
            MODEL=4
-           WRITE(*,'(a)')' General Hartree-Fock formalism'
+           WRITE(*,'(a)')' (Real) General Hartree-Fock formalism'
         ELSE
            GO TO 1
         END IF
@@ -171,7 +171,7 @@ SUBROUTINE SETUP_DATA
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   IF (.NOT.RELATIVISTIC.AND.APPROXIMATION==1) THEN
      CALL LOOKFOR(100,'## DESCRIPTION OF THE BOSON STAR',INFO)
-     IF (INFO/=0) STOP
+     IF (INFO/=0) STOP' The description of the boson star is not given.'
      WRITE(*,'(a)')' --- **** ---'
      READ(100,*) NAME
      READ(100,*) MASS
@@ -183,7 +183,7 @@ SUBROUTINE SETUP_DATA
      WRITE(*,'(a)')' --- **** ---'
   ELSE
      CALL LOOKFOR(100,'## DESCRIPTION OF THE MOLECULAR SYSTEM',INFO)
-     IF (INFO/=0) STOP
+     IF (INFO/=0) STOP' The description of the molecular system is not given.'
      WRITE(*,'(a)')' --- Molecular system ---'
      READ(100,'(3/,a)')NAME
      WRITE(*,'(a,a)')' ** NAME: ',NAME
@@ -201,11 +201,11 @@ SUBROUTINE SETUP_DATA
      IF (RELATIVISTIC) THEN
         IF (MODEL==2) THEN
            READ(100,'(3(i3))')NBECS,NBEOS,NBOOS
-           WRITE(*,'(a,i3)')'   - number of closed shell electrons = ',NBECS
-           WRITE(*,'(a,i3)')'   - number of open shell electrons = ',NBEOS
-           WRITE(*,'(a,i3)')'   - number of open shell orbitals = ',NBOOS
+           WRITE(*,'(a,i3)')'   - number of closed-shell electrons = ',NBECS
+           WRITE(*,'(a,i3)')'   - number of open-shell electrons = ',NBEOS
+           WRITE(*,'(a,i3)')'   - number of open-shell orbitals = ',NBOOS
            IF (NBE/=NBECS+NBEOS) STOP' Problem with the total number of electrons'
-           IF (NBOOS<=NBEOS) STOP' Problem with the number of open shell orbitals!'
+           IF (NBOOS<=NBEOS) STOP' Problem with the number of open-shell orbitals!'
         END IF
      ELSE
         IF (MODEL==1) THEN
@@ -492,7 +492,7 @@ SUBROUTINE SETUP_BASIS
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## BASIS DEFINITION',INFO)
-  IF (INFO/=0) STOP
+  IF (INFO/=0) STOP' The basis definition is not given.'
   READ(100,'(3/,a)') BASISNAME
   IF (BASISNAME(1:6)=='BASIS ') THEN
 ! The basis set is an existing one in the basis library
@@ -622,19 +622,19 @@ MODULE scf_parameters
   DOUBLE PRECISION :: TRSHLD
 ! maximum number of iterations allowed
   INTEGER :: MAXITR
-! direct computation of the bielectronic integrals or not
+! flag for the direct computation of the bielectronic integrals
   LOGICAL :: DIRECT
-! "semi-direct" computation of the bielectronic integrals (relativistic case only)
+! flag for the "semi-direct" computation of the bielectronic integrals (relativistic case only)
 ! Note: the case is considered as a (DIRECT==.FALSE.) subcase: GBF bielectronic integrals are precomputed and kept in memory, 2-spinor bielectronic integrals being computed "directly" using these values afterwards.
   LOGICAL :: SEMIDIRECT
-! storage of the computed bielectronic integrals (and/or their list) on disk or in memory
+! flag for the storage of the computed bielectronic integrals (and/or their list) on disk or in memory
   LOGICAL :: USEDISK
-! use of the SS-bielectronic integrals
+! flag for the use of the SS-bielectronic integrals
   LOGICAL :: SSINTEGRALS
+! flag for the use of the LS-bielectronic integrals
+  LOGICAL :: SLINTEGRALS
 ! resume EIG and EIGVEC from last computation
   LOGICAL :: RESUME
-  ! use of the SL-bielectronic integrals. Should not be set by the user directly
-  LOGICAL :: SLINTEGRALS = .TRUE.
 CONTAINS
 
 SUBROUTINE SETUP_SCF
@@ -647,14 +647,14 @@ SUBROUTINE SETUP_SCF
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## SCF PARAMETERS',INFO)
-  IF (INFO/=0) STOP
+  IF (INFO/=0) STOP' The SCF parameters are not given.'
   READ(100,'(7/,i1)') NBALG
   DO I=1,NBALG
      READ(100,'(i1)') ALG(I)
      IF (RELATIVISTIC.AND.(ALG(I)==4)) THEN
-        STOP'The Optimal Damping Algorithm is intended for the non-relativistic case only.'
+        STOP' The Optimal Damping Algorithm is intended for the non-relativistic case only.'
      ELSE IF ((.NOT.RELATIVISTIC).AND.(ALG(I)==5)) THEN
-        STOP'ES''s algorithm is intended for the relativistic case only.'
+        STOP' ES''s algorithm is intended for the relativistic case only.'
      END IF
   END DO
   READ(100,*) TRSHLD
@@ -698,12 +698,27 @@ SUBROUTINE SETUP_SCF
        WRITE(*,*)'Subroutine SETUP_SCF: unknown type of computation for bielectronic integrals.'
        STOP
      END IF
-     READ(100,'(a4)') CHAR
-     IF (CHAR=='NOSS') THEN
+     IF (MODEL==3) THEN
+! Special case: complex GHF
         SSINTEGRALS=.FALSE.
-        WRITE(*,'(a)')' (SS-integrals are not used in the computation)'
+        SLINTEGRALS=.FALSE.
      ELSE
-        SSINTEGRALS=.TRUE.
+        REWIND(100)
+        CALL LOOKFOR(100,'NOSS',INFO)
+        IF (INFO==0) THEN
+           SSINTEGRALS=.FALSE.
+           WRITE(*,'(a)')' (SS-integrals are not used in the computation)'
+        ELSE
+           SSINTEGRALS=.TRUE.
+        END IF
+        REWIND(100)
+        CALL LOOKFOR(100,'NOLS',INFO)
+        IF (INFO==0) THEN
+           SLINTEGRALS=.FALSE.
+           WRITE(*,'(a)')' (SL-integrals are not used in the computation)'
+        ELSE
+           SLINTEGRALS=.TRUE.
+        END IF
      END IF
   ELSE
      IF (CHAR=='DIR') THEN
@@ -748,7 +763,7 @@ SUBROUTINE SETUP_SCF
      END IF
   END DO
   
-  RESUME = .FALSE.
+  RESUME=.FALSE.
   CALL LOOKFOR(100,'RESUME',INFO)
   IF(INFO == 0) THEN
      READ(100,'(a)')CHAR

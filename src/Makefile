@@ -14,12 +14,12 @@ ifndef ASPICROOT
 endif
 
 ifeq ($(F95),g95)
-   F95FLAGS = -c $(FLAGS) -fmod=$(MODDIR) $(FFLAGS)
+   F95FLAGS = -c -ffree-line-length-huge $(FLAGS) -fmod=$(MODDIR) $(FFLAGS)
    LD = g95
    FLIBS = -llapack -lblas -lm
 endif
 ifeq ($(F95),gfortran)
-   F95FLAGS = -c $(FLAGS) -fopenmp -J $(MODDIR) $(FFLAGS)
+   F95FLAGS = -c -ffree-line-length-none $(FLAGS) -fopenmp -J $(MODDIR) $(FFLAGS)
    LD = gfortran
    FLIBS = -lgomp -llapack -lblas -lm
 endif

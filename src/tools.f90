@@ -1,5 +1,8 @@
 MODULE constants
   DOUBLE PRECISION,PARAMETER :: PI=3.14159265358979323846D0
+! speed of light in the vacuum in atomic units (for the relativistic case)
+! Note : One has $c=\frac{e^2h_e}{\hbar\alpha}$, where $\alpha$ is the fine structure constant, $c$ is the speed of light in the vacuum, $e$ is the elementary charge, $\hbar$ is the reduced Planck constant and $k_e$ is the Coulomb constant. In Hartree atomic units, the numerical values of the electron mass, the elementary charge, the reduced Planck constant and the Coulomb constant are all unity by definition, so that $c=\alpha^{-1}$. The value chosen here is the one recommended in: P. J. Mohr, B. N. Taylor, and D. B. Newell, CODATA recommended values of the fundamental physical constants: 2006.
+  DOUBLE PRECISION,PARAMETER :: SPEED_OF_LIGHT=137.035999967994D0
 END MODULE
 
 MODULE random
@@ -1039,7 +1042,6 @@ SUBROUTINE LOOKFOR(NUNIT,SUBSTRING,INFO)
 1 READ(100,'(a)',ERR=2,END=2) STRING
   IF (INDEX(STRING,SUBSTRING)==0) GOTO 1
   RETURN
-2 WRITE(*,*)'Subroutine LOOKFOR: text string "',SUBSTRING,'" was not found in file.'
-  INFO=1
+2 INFO=1
 END SUBROUTINE LOOKFOR
 END MODULE

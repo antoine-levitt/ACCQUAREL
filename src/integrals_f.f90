@@ -194,7 +194,7 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)
   LOGICAL :: SC,SS
 
   ! same spin check. Not used outside GHF
-  SS = .TRUE.
+  SS=.TRUE.
 
   OPEN(LUNIT,form='UNFORMATTED')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
@@ -298,10 +298,8 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
                           SC=((PHI(I)%contractions(I1,I2)%center_id==PHI(J)%contractions(I1,I3)%center_id)      &
  &                            .AND.(PHI(J)%contractions(I1,I3)%center_id==PHI(K)%contractions(I4,I5)%center_id) &
  &                            .AND.(PHI(K)%contractions(I4,I5)%center_id==PHI(L)%contractions(I4,I6)%center_id))
-                          GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree &
- &                                             +PHI(J)%contractions(I1,I3)%monomialdegree &
- &                                             +PHI(K)%contractions(I4,I5)%monomialdegree &
- &                                             +PHI(L)%contractions(I4,I6)%monomialdegree
+                          GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree+PHI(J)%contractions(I1,I3)%monomialdegree &
+ &                                             +PHI(K)%contractions(I4,I5)%monomialdegree+PHI(L)%contractions(I4,I6)%monomialdegree
                           IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
                              SUBSIZE(1)=SUBSIZE(1)+1
                              WRITE(LUNIT)I,J,K,L,'LL'
@@ -316,33 +314,33 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
 1       CONTINUE
      END IF
   END DO ; END DO ; END DO ; END DO
-! SSLL-type integrals
-  IF(SLINTEGRALS) THEN
-  DO I=NBAS(1)+1,SUM(NBAS) ; DO J=NBAS(1)+1,SUM(NBAS) ; DO K=1,NBAS(1) ; DO L=1,NBAS(1)
-     DO I1=1,2
-        DO I2=1,PHI(I)%nbrofcontractions(I1)
-           DO I3=1,PHI(J)%nbrofcontractions(I1)
-              DO I4=1,2
-                 DO I5=1,PHI(K)%nbrofcontractions(I4)
-                    DO I6=1,PHI(L)%nbrofcontractions(I4)
-                       SC=((PHI(I)%contractions(I1,I2)%center_id==PHI(J)%contractions(I1,I3)%center_id)      &
- &                         .AND.(PHI(J)%contractions(I1,I3)%center_id==PHI(K)%contractions(I4,I5)%center_id) &
- &                         .AND.(PHI(K)%contractions(I4,I5)%center_id==PHI(L)%contractions(I4,I6)%center_id))
-                       GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree+PHI(J)%contractions(I1,I3)%monomialdegree &
- &                                          +PHI(K)%contractions(I4,I5)%monomialdegree+PHI(L)%contractions(I4,I6)%monomialdegree
-                       IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
-                          WRITE(LUNIT)I,J,K,L,'SL'
-                          SUBSIZE(2)=SUBSIZE(2)+1
-                          GO TO 2
-                       END IF
+  IF (SLINTEGRALS) THEN
+! LLSS-type integrals
+     DO I=NBAS(1)+1,SUM(NBAS) ; DO J=NBAS(1)+1,SUM(NBAS) ; DO K=1,NBAS(1) ; DO L=1,NBAS(1)
+        DO I1=1,2
+           DO I2=1,PHI(I)%nbrofcontractions(I1)
+              DO I3=1,PHI(J)%nbrofcontractions(I1)
+                 DO I4=1,2
+                    DO I5=1,PHI(K)%nbrofcontractions(I4)
+                       DO I6=1,PHI(L)%nbrofcontractions(I4)
+                          SC=((PHI(I)%contractions(I1,I2)%center_id==PHI(J)%contractions(I1,I3)%center_id)      &
+ &                            .AND.(PHI(J)%contractions(I1,I3)%center_id==PHI(K)%contractions(I4,I5)%center_id) &
+ &                            .AND.(PHI(K)%contractions(I4,I5)%center_id==PHI(L)%contractions(I4,I6)%center_id))
+                          GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree+PHI(J)%contractions(I1,I3)%monomialdegree &
+ &                                             +PHI(K)%contractions(I4,I5)%monomialdegree+PHI(L)%contractions(I4,I6)%monomialdegree
+                          IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+                             WRITE(LUNIT)I,J,K,L,'SL'
+                             SUBSIZE(2)=SUBSIZE(2)+1
+                             GO TO 2
+                          END IF
+                       END DO
                     END DO
                  END DO
               END DO
            END DO
         END DO
-     END DO
-2    CONTINUE
-  END DO; END DO ; END DO ; END DO
+2       CONTINUE
+     END DO; END DO ; END DO ; END DO
   END IF
   IF (SSINTEGRALS) THEN
 ! SSSS-type integrals
@@ -357,10 +355,8 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
                              SC=((PHI(I)%contractions(I1,I2)%center_id==PHI(J)%contractions(I1,I3)%center_id)      &
  &                               .AND.(PHI(J)%contractions(I1,I3)%center_id==PHI(K)%contractions(I4,I5)%center_id) &
  &                               .AND.(PHI(K)%contractions(I4,I5)%center_id==PHI(L)%contractions(I4,I6)%center_id))
-                             GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree &
- &                                                +PHI(J)%contractions(I1,I3)%monomialdegree &
- &                                                +PHI(K)%contractions(I4,I5)%monomialdegree &
- &                                                +PHI(L)%contractions(I4,I6)%monomialdegree
+                             GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree+PHI(J)%contractions(I1,I3)%monomialdegree &
+ &                                                +PHI(K)%contractions(I4,I5)%monomialdegree+PHI(L)%contractions(I4,I6)%monomialdegree
                              IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
                                 WRITE(LUNIT)I,J,K,L,'SS'
                                 SUBSIZE(3)=SUBSIZE(3)+1
@@ -392,7 +388,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
   LOGICAL :: SC
 
   NBF=NGBF
-! (LL|LL) integrals
+! computations for LLLL-type integrals
   WRITE(*,*)'- Computing LL integrals'
   ALLOCATE(LLIJKL(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2+5*NGBF(1)+6)/24), &
  &         LLIKJL(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2+NGBF(1)-2)/24),   &
@@ -420,8 +416,8 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
         END IF
      END IF
   END DO ; END DO ; END DO ; END DO
-  IF(SLINTEGRALS) THEN
-     ! (SS|LL) integrals
+  IF (SLINTEGRALS) THEN
+! computations for SSLL-type integrals
      WRITE(*,*)'- Computing SL integrals'
      ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
      N=0
@@ -445,7 +441,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
         !$OMP END PARALLEL DO
   END IF
   IF (SSINTEGRALS) THEN
-! (SS|SS) integrals
+! computations for SSSS-type integrals
      WRITE(*,*)'- Computing SS integrals'
      ALLOCATE(SSIJKL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+5*NGBF(2)+6)/24), &
  &            SSIKJL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+NGBF(2)-2)/24),   &
