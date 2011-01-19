@@ -712,7 +712,7 @@ SUBROUTINE SETUP_SCF
            SSINTEGRALS=.TRUE.
         END IF
         REWIND(100)
-        CALL LOOKFOR(100,'NOLS',INFO)
+        CALL LOOKFOR(100,'NOSL',INFO)
         IF (INFO==0) THEN
            SLINTEGRALS=.FALSE.
            WRITE(*,'(a)')' (SL-integrals are not used in the computation)'
