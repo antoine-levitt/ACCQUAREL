@@ -181,6 +181,27 @@ FUNCTION COULOMBVALUE_nonrelativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
  &                    PHI_D%nbrofexponents,PHI_D%center,PHI_D%exponents,PHI_D%coefficients,PHI_D%monomialdegree)
 END FUNCTION COULOMBVALUE_nonrelativistic
 
+FUNCTION APRIORI_ZERO(PHI1,PHI2,PHI3,PHI4) RESULT(VALUE)
+  ! Function that checks whether a given bielectronic integral can a priori be predicted to be zero
+  USE case_parameters ; USE basis_parameters
+  TYPE(gaussianbasisfunction),INTENT(IN) :: PHI1,PHI2,PHI3,PHI4
+  LOGICAL :: SC,SYM,VALUE
+  INTEGER,DIMENSION(3) :: GLOBALMONOMIALDEGREE
+
+  ! same center and odd global monomial degree
+  SC=((PHI1%center_id==PHI2%center_id).AND.(PHI2%center_id==PHI3%center_id).AND.(PHI3%center_id==PHI4%center_id))
+  IF(SC) THEN
+     GLOBALMONOMIALDEGREE=PHI1%monomialdegree+PHI2%monomialdegree+PHI3%monomialdegree+PHI4%monomialdegree
+     IF(ANY(MOD(GLOBALMONOMIALDEGREE,2)==1)) THEN
+        VALUE = .TRUE.
+        RETURN
+     END IF
+  END IF
+
+  VALUE = .FALSE.
+  
+END FUNCTION APRIORI_ZERO
+
 SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)
 ! Subroutine that generates the list (without redundancy as symmetries are taken into account) of the bielectronic integrals with nonzero value.
 ! Reference: R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974.
@@ -190,25 +211,19 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)
   INTEGER,INTENT(OUT) :: LISTSIZE
 
   INTEGER :: I,J,K,L
-  INTEGER,DIMENSION(3) :: GLOBALMONOMIALDEGREE
-  LOGICAL :: SC,SS
-
-  ! same spin check. Not used outside GHF
-  SS=.TRUE.
-
+  LOGICAL :: SS = .TRUE.
+  
   OPEN(LUNIT,form='UNFORMATTED')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
   LISTSIZE=0
   DO I=1,NBAST ; DO J=1,I ; DO K=1,J ; DO L=1,K
-     ! same center?
-     SC=((PHI(I)%center_id==PHI(J)%center_id).AND.(PHI(J)%center_id==PHI(K)%center_id).AND.(PHI(K)%center_id==PHI(L)%center_id))
-     GLOBALMONOMIALDEGREE=PHI(I)%monomialdegree+PHI(J)%monomialdegree+PHI(K)%monomialdegree+PHI(L)%monomialdegree
-     ! same spin? i must have same spin as j, same for k and l
-     IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (J <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (J > NBAST/2))).AND.&
-          &(((K <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((K > NBAST/2) .AND. (L > NBAST/2)))
-! parity check on the product of the monomials if the four functions share the same center
-     IF (((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)).AND.SS) THEN
-        LISTSIZE=LISTSIZE+1 ; WRITE(LUNIT)I,J,K,L
+     IF (.NOT.APRIORI_ZERO(PHI(I),PHI(J),PHI(K),PHI(L))) THEN
+        IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (J <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (J > NBAST/2))).AND.&
+             &(((K <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((K > NBAST/2) .AND. (L > NBAST/2)))
+        IF(SS) THEN
+           LISTSIZE=LISTSIZE+1 ; WRITE(LUNIT)I,J,K,L
+        END IF
+
         IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (K <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (K > NBAST/2))).AND.&
              &(((J <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((J > NBAST/2) .AND. (L > NBAST/2)))
         IF ((K<J).AND.SS) THEN
@@ -280,8 +295,6 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
   INTEGER,INTENT(OUT) :: LISTSIZE,SUBSIZE(3)
 
   INTEGER :: I,J,K,L,I1,I2,I3,I4,I5,I6
-  INTEGER,DIMENSION(3) :: GLOBALMONOMIALDEGREE
-  LOGICAL :: SC
 
   OPEN(LUNIT,form='UNFORMATTED')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
@@ -295,12 +308,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
                  DO I4=1,2
                     DO I5=1,PHI(K)%nbrofcontractions(I4)
                        DO I6=1,PHI(L)%nbrofcontractions(I4)
-                          SC=((PHI(I)%contractions(I1,I2)%center_id==PHI(J)%contractions(I1,I3)%center_id)      &
- &                            .AND.(PHI(J)%contractions(I1,I3)%center_id==PHI(K)%contractions(I4,I5)%center_id) &
- &                            .AND.(PHI(K)%contractions(I4,I5)%center_id==PHI(L)%contractions(I4,I6)%center_id))
-                          GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree+PHI(J)%contractions(I1,I3)%monomialdegree &
- &                                             +PHI(K)%contractions(I4,I5)%monomialdegree+PHI(L)%contractions(I4,I6)%monomialdegree
-                          IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+                          IF(.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
                              SUBSIZE(1)=SUBSIZE(1)+1
                              WRITE(LUNIT)I,J,K,L,'LL'
                              GO TO 1
@@ -323,12 +331,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
                  DO I4=1,2
                     DO I5=1,PHI(K)%nbrofcontractions(I4)
                        DO I6=1,PHI(L)%nbrofcontractions(I4)
-                          SC=((PHI(I)%contractions(I1,I2)%center_id==PHI(J)%contractions(I1,I3)%center_id)      &
- &                            .AND.(PHI(J)%contractions(I1,I3)%center_id==PHI(K)%contractions(I4,I5)%center_id) &
- &                            .AND.(PHI(K)%contractions(I4,I5)%center_id==PHI(L)%contractions(I4,I6)%center_id))
-                          GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree+PHI(J)%contractions(I1,I3)%monomialdegree &
- &                                             +PHI(K)%contractions(I4,I5)%monomialdegree+PHI(L)%contractions(I4,I6)%monomialdegree
-                          IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+                             IF(.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
                              WRITE(LUNIT)I,J,K,L,'SL'
                              SUBSIZE(2)=SUBSIZE(2)+1
                              GO TO 2
@@ -352,12 +355,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
                     DO I4=1,2
                        DO I5=1,PHI(K)%nbrofcontractions(I4)
                           DO I6=1,PHI(L)%nbrofcontractions(I4)
-                             SC=((PHI(I)%contractions(I1,I2)%center_id==PHI(J)%contractions(I1,I3)%center_id)      &
- &                               .AND.(PHI(J)%contractions(I1,I3)%center_id==PHI(K)%contractions(I4,I5)%center_id) &
- &                               .AND.(PHI(K)%contractions(I4,I5)%center_id==PHI(L)%contractions(I4,I6)%center_id))
-                             GLOBALMONOMIALDEGREE= PHI(I)%contractions(I1,I2)%monomialdegree+PHI(J)%contractions(I1,I3)%monomialdegree &
- &                                                +PHI(K)%contractions(I4,I5)%monomialdegree+PHI(L)%contractions(I4,I6)%monomialdegree
-                             IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+                          IF(.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
                                 WRITE(LUNIT)I,J,K,L,'SS'
                                 SUBSIZE(3)=SUBSIZE(3)+1
                                 GO TO 3
@@ -384,8 +382,6 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
   TYPE(gaussianbasisfunction),DIMENSION(SUM(NGBF)),INTENT(IN) :: GBF
 
   INTEGER :: I,J,K,L,M,N,O
-  INTEGER,DIMENSION(3) :: GLOBALMONOMIALDEGREE
-  LOGICAL :: SC
 
   NBF=NGBF
 ! computations for LLLL-type integrals
@@ -395,10 +391,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
  &         LLILJK(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2-3*NGBF(1)+2)/24))
   M=0 ; N=0 ; O=0
   DO I=1,NGBF(1) ; DO J=1,I ; DO K=1,J ; DO L=1,K
-     SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
-     GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
-! parity check (one center case)
-     IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+     IF (.NOT.APRIORI_ZERO(GBF(I),GBF(J),GBF(K),GBF(L))) THEN
         M=M+1 ; LLIJKL(M)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
         IF (K<J) THEN
            N=N+1 ; LLIKJL(N)=COULOMBVALUE(GBF(I),GBF(K),GBF(J),GBF(L))
@@ -422,17 +415,13 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
      ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
      N=0
      ! Here the first integrals are faster to compute than the last ones: therefore, schedule with CHUNK=1 to distribute work evenly.
-     !$OMP PARALLEL DO PRIVATE(N,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1)
+     !$OMP PARALLEL DO PRIVATE(N,J,K,L) SCHEDULE(STATIC,1)
      DO I=NGBF(1)+1,SUM(NGBF)
         ! Note: the value of N needs to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
         N=NGBF(1)*(NGBF(1)+1)/2*(I-NGBF(1)-1)*(I-NGBF(1))/2
         ! this takes N(N+1)/2*(I-N) iters
         DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
-           SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.&
-                &(GBF(K)%center_id==GBF(L)%center_id))
-           GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
-           ! parity check (one center case)
-           IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+           IF (.NOT.APRIORI_ZERO(GBF(I),GBF(J),GBF(K),GBF(L))) THEN
               N=N+1 ; SLIJKL(N)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
            ELSE
               N=N+1 ; SLIJKL(N)=(0.D0,0.D0)
@@ -447,17 +436,14 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
  &            SSIKJL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+NGBF(2)-2)/24),   &
  &            SSILJK(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2-3*NGBF(2)+2)/24))
      M=0 ; N=0 ; O=0
-     !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L,SC,GLOBALMONOMIALDEGREE) SCHEDULE(STATIC,1)
+     !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L) SCHEDULE(STATIC,1)
      DO I=NGBF(1)+1,SUM(NGBF)
 ! Note: the values of M, N and O need to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
         M=(I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)*(I-NGBF(1)+2)/24
         N=(I-NGBF(1)-2)*(I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)/24
         O=(I-NGBF(1)-3)*(I-NGBF(1)-2)*(I-NGBF(1)-1)*(I-NGBF(1))/24
         DO J=NGBF(1)+1,I ; DO K=NGBF(1)+1,J ; DO L=NGBF(1)+1,K
-        SC=((GBF(I)%center_id==GBF(J)%center_id).AND.(GBF(J)%center_id==GBF(K)%center_id).AND.(GBF(K)%center_id==GBF(L)%center_id))
-        GLOBALMONOMIALDEGREE=GBF(I)%monomialdegree+GBF(J)%monomialdegree+GBF(K)%monomialdegree+GBF(L)%monomialdegree
-! parity check (one center case)
-        IF ((SC.AND.ALL(MOD(GLOBALMONOMIALDEGREE,2)==0)).OR.(.NOT.SC)) THEN
+        IF (.NOT.APRIORI_ZERO(GBF(I),GBF(J),GBF(K),GBF(L))) THEN
            M=M+1 ; SSIJKL(M)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
            IF (K<J) THEN
               N=N+1 ; SSIKJL(N)=COULOMBVALUE(GBF(I),GBF(K),GBF(J),GBF(L))
