@@ -723,16 +723,19 @@ SUBROUTINE SETUP_SCF
         END IF
      END IF
 
+     REWIND(100)
      CALL LOOKFOR(100,'SYMMETRY SX',INFO)
      IF (INFO==0) THEN
         WRITE(*,'(a)')' (System possesses X-plane symmetry)'
         SYM_SX = .TRUE.
      END IF
+     REWIND(100)
      CALL LOOKFOR(100,'SYMMETRY SY',INFO)
      IF (INFO==0) THEN
         WRITE(*,'(a)')' (System possesses Y-plane symmetry)'
         SYM_SY = .TRUE.
      END IF
+     REWIND(100)
      CALL LOOKFOR(100,'SYMMETRY SZ',INFO)
      IF (INFO==0) THEN
         WRITE(*,'(a)')' (System possesses Z-plane symmetry)'
