@@ -183,12 +183,13 @@ END FUNCTION COULOMBVALUE_nonrelativistic
 
 FUNCTION APRIORI_ZERO(PHI1,PHI2,PHI3,PHI4) RESULT(VALUE)
   ! Function that checks whether a given bielectronic integral can a priori be predicted to be zero
-  USE case_parameters ; USE basis_parameters
+  USE case_parameters ; USE basis_parameters ; USE scf_parameters
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI1,PHI2,PHI3,PHI4
-  LOGICAL :: SC,SYM,VALUE
+  LOGICAL :: SC,VALUE
   INTEGER,DIMENSION(3) :: GLOBALMONOMIALDEGREE
 
-  ! same center and odd global monomial degree
+  GLOBALMONOMIALDEGREE=PHI1%monomialdegree+PHI2%monomialdegree+PHI3%monomialdegree+PHI4%monomialdegree
+  ! If all functions have the same center and any monomial is odd, integral is zero
   SC=((PHI1%center_id==PHI2%center_id).AND.(PHI2%center_id==PHI3%center_id).AND.(PHI3%center_id==PHI4%center_id))
   IF(SC) THEN
      GLOBALMONOMIALDEGREE=PHI1%monomialdegree+PHI2%monomialdegree+PHI3%monomialdegree+PHI4%monomialdegree
@@ -198,8 +199,15 @@ FUNCTION APRIORI_ZERO(PHI1,PHI2,PHI3,PHI4) RESULT(VALUE)
      END IF
   END IF
 
-  VALUE = .FALSE.
+  ! Plane symmetries
+  IF((SYM_SX .AND. MOD(GLOBALMONOMIALDEGREE(1),2) == 1).OR.&
+       &(SYM_SY .AND. MOD(GLOBALMONOMIALDEGREE(2),2) == 1).OR.&
+       &(SYM_SZ .AND. MOD(GLOBALMONOMIALDEGREE(3),2) == 1)) THEN
+     VALUE = .TRUE.
+     RETURN
+  END IF
   
+  VALUE = .FALSE.
 END FUNCTION APRIORI_ZERO
 
 SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)

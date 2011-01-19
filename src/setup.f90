@@ -635,6 +635,8 @@ MODULE scf_parameters
   LOGICAL :: SLINTEGRALS
 ! resume EIG and EIGVEC from last computation
   LOGICAL :: RESUME
+! symmetries of the system
+  LOGICAL :: SYM_SX = .FALSE.,SYM_SY = .FALSE.,SYM_SZ = .FALSE.
 CONTAINS
 
 SUBROUTINE SETUP_SCF
@@ -719,6 +721,29 @@ SUBROUTINE SETUP_SCF
         ELSE
            SLINTEGRALS=.TRUE.
         END IF
+     END IF
+     READ(100,'(a4)') CHAR
+     IF (CHAR=='NOSL') THEN
+        SLINTEGRALS=.FALSE.
+        WRITE(*,'(a)')' (SL-integrals are not used in the computation)'
+     ELSE
+        SLINTEGRALS=.TRUE.
+     END IF
+
+     CALL LOOKFOR(100,'SYMMETRY SX',INFO)
+     IF (INFO==0) THEN
+        WRITE(*,'(a)')' (System possesses X-plane symmetry)'
+        SYM_SX = .TRUE.
+     END IF
+     CALL LOOKFOR(100,'SYMMETRY SY',INFO)
+     IF (INFO==0) THEN
+        WRITE(*,'(a)')' (System possesses Y-plane symmetry)'
+        SYM_SY = .TRUE.
+     END IF
+     CALL LOOKFOR(100,'SYMMETRY SZ',INFO)
+     IF (INFO==0) THEN
+        WRITE(*,'(a)')' (System possesses Z-plane symmetry)'
+        SYM_SZ = .TRUE.
      END IF
   ELSE
      IF (CHAR=='DIR') THEN
