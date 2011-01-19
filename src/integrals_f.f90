@@ -398,7 +398,15 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
  &         LLIKJL(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2+NGBF(1)-2)/24),   &
  &         LLILJK(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2-3*NGBF(1)+2)/24))
   M=0 ; N=0 ; O=0
-  DO I=1,NGBF(1) ; DO J=1,I ; DO K=1,J ; DO L=1,K
+  ! Here the first integrals are faster to compute than the last ones: therefore, schedule with CHUNK=1 to distribute work evenly.
+  !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L) SCHEDULE(STATIC,1)
+  DO I=1,NGBF(1)
+     ! Note: the values of M, N and O need to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
+     M=(I-1)*(I)*(I+1)*(I+2)/24
+     N=(I-2)*(I-1)*(I)*(I+1)/24
+     O=(I-3)*(I-2)*(I-1)*(I)/24
+
+     DO J=1,I ; DO K=1,J ; DO L=1,K
      IF (.NOT.APRIORI_ZERO(GBF(I),GBF(J),GBF(K),GBF(L))) THEN
         M=M+1 ; LLIJKL(M)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
         IF (K<J) THEN
@@ -417,6 +425,7 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
         END IF
      END IF
   END DO ; END DO ; END DO ; END DO
+  !$OMP END PARALLEL DO  
   IF (SLINTEGRALS) THEN
 ! computations for SSLL-type integrals
      WRITE(*,*)'- Computing SL integrals'
