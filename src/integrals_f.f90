@@ -192,7 +192,6 @@ FUNCTION APRIORI_ZERO(PHI1,PHI2,PHI3,PHI4) RESULT(VALUE)
   ! If all functions have the same center and any monomial is odd, integral is zero
   SC=((PHI1%center_id==PHI2%center_id).AND.(PHI2%center_id==PHI3%center_id).AND.(PHI3%center_id==PHI4%center_id))
   IF(SC) THEN
-     GLOBALMONOMIALDEGREE=PHI1%monomialdegree+PHI2%monomialdegree+PHI3%monomialdegree+PHI4%monomialdegree
      IF(ANY(MOD(GLOBALMONOMIALDEGREE,2)==1)) THEN
         VALUE = .TRUE.
         RETURN
