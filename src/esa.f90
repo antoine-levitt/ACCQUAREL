@@ -159,8 +159,10 @@ SUBROUTINE ESA(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   CLOSE(100)
   IF (METHOD=='D') THEN
      WRITE(*,*)'Function $Theta$ computed using diagonalization'
-  ELSE
+  ELSEIF(METHOD=='S') THEN
      WRITE(*,*)'Function $Theta$ computed using polynomial recursion'
+  ELSE
+     WRITE(*,*)'Function $Theta$ ignored'
   END IF
   ALLOCATE(PDM(1:NBAST*(NBAST+1)/2),PDM1(1:NBAST*(NBAST+1)/2),PTDM(1:NBAST*(NBAST+1)/2),PDMDIF(1:NBAST*(NBAST+1)/2))
   ALLOCATE(PTEFM(1:NBAST*(NBAST+1)/2),PTTEFM(1:NBAST*(NBAST+1)/2),PFM(1:NBAST*(NBAST+1)/2))
