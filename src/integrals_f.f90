@@ -1,9 +1,11 @@
 MODULE integrals
+  ! size of bielectronic indices. 1 for 8-bits (255), 2 for 16-bits(65535), 4 for 32-bits (2^32), 8 for 64-bits (2^64). Only used when writing/reading data on disk. Should be bigger than two times the total number of basis functions (signedness issues). 2 is default, set it to 1 to reduce disk usage. Use in code with INTEGER(smallint)
+  INTEGER, parameter :: smallint = 2
 ! Note: all the integrals involving gaussian basis functions are computed by the A.S.P.I.C. code (written in C++ by F. Lodier, see http://www.ann.jussieu.fr/A.S.P.I.C/).
 ! number of a priori nonzero bielectronic integrals
   INTEGER :: BINMBR
 ! arrays for the list, values (real/complex for GBF/2-spinor basis functions in the non-relativistic/relativistic case) and "class" (relativistic case only) of bielectronic integrals (when stored in memory)
-  INTEGER,DIMENSION(:,:),ALLOCATABLE :: BILIST
+  INTEGER(smallint),DIMENSION(:,:),ALLOCATABLE :: BILIST
   DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: RBIVALUES
   DOUBLE COMPLEX,DIMENSION(:),ALLOCATABLE :: CBIVALUES
   CHARACTER(2),DIMENSION(:),ALLOCATABLE :: BITYPE
@@ -217,7 +219,7 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)
   INTEGER,INTENT(IN) :: NBAST
   INTEGER,INTENT(OUT) :: LISTSIZE
 
-  INTEGER :: I,J,K,L
+  INTEGER(smallint) :: I,J,K,L
   LOGICAL :: SS = .TRUE.
   
   OPEN(LUNIT,access='STREAM')
@@ -301,7 +303,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
   INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
   INTEGER,INTENT(OUT) :: LISTSIZE,SUBSIZE(3)
 
-  INTEGER :: I,J,K,L,I1,I2,I3,I4,I5,I6
+  INTEGER(smallint) :: I,J,K,L,I1,I2,I3,I4,I5,I6
 
   OPEN(LUNIT,access='STREAM')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
