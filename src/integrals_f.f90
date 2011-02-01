@@ -220,7 +220,7 @@ SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)
   INTEGER :: I,J,K,L
   LOGICAL :: SS = .TRUE.
   
-  OPEN(LUNIT,form='UNFORMATTED')
+  OPEN(LUNIT,access='STREAM')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
   LISTSIZE=0
   DO I=1,NBAST ; DO J=1,I ; DO K=1,J ; DO L=1,K
@@ -303,7 +303,7 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
 
   INTEGER :: I,J,K,L,I1,I2,I3,I4,I5,I6
 
-  OPEN(LUNIT,form='UNFORMATTED')
+  OPEN(LUNIT,access='STREAM')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
   SUBSIZE=0
 ! LLLL-type integrals

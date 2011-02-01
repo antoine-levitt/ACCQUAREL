@@ -1,4 +1,4 @@
-  IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
+  IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,access='STREAM')
   DO N=1,BINMBR
      IF (DIRECT) THEN
 ! the values of the bielectronic integrals are computed "on the fly"

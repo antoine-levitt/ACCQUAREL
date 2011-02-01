@@ -49,7 +49,7 @@ SUBROUTINE DRIVER_relativistic
      IF (.NOT.USEDISK) THEN
 ! storage of the list of nonzero bielectronic integrals in memory
         ALLOCATE(BILIST(1:BINMBR,1:4))
-        OPEN(LUNIT,form='UNFORMATTED')
+        OPEN(LUNIT,access='STREAM')
         DO I=1,BINMBR
            READ(LUNIT)BILIST(I,:)
         END DO
@@ -64,7 +64,7 @@ SUBROUTINE DRIVER_relativistic
         IF (.NOT.USEDISK) THEN
 ! storage the list and the type of nonzero bielectronic integrals (in order to use the precomputed GBF bielectronic integrals) in memory
            ALLOCATE(BILIST(1:BINMBR,1:4),BITYPE(1:BINMBR))
-           OPEN(LUNIT,form='UNFORMATTED')
+           OPEN(LUNIT,access='STREAM')
            DO I=1,BINMBR
               READ(LUNIT)BILIST(I,:),BITYPE(I)
            END DO
@@ -75,7 +75,7 @@ SUBROUTINE DRIVER_relativistic
         IF (USEDISK) THEN
 ! storage of the list and values of nonzero bielectronic integrals on disk
            ALLOCATE(BILIST(1:1,1:4),BITYPE(1:1))
-           OPEN(LUNIT,form='UNFORMATTED') ; OPEN(BIUNIT,form='UNFORMATTED')
+           OPEN(LUNIT,access='STREAM') ; OPEN(BIUNIT,access='STREAM')
            DO I=1,BINMBR
               READ(LUNIT)BILIST(1,:),BITYPE(1)
               WRITE(BIUNIT)BILIST(1,:),COULOMBVALUE(PHI(BILIST(1,1)),PHI(BILIST(1,2)),PHI(BILIST(1,3)),PHI(BILIST(1,4)),BITYPE(1))
@@ -86,7 +86,7 @@ SUBROUTINE DRIVER_relativistic
         ELSE
 ! storage of the list and values of nonzero bielectronic integrals in memory
            ALLOCATE(BILIST(1:BINMBR,1:4),BITYPE(1:1),CBIVALUES(1:BINMBR))
-           OPEN(LUNIT,form='UNFORMATTED')
+           OPEN(LUNIT,access='STREAM')
            DO I=1,BINMBR
               READ(LUNIT)BILIST(I,:),BITYPE(1)
               CBIVALUES(I)=COULOMBVALUE(PHI(BILIST(I,1)),PHI(BILIST(I,2)),PHI(BILIST(I,3)),PHI(BILIST(I,4)),BITYPE(1))
@@ -141,21 +141,21 @@ SUBROUTINE DRIVER_relativistic
   END DO
   IF (DIRECT) THEN
      IF (USEDISK) THEN
-        OPEN(LUNIT,form='UNFORMATTED') ; CLOSE(LUNIT,STATUS='DELETE')
+        OPEN(LUNIT,access='STREAM') ; CLOSE(LUNIT,STATUS='DELETE')
      ELSE
         DEALLOCATE(BILIST)
      END IF
   ELSE
      IF (SEMIDIRECT) THEN
         IF (USEDISK) THEN
-           OPEN(LUNIT,form='UNFORMATTED') ; CLOSE(LUNIT,STATUS='DELETE')
+           OPEN(LUNIT,access='STREAM') ; CLOSE(LUNIT,STATUS='DELETE')
         ELSE
            DEALLOCATE(BILIST,BITYPE)
         END IF
         CALL DEALLOCATE_INTEGRALS
      ELSE
         IF (USEDISK) THEN
-           OPEN(BIUNIT,form='UNFORMATTED') ; CLOSE(BIUNIT,STATUS='DELETE')
+           OPEN(BIUNIT,access='STREAM') ; CLOSE(BIUNIT,STATUS='DELETE')
         ELSE
            DEALLOCATE(BILIST,CBIVALUES)
         END IF
@@ -244,7 +244,7 @@ SUBROUTINE DRIVER_nonrelativistic
 ! Computation of the bielectronic integrals will be done "on the fly"
 ! storage of the list of nonzero bielectronic integrals in memory
      ALLOCATE(BILIST(1:BINMBR,1:4))
-     OPEN(LUNIT,form='UNFORMATTED')
+     OPEN(LUNIT,access='STREAM')
      DO I=1,BINMBR
         READ(LUNIT)BILIST(I,:)
      END DO
@@ -254,7 +254,7 @@ SUBROUTINE DRIVER_nonrelativistic
      WRITE(*,'(a)')'* Computation of the bielectronic integrals of GBF basis functions'
      IF (USEDISK) THEN
         ALLOCATE(BILIST(1:1,1:4))
-        OPEN(LUNIT,form='UNFORMATTED') ; OPEN(BIUNIT,form='UNFORMATTED')
+        OPEN(LUNIT,access='STREAM') ; OPEN(BIUNIT,access='STREAM')
         DO I=1,BINMBR
            READ(LUNIT)BILIST(1,:)
            WRITE(BIUNIT)BILIST(1,:),COULOMBVALUE(PHI(BILIST(1,1)),PHI(BILIST(1,2)),PHI(BILIST(1,3)),PHI(BILIST(1,4)))
@@ -264,7 +264,7 @@ SUBROUTINE DRIVER_nonrelativistic
         CLOSE(LUNIT,STATUS='DELETE') ; CLOSE(BIUNIT)
      ELSE
         ALLOCATE(BILIST(1:BINMBR,1:4),RBIVALUES(1:BINMBR))
-        OPEN(LUNIT,form='UNFORMATTED')
+        OPEN(LUNIT,access='STREAM')
 	!$OMP PARALLEL DO SCHEDULE(STATIC,1)
         DO I=1,BINMBR
            READ(LUNIT)BILIST(I,:)
@@ -364,7 +364,7 @@ SUBROUTINE DRIVER_nonrelativistic
      DEALLOCATE(BILIST)
   ELSE
      IF (USEDISK) THEN
-        OPEN(BIUNIT,form='UNFORMATTED') ; CLOSE(BIUNIT,STATUS='DELETE')
+        OPEN(BIUNIT,access='STREAM') ; CLOSE(BIUNIT,STATUS='DELETE')
      ELSE
         DEALLOCATE(BILIST,RBIVALUES)
      END IF
@@ -447,7 +447,7 @@ SUBROUTINE DRIVER_boson_star
   WRITE(*,'(a)')'* Computation of the bielectronic integrals'
   IF (USEDISK) THEN
      ALLOCATE(BILIST(1:1,1:4))
-     OPEN(LUNIT,form='UNFORMATTED') ; OPEN(BIUNIT,form='UNFORMATTED')
+     OPEN(LUNIT,access='STREAM') ; OPEN(BIUNIT,access='STREAM')
      DO I=1,BINMBR
         READ(LUNIT)BILIST(1,:)
         WRITE(BIUNIT)BILIST(1,:),COULOMBVALUE(PHI(BILIST(1,1)),PHI(BILIST(1,2)),PHI(BILIST(1,3)),PHI(BILIST(1,4)))
@@ -457,7 +457,7 @@ SUBROUTINE DRIVER_boson_star
      CLOSE(LUNIT,STATUS='DELETE') ; CLOSE(BIUNIT)
   ELSE
      ALLOCATE(BILIST(1:BINMBR,1:4),RBIVALUES(1:BINMBR))
-     OPEN(LUNIT,form='UNFORMATTED')
+     OPEN(LUNIT,access='STREAM')
      !$OMP PARALLEL DO SCHEDULE(STATIC, 1)
      DO I=1,BINMBR
         READ(LUNIT)BILIST(I,:)
@@ -589,7 +589,7 @@ SUBROUTINE DRIVER_boson_star
   DEALLOCATE(LAMBDA,EIG,EIGVEC,POEFM,PTEFM,PFM,PDM,PDM1)
   DEALLOCATE(PTTEFM,PTDM,PDMDIF)
   IF (USEDISK) THEN
-     OPEN(BIUNIT,form='UNFORMATTED') ; CLOSE(BIUNIT,STATUS='DELETE')
+     OPEN(BIUNIT,access='STREAM') ; CLOSE(BIUNIT,STATUS='DELETE')
   ELSE
      DEALLOCATE(BILIST,RBIVALUES)
   END IF
