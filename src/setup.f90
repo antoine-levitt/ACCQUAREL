@@ -11,6 +11,7 @@ CONTAINS
 
 SUBROUTINE SETUP_CASE
   USE constants ; USE setup_tools
+  IMPLICIT NONE
   DOUBLE PRECISION :: SCALING_FACTOR
   CHARACTER(2) :: CHAR
   INTEGER :: INFO
@@ -43,6 +44,7 @@ END SUBROUTINE SETUP_CASE
 
 SUBROUTINE SETUP_APPROXIMATION
   USE setup_tools
+  IMPLICIT NONE
   CHARACTER(12) :: CHAR
   INTEGER :: INFO
 
@@ -66,6 +68,7 @@ END SUBROUTINE SETUP_APPROXIMATION
 
 SUBROUTINE SETUP_FORMALISM
   USE setup_tools
+  IMPLICIT NONE
   CHARACTER(3) :: CHAR
   INTEGER :: INFO
 
@@ -110,13 +113,17 @@ SUBROUTINE SETUP_FORMALISM
 ! Restricted Open-shell Hartree-Fock (ROHF) formalism
 ! Reference: C. C. J. Roothaan, Self-consistent field theory for open shells of electronic systems, Rev. Modern Phys., 32(2), 179-185, 1960.
            MODEL=3
-           WRITE(*,'(a)')' Restricted Open-shell Hartree-Fock (ROHF) formalism'
+           WRITE(*,'(a)')' (Real) Restricted Open-shell Hartree-Fock (ROHF) formalism'
            WRITE(*,*)'Option not implemented yet!'
            STOP
-        ELSE IF (CHAR=='GHF') THEN
-           ! General Hartree-Fock (GHF) formalism
+        ELSE IF (CHAR=='RGH') THEN
+! Real General Hartree-Fock (RGHF) formalism
            MODEL=4
-           WRITE(*,'(a)')' (Real) General Hartree-Fock formalism'
+           WRITE(*,'(a)')' Real General Hartree-Fock formalism'
+!        ELSE IF (CHAR=='CGH') THEN
+! Complex General Hartree-Fock (CGHF) formalism
+!           MODEL=5
+!           WRITE(*,'(a)')' Complex General Hartree-Fock formalism'
         ELSE
            GO TO 1
         END IF
@@ -138,6 +145,9 @@ MODULE data_parameters
   INTEGER,DIMENSION(10) :: Z
 ! positions of the nucleii
   DOUBLE PRECISION,DIMENSION(3,10) :: CENTER
+! flags for the point group symmetries of the molecular system
+! - plane symmetries
+  LOGICAL :: SYM_SX,SYM_SY,SYM_SZ
 ! total number of electrons in the molecular system
   INTEGER :: NBE
 ! total number of electrons in the closed shells (open-shell DHF formalism)
@@ -215,8 +225,31 @@ SUBROUTINE SETUP_DATA
            WRITE(*,'(a,i3)')'   - number of electrons of $\alpha$ spin = ',NBEA
            WRITE(*,'(a,i3)')'   - number of electrons of $\beta$ spin = ',NBEB
            IF (NBE/=NBEA+NBEB) STOP' Problem with the total number of electrons!'
-!        ELSE IF (MODEL==3) THEN
         END IF
+     END IF
+     REWIND(100)
+     CALL LOOKFOR(100,'SYMMETRY SX',INFO)
+     IF (INFO==0) THEN
+        WRITE(*,'(a)')' The system possesses a symmetry wrt the x-plane.'
+        SYM_SX=.TRUE.
+     ELSE
+        SYM_SX=.FALSE.
+     END IF
+     REWIND(100)
+     CALL LOOKFOR(100,'SYMMETRY SY',INFO)
+     IF (INFO==0) THEN
+        WRITE(*,'(a)')' The system possesses a symmetry wrt the y-plane.'
+        SYM_SY=.TRUE.
+     ELSE
+        SYM_SY=.FALSE.
+     END IF
+     REWIND(100)
+     CALL LOOKFOR(100,'SYMMETRY SZ',INFO)
+     IF (INFO==0) THEN
+        WRITE(*,'(a)')' The system possesses a symmetry wrt the z-plane.'
+        SYM_SZ=.TRUE.
+     ELSE
+        SYM_SZ=.FALSE.
      END IF
      WRITE(*,'(a)')' --------- **** ---------'
   END IF
@@ -225,6 +258,7 @@ END SUBROUTINE SETUP_DATA
 
 FUNCTION IDENTIFYZ(Z) RESULT (SYMBOL)
 ! Function returning the symbol of a chemical element given its atomic number Z.
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: Z
   CHARACTER(2) :: SYMBOL
 
@@ -347,6 +381,7 @@ END FUNCTION IDENTIFYZ
 
 SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
 ! Function that computes the internuclear repulsion energy for the given specific geometry of the molecular system.
+  IMPLICIT NONE
   INTEGER :: I,J
   DOUBLE PRECISION,DIMENSION(3) :: DIFF
 
@@ -361,6 +396,7 @@ END SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
 
 ! Various functions for the Hartree model with temperature
 FUNCTION POSITIVE_PART(X) RESULT(FUNC)
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
@@ -372,6 +408,7 @@ FUNCTION POSITIVE_PART(X) RESULT(FUNC)
 END FUNCTION POSITIVE_PART
 
 FUNCTION ENTROPY_FUNCTION(X) RESULT(FUNC)
+  IMPLICIT NONE
 ! beta test function for the entropy
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
@@ -380,6 +417,7 @@ FUNCTION ENTROPY_FUNCTION(X) RESULT(FUNC)
 END FUNCTION ENTROPY_FUNCTION
 
 FUNCTION RECIP_DENTFUNC(X) RESULT(FUNC)
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
@@ -391,6 +429,7 @@ FUNCTION RECIP_DENTFUNC(X) RESULT(FUNC)
 END FUNCTION RECIP_DENTFUNC
 
 FUNCTION DRECIP_DENTFUNC(X) RESULT(FUNC)
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
@@ -404,6 +443,7 @@ FUNCTION DRECIP_DENTFUNC(X) RESULT(FUNC)
 END FUNCTION
 
 FUNCTION FUNCFORMU(X) RESULT(FUNC)
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
@@ -420,6 +460,7 @@ FUNCTION FUNCFORMU(X) RESULT(FUNC)
 END FUNCTION FUNCFORMU
 
 SUBROUTINE RDENTFUNCD(X,FVAL,FDERIV)
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION,INTENT(OUT) :: FVAL,FDERIV
 
@@ -486,6 +527,7 @@ CONTAINS
 
 SUBROUTINE SETUP_BASIS
   USE case_parameters ; USE setup_tools
+  IMPLICIT NONE
   CHARACTER(LEN=4) :: CHAR
   CHARACTER(LEN=26) :: BASISNAME
   INTEGER :: INFO
@@ -543,6 +585,7 @@ END SUBROUTINE SETUP_BASIS
 FUNCTION GBF_POINTWISE_VALUE(GBF,POINT) RESULT(VALUE)
 ! Function that computes the value of a gaussian basis function at a given point of space.
   USE iso_c_binding
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: GBF
   DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
   REAL(KIND=C_DOUBLE) :: VALUE
@@ -553,6 +596,7 @@ FUNCTION GBF_POINTWISE_VALUE(GBF,POINT) RESULT(VALUE)
 END FUNCTION GBF_POINTWISE_VALUE
 
 SUBROUTINE PRINTGBF(PHI,NUNIT)
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NUNIT
 
@@ -571,6 +615,7 @@ END SUBROUTINE PRINTGBF
 FUNCTION TWOSPINOR_POINTWISE_VALUE(PHI,POINT) RESULT(VALUE)
 ! Function that computes the value of a Pauli 2-spinor basis function at a given point of space.
   USE iso_c_binding
+  IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI
   DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
   DOUBLE COMPLEX,DIMENSION(2) :: VALUE
@@ -586,10 +631,12 @@ FUNCTION TWOSPINOR_POINTWISE_VALUE(PHI,POINT) RESULT(VALUE)
 END FUNCTION TWOSPINOR_POINTWISE_VALUE
 
 SUBROUTINE PRINT2SPINOR(PHI,NUNIT)
+  IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NUNIT
 
   INTEGER :: I,J,K
+
   DO K=1,2
      WRITE(NUNIT,*)'component #',K
      IF (PHI%nbrofcontractions(K)==0) THEN
@@ -633,15 +680,14 @@ MODULE scf_parameters
   LOGICAL :: SSINTEGRALS
 ! flag for the use of the LS-bielectronic integrals
   LOGICAL :: SLINTEGRALS
-! resume EIG and EIGVEC from last computation
+! flag to resume a previous computation (using EIG and EIGVEC)
   LOGICAL :: RESUME
-! symmetries of the system
-  LOGICAL :: SYM_SX = .FALSE.,SYM_SY = .FALSE.,SYM_SZ = .FALSE.
 CONTAINS
 
 SUBROUTINE SETUP_SCF
   !$ USE omp_lib
   USE case_parameters ; USE setup_tools
+  IMPLICIT NONE
   CHARACTER :: METHOD
   CHARACTER(4) :: CHAR
   INTEGER :: I,INFO,MXSET,STAT,NUMBER_OF_THREADS
@@ -701,7 +747,7 @@ SUBROUTINE SETUP_SCF
        STOP
      END IF
      IF (MODEL==3) THEN
-! Special case: complex GHF
+! CGHF is a subcase of the relativistic case (for the moment...)
         SSINTEGRALS=.FALSE.
         SLINTEGRALS=.FALSE.
      ELSE
@@ -721,25 +767,6 @@ SUBROUTINE SETUP_SCF
         ELSE
            SLINTEGRALS=.TRUE.
         END IF
-     END IF
-
-     REWIND(100)
-     CALL LOOKFOR(100,'SYMMETRY SX',INFO)
-     IF (INFO==0) THEN
-        WRITE(*,'(a)')' (System possesses X-plane symmetry)'
-        SYM_SX = .TRUE.
-     END IF
-     REWIND(100)
-     CALL LOOKFOR(100,'SYMMETRY SY',INFO)
-     IF (INFO==0) THEN
-        WRITE(*,'(a)')' (System possesses Y-plane symmetry)'
-        SYM_SY = .TRUE.
-     END IF
-     REWIND(100)
-     CALL LOOKFOR(100,'SYMMETRY SZ',INFO)
-     IF (INFO==0) THEN
-        WRITE(*,'(a)')' (System possesses Z-plane symmetry)'
-        SYM_SZ = .TRUE.
      END IF
   ELSE
      IF (CHAR=='DIR') THEN
@@ -792,7 +819,7 @@ SUBROUTINE SETUP_SCF
         RESUME = .TRUE.
      END IF
   END IF
-  !$ ! determination of the number of threads to be used by OpenMP
+! determination of the number of threads to be used by OpenMP
   !$ CALL LOOKFOR(100,'PARALLELIZATION PARAMETERS',INFO)
   !$ IF (INFO==0) THEN
   !$    READ(100,'(/,i3)')NUMBER_OF_THREADS

@@ -260,6 +260,93 @@ SUBROUTINE ROOTHAAN_UHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   DEALLOCATE(PDMA,PDMB,PTDM,PSDM,PTDM1,PTEFM,PEMS,PFMA,PFMB)
 END SUBROUTINE ROOTHAAN_UHF
 
+SUBROUTINE ROOTHAAN_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+! Roothaan's algorithm (real general Hartree-Fock formalism).
+! Reference: C. C. J. Roothaan, New developments in molecular orbital theory, Rev. Modern Phys., 23(2), 69-89, 1951.
+  USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
+  USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE output
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: NBAST
+  DOUBLE PRECISION,DIMENSION(NBAST) :: EIG
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EIGVEC
+  DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: POEFM
+  TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
+  DOUBLE PRECISION,INTENT(IN) :: TRSHLD
+  INTEGER,INTENT(IN) :: MAXITR
+  LOGICAL,INTENT(IN) :: RESUME
+
+  INTEGER :: ITER,INFO,I
+  DOUBLE PRECISION :: ETOT,ETOT1
+  DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: PTEFM,PFM,PDM,PDM1
+  LOGICAL :: NUMCONV
+
+! INITIALIZATION AND PRELIMINARIES
+  ALLOCATE(PDM(1:NBAST*(NBAST+1)/2),PDM1(1:NBAST*(NBAST+1)/2))
+  ALLOCATE(PTEFM(1:NBAST*(NBAST+1)/2),PFM(1:NBAST*(NBAST+1)/2))
+
+  ITER=0
+  PDM=0.D0
+  PTEFM=0.D0
+  ETOT1=0.D0
+  OPEN(16,FILE='plots/rootenrgy.txt',STATUS='unknown',ACTION='write')
+  OPEN(17,FILE='plots/rootcrit1.txt',STATUS='unknown',ACTION='write')
+  OPEN(18,FILE='plots/rootcrit2.txt',STATUS='unknown',ACTION='write')
+
+! LOOP
+1 CONTINUE
+  ITER=ITER+1
+  WRITE(*,*)' '
+  WRITE(*,*)'# ITER =',ITER
+
+! Assembly and diagonalization of the Fock matrix
+  PFM=POEFM+PTEFM
+  IF(.NOT.(RESUME .AND. ITER == 1)) THEN
+     CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
+     IF (INFO/=0) GO TO 4
+  END IF
+! Assembly of the density matrix according to the aufbau principle
+  PDM1=PDM
+  CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE)
+! Computation of the energy associated to the density matrix
+  CALL BUILDTEFM_RGHF(PTEFM,NBAST,PHI,PDM)
+  ETOT=ENERGY_RGHF(POEFM,PTEFM,PDM,NBAST)
+  WRITE(*,*)'E(D_n)=',ETOT
+  CALL OUTPUT_ITER(ITER,PDM,PHI,NBAST,EIG,EIGVEC,ETOT)
+! Numerical convergence check
+  CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
+  IF (NUMCONV) THEN
+! Convergence reached
+     GO TO 2
+  ELSE IF (ITER==MAXITR) THEN
+! Maximum number of iterations reached without convergence
+     GO TO 3
+  ELSE
+! Convergence not reached, increment
+     ETOT1=ETOT
+     GO TO 1
+  END IF
+! MESSAGES
+2 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine ROOTHAAN: convergence after',ITER,'iteration(s).'
+  OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
+  DO I=1,NBAST
+     WRITE(9,'(i4,e22.14)')I,EIG(I)
+  END DO
+  CLOSE(9)
+  GO TO 5
+3 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine ROOTHAAN: no convergence after',ITER,'iteration(s).'
+  OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
+  DO I=1,NBAST
+     WRITE(9,'(i4,e22.14)')I,EIG(I)
+  END DO
+  CLOSE(9)
+  GO TO 5
+4 WRITE(*,*)'(called from subroutine ROOTHAAN)'
+5 CALL OUTPUT_FINALIZE(ITER,PDM,PHI,NBAST,EIG,EIGVEC,ETOT)
+  DEALLOCATE(PDM,PDM1,PTEFM,PFM)
+  CLOSE(16) ; CLOSE(17) ; CLOSE(18)
+END SUBROUTINE ROOTHAAN_RGHF
+
+! ** NONWORKING PART **
 SUBROUTINE ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
 ! Roothaan's algorithm (average-of-configuration open-shell Dirac-Hartree-Fock formalism).
 ! Reference(s)?
@@ -354,89 +441,3 @@ SUBROUTINE ROOTHAAN_AOCOSDHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR)
 5 CALL OUTPUT_FINALIZE(ITER,PDMC+PDMO,PHI,NBAST,EIG,EIGVEC,ETOT)
   DEALLOCATE(PDMC,PDMO,PDMC1,PDMO1,PTEFMC,PTEFMO,PFMC,PFMO)
 END SUBROUTINE ROOTHAAN_AOCOSDHF
-
-SUBROUTINE ROOTHAAN_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! Roothaan's algorithm (restricted closed-shell Hartree-Fock formalism).
-! Reference: C. C. J. Roothaan, New developments in molecular orbital theory, Rev. Modern Phys., 23(2), 69-89, 1951.
-  USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
-  USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE output
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: NBAST
-  DOUBLE PRECISION,DIMENSION(NBAST) :: EIG
-  DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EIGVEC
-  DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(IN) :: POEFM
-  TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-  DOUBLE PRECISION,INTENT(IN) :: TRSHLD
-  INTEGER,INTENT(IN) :: MAXITR
-  LOGICAL,INTENT(IN) :: RESUME
-
-  INTEGER :: ITER,INFO,I
-  DOUBLE PRECISION :: ETOT,ETOT1
-  DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: PTEFM,PFM,PDM,PDM1
-  LOGICAL :: NUMCONV
-
-! INITIALIZATION AND PRELIMINARIES
-  ALLOCATE(PDM(1:NBAST*(NBAST+1)/2),PDM1(1:NBAST*(NBAST+1)/2))
-  ALLOCATE(PTEFM(1:NBAST*(NBAST+1)/2),PFM(1:NBAST*(NBAST+1)/2))
-
-  ITER=0
-  PDM=0.D0
-  PTEFM=0.D0
-  ETOT1=0.D0
-  OPEN(16,FILE='plots/rootenrgy.txt',STATUS='unknown',ACTION='write')
-  OPEN(17,FILE='plots/rootcrit1.txt',STATUS='unknown',ACTION='write')
-  OPEN(18,FILE='plots/rootcrit2.txt',STATUS='unknown',ACTION='write')
-
-! LOOP
-1 CONTINUE
-  ITER=ITER+1
-  WRITE(*,*)' '
-  WRITE(*,*)'# ITER =',ITER
-
-! Assembly and diagonalization of the Fock matrix
-  PFM=POEFM+PTEFM
-  IF(.NOT.(RESUME .AND. ITER == 1)) THEN
-     CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
-     IF (INFO/=0) GO TO 4
-  END IF
-! Assembly of the density matrix according to the aufbau principle
-  PDM1=PDM
-  CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE)
-! Computation of the energy associated to the density matrix
-  CALL BUILDTEFM_GHF(PTEFM,NBAST,PHI,PDM)
-  ETOT=ENERGY_GHF(POEFM,PTEFM,PDM,NBAST)
-  WRITE(*,*)'E(D_n)=',ETOT
-  CALL OUTPUT_ITER(ITER,PDM,PHI,NBAST,EIG,EIGVEC,ETOT)
-! Numerical convergence check
-  CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
-  IF (NUMCONV) THEN
-! Convergence reached
-     GO TO 2
-  ELSE IF (ITER==MAXITR) THEN
-! Maximum number of iterations reached without convergence
-     GO TO 3
-  ELSE
-! Convergence not reached, increment
-     ETOT1=ETOT
-     GO TO 1
-  END IF
-! MESSAGES
-2 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine ROOTHAAN: convergence after',ITER,'iteration(s).'
-  OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
-  DO I=1,NBAST
-     WRITE(9,'(i4,e22.14)')I,EIG(I)
-  END DO
-  CLOSE(9)
-  GO TO 5
-3 WRITE(*,*)' ' ; WRITE(*,*)'Subroutine ROOTHAAN: no convergence after',ITER,'iteration(s).'
-  OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
-  DO I=1,NBAST
-     WRITE(9,'(i4,e22.14)')I,EIG(I)
-  END DO
-  CLOSE(9)
-  GO TO 5
-4 WRITE(*,*)'(called from subroutine ROOTHAAN)'
-5 CALL OUTPUT_FINALIZE(ITER,PDM,PHI,NBAST,EIG,EIGVEC,ETOT)
-  DEALLOCATE(PDM,PDM1,PTEFM,PFM)
-  CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE ROOTHAAN_GHF

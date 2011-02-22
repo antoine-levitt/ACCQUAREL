@@ -16,7 +16,7 @@ SUBROUTINE CHECKORB(EIG,N,LOON)
 
   INTEGER :: HGEN
 
-! Determination of the number of the lowest occupied orbital (i.e., the one relative to the first eigenvalue associated to an electronic state in the gap)
+! determination of the number of the lowest occupied orbital (i.e., the one relative to the first eigenvalue associated to an electronic state in the gap)
   LOON=MINLOC(EIG,DIM=1,MASK=EIG>-C*C)
   IF (LOON.EQ.0) THEN
      STOP'Subroutine CHECKORB: no eigenvalue associated to an electronic state.'
@@ -26,7 +26,7 @@ SUBROUTINE CHECKORB(EIG,N,LOON)
         WRITE(*,'(a)')' Subroutine CHECKORB: there are not enough eigenvalues associated to electronic states (',N-LOON,').'
         STOP
      END IF
-! Determination of the number of the highest orbital relative to an eigenvalue associated to an electronic state in the gap
+! determination of the number of the highest orbital relative to an eigenvalue associated to an electronic state in the gap
      HGEN=MAXLOC(EIG,DIM=1,MASK=EIG<0.D0)
      WRITE(*,'(a,i3)')' Number of eigenvalues associated to electronic states in the gap = ',HGEN-LOON+1
      IF (HGEN-LOON+1.LT.NBE) THEN
@@ -64,7 +64,7 @@ SUBROUTINE CHECKNUMCONV_relativistic(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n),D_n] =',FNCMT
   WRITE(18,'(e22.14)')FNCMT
   IF (FNCMT<=TRSHLD) CONVC=.TRUE.
-! This criterion is not used to assert convergence
+! Note: this criterion is not used to assert convergence
   WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
   WRITE(16,'(e22.14)')ETOTN
 
@@ -104,7 +104,7 @@ SUBROUTINE CHECKNUMCONV_RHF(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV)
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n),D_n] =',FNCMT
   WRITE(18,'(e22.14)')FNCMT
   IF (FNCMT<=TRSHLD) CONVC=.TRUE.
-! This criterion is not used to assert convergence
+! Note: this criterion is not used to assert convergence
   WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
   WRITE(16,'(e22.14)')ETOTN
 
@@ -144,7 +144,7 @@ SUBROUTINE CHECKNUMCONV_UHF(PDMA,PDMB,PTDMO,PFMA,PFMB,N,ETOTN,ETOTO,TRSHLD,NUMCO
   FNCMTB=NORM(CMT,N,'F')
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n^b),D_n^b] =',FNCMTB
   IF ((FNCMTA<=TRSHLD).AND.(FNCMTB<=TRSHLD)) CONVC=.TRUE.
-! This criterion is not used to assert convergence
+! Note: this criterion is not used to assert convergence
   WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
 
   IF (CONVD.AND.CONVC) THEN
@@ -186,7 +186,7 @@ SUBROUTINE CHECKNUMCONV_AOCOSDHF(PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO,N,ETOTN,ETOTO
   FNCMTO=NORM(CMT,N,'F')
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n^o),D_n^o] =',FNCMTO
   IF ((FNCMTC<=TRSHLD).AND.(FNCMTO<=TRSHLD)) CONVC=.TRUE.
-! This criterion is not used to assert convergence
+! Note: this criterion is not used to assert convergence
   WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
 
   IF (CONVD.AND.CONVC) THEN

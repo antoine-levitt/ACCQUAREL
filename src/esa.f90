@@ -12,6 +12,7 @@ FUNCTION THETA(PDM,POEFM,N,PHI,METHOD) RESULT (PDMNEW)
   USE case_parameters ; USE basis_parameters ; USE matrices
   USE matrix_tools ; USE metric_relativistic
   USE debug
+  IMPLICIT NONE
   CHARACTER,INTENT(IN) :: METHOD
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PDM,POEFM
@@ -22,6 +23,7 @@ FUNCTION THETA(PDM,POEFM,N,PHI,METHOD) RESULT (PDMNEW)
   DOUBLE PRECISION,PARAMETER :: TOL=1.D-8
 
   INTEGER :: ITER,INFO,LOON
+  DOUBLE PRECISION :: RESIDUAL
   DOUBLE PRECISION,DIMENSION(N) :: EIG
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2) :: PTEFM,PFM,PDMOLD,PPROJM
   DOUBLE COMPLEX,DIMENSION(N,N) :: EIGVEC,DM,SF,TSF
@@ -64,19 +66,20 @@ FUNCTION THETA(PDM,POEFM,N,PHI,METHOD) RESULT (PDMNEW)
 !        IF (INFO==0) WRITE(13,*)' Eigenvalues:',EIG
      END IF
      IF (THETA_CHECK) WRITE(13,*)'Residual =',NORM(ABA(PSRS,PDMNEW-PDMOLD,N),N,'I')
-     IF (NORM(PDMNEW-PDMOLD,N,'I')<TOL) THEN
+     RESIDUAL=NORM(PDMNEW-PDMOLD,N,'I')
+     IF (RESIDUAL<TOL) THEN
         IF (THETA_CHECK) THEN
            WRITE(13,'(a,i3,a)')' Function THETA: convergence after ',ITER,' iteration(s).'
-           WRITE(13,*)ITER,NORM(PDMNEW-PDMOLD,N,'I')
+           WRITE(13,*)ITER,RESIDUAL
         END IF
         RETURN
      ELSE IF (ITER>=ITERMAX) THEN
-        WRITE(*,*)'Function THETA: no convergence after ',ITER,' iteration(s).'
+        WRITE(*,*)'Warning in function THETA: no convergence after ',ITER,' iteration(s) (the residual is ',RESIDUAL,').'
         IF (THETA_CHECK) THEN
            WRITE(13,*)'Function THETA: no convergence after ',ITER,' iteration(s).'
-           WRITE(13,*)'Residual =',NORM(PDMNEW-PDMOLD,N,'I')
+           WRITE(13,*)'Residual =',RESIDUAL
         END IF
-        STOP
+        RETURN
      END IF
      PDMOLD=PDMNEW
   END DO
@@ -87,6 +90,7 @@ FUNCTION SIGN(PA,N) RESULT (SA)
 ! Function that computes the sign function of the hermitian matrix of a selfadjoint operator, which upper triangular part is stored in packed form, using a polynomial recursion (PINVS contains the inverse of the overlap matrix, which upper triangular part is stored in packed form).
 ! Note: the result is an unpacked matrix due to subsequent use.
   USE matrix_tools ; USE metric_relativistic
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA
   DOUBLE COMPLEX,DIMENSION(N,N) :: SA
@@ -116,6 +120,7 @@ END MODULE
 
 FUNCTION DFE(LAMBDA) RESULT (ETOT)
   USE common_functions ; USE matrices ; USE matrix_tools ; USE esa_mod
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: LAMBDA
   DOUBLE PRECISION :: ETOT
 
@@ -132,6 +137,7 @@ SUBROUTINE ESA(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE setup_tools
   USE optimization_tools ; USE esa_mod
   USE debug
+  IMPLICIT NONE
   INTEGER,INTENT(IN),TARGET :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(INOUT) :: EIG
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(INOUT) :: EIGVEC

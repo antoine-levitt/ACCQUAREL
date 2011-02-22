@@ -1,11 +1,12 @@
 PROGRAM ACCQUAREL
   USE setup_tools ; USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters
   USE random
+  IMPLICIT NONE
   DOUBLE PRECISION :: STARTTIME,ENDTIME
 
   CALL CPU_TIME(STARTTIME)
 
-  CALL INIT_RANDOM
+  CALL INIT_RANDOM_SEED
   
   WRITE(*,*)' *** ACCQUAREL using A.S.P.I.C. *** '
   !$ WRITE(*,*)' (parallel version compiled by an OpenMP-compliant implementation)'

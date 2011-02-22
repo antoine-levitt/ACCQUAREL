@@ -3,6 +3,7 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 ! Reference: P. Pulay, Convergence acceleration of iterative sequences. The case of SCF iteration, Chem. Phys. Lett., 73(2), 393-398, 1980.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE setup_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(INOUT) :: EIG
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(INOUT) :: EIGVEC
@@ -155,6 +156,7 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 ! Reference: P. Pulay, Convergence acceleration of iterative sequences. The case of SCF iteration, Chem. Phys. Lett., 73(2), 393-398, 1980.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE setup_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(INOUT) :: EIG
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(INOUT) :: EIGVEC
@@ -300,11 +302,12 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
 END SUBROUTINE DIIS_RHF
 
-SUBROUTINE DIIS_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! DIIS (Direct Inversion in the Iterative Subspace) algorithm (restricted closed-shell Hartree-Fock formalism)
+SUBROUTINE DIIS_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+! DIIS (Direct Inversion in the Iterative Subspace) algorithm (real general Hartree-Fock formalism)
 ! Reference: P. Pulay, Convergence acceleration of iterative sequences. The case of SCF iteration, Chem. Phys. Lett., 73(2), 393-398, 1980.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE setup_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(INOUT) :: EIG
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(INOUT) :: EIGVEC
@@ -348,7 +351,7 @@ SUBROUTINE DIIS_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   WRITE(*,*)'# ITER =',ITER
 
 ! Assembly and diagonalization of the Fock matrix
-  CALL BUILDTEFM_GHF(PTEFM,NBAST,PHI,PTDM)
+  CALL BUILDTEFM_RGHF(PTEFM,NBAST,PHI,PTDM)
   PFM=POEFM+PTEFM
   IF(.NOT.(RESUME .AND. ITER == 1)) THEN
      CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
@@ -357,8 +360,8 @@ SUBROUTINE DIIS_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 ! Assembly of the density matrix according to the aufbau principle
   CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE)
 ! Computation of the total energy
-  CALL BUILDTEFM_GHF(PTEFM,NBAST,PHI,PDM)
-  ETOT=ENERGY_GHF(POEFM,PTEFM,PDM,NBAST)
+  CALL BUILDTEFM_RGHF(PTEFM,NBAST,PHI,PDM)
+  ETOT=ENERGY_RGHF(POEFM,PTEFM,PDM,NBAST)
   WRITE(*,*)'Total energy =',ETOT
 ! Numerical convergence check
   IF (ITER==1) THEN
@@ -448,4 +451,4 @@ SUBROUTINE DIIS_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 5 WRITE(*,*)'(called from subroutine DIIS)'
 6 DEALLOCATE(PDM,PTDM,PDMSET,PTEFM,PFM,TMP,ERRSET)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE DIIS_GHF
+END SUBROUTINE DIIS_RGHF

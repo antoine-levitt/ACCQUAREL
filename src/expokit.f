@@ -1,4 +1,5 @@
 * EXPOKIT, used under a free license, http://www.maths.uq.edu.au/expokit/
+* note: the calls to the DNCHBV subroutine have been modified in order to eliminate the compiler warnings about inconsistent types.
 *----------------------------------------------------------------------|
       subroutine DMEXPV( n, m, t, v, w, tol, anorm,
      .                   wsp,lwsp, iwsp,liwsp, matvec, itrace,iflag )
@@ -292,7 +293,8 @@
             wsp(iexph+i-1) = 0.0d0
          enddo
          wsp(iexph) = 1.0d0
-         call DNCHBV(mx,sgn*t_step,wsp(ih),mh,wsp(iexph),wsp(ifree+mx))
+         call DNCHBV(mx,sgn*t_step,wsp(ih),mh,wsp(iexph),
+     &               dcmplx(wsp(ifree+mx),0.0d0))
       endif
 
  402  continue
@@ -502,6 +504,7 @@
          hnorm = MAX( hnorm,wsp(i) )
       enddo
       hnorm = ABS( t*hnorm )
+      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of DGPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale = t / DBLE(2**ns)
       scale2 = scale*scale
@@ -671,6 +674,7 @@
          hnorm = MAX( hnorm,wsp(i) )
       enddo
       hnorm = ABS( t*hnorm )
+      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of DSPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale = t / DBLE(2**ns)
       scale2 = scale*scale
@@ -843,6 +847,7 @@
          hnorm = MAX( hnorm,DBLE(wsp(i)) )
       enddo
       hnorm = ABS( t*hnorm )
+      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of ZGPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale =  CMPLX( t/DBLE(2**ns),0.0d0 )
       scale2 = scale*scale
@@ -1014,6 +1019,7 @@
          hnorm = MAX( hnorm,DBLE(wsp(i)) )
       enddo
       hnorm = ABS( t*hnorm )
+      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of ZHPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale =  CMPLX( t/DBLE(2**ns),0.0d0 )
       scale2 = scale*scale
@@ -1895,7 +1901,8 @@
             wsp(iexph+i-1) = 0.0d0
          enddo
          wsp(iexph) = 1.0d0
-         call DNCHBV(mx,sgn*t_step,wsp(ih),mh,wsp(iexph),wsp(ifree+mx))
+         call DNCHBV(mx,sgn*t_step,wsp(ih),mh,wsp(iexph),
+     &               dcmplx(wsp(ifree+mx),0.0d0))
       endif
 
  402  continue
@@ -2277,7 +2284,8 @@
             wsp(iexph+i-1) = 0.0d0
          enddo
          wsp(iexph) = 1.0d0
-         call DNCHBV(mx,sgn*t_step,wsp(ih),mh,wsp(iexph),wsp(ifree+mx))
+         call DNCHBV(mx,sgn*t_step,wsp(ih),mh,wsp(iexph),
+     &               dcmplx(wsp(ifree+mx),0.0d0))
       endif
  402  continue
 * 

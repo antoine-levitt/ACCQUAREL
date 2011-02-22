@@ -1,10 +1,10 @@
 MODULE integrals
-  ! size of bielectronic indices. 1 for 8-bits (255), 2 for 16-bits(65535), 4 for 32-bits (2^32), 8 for 64-bits (2^64). Only used when writing/reading data on disk. Should be bigger than two times the total number of basis functions (signedness issues). 2 is default, set it to 1 to reduce disk usage. Use in code with INTEGER(smallint)
-  INTEGER, parameter :: smallint = 2
 ! Note: all the integrals involving gaussian basis functions are computed by the A.S.P.I.C. code (written in C++ by F. Lodier, see http://www.ann.jussieu.fr/A.S.P.I.C/).
 ! number of a priori nonzero bielectronic integrals
   INTEGER :: BINMBR
 ! arrays for the list, values (real/complex for GBF/2-spinor basis functions in the non-relativistic/relativistic case) and "class" (relativistic case only) of bielectronic integrals (when stored in memory)
+! Important note: by default, the indices of the basis functions are stored in 16-bits signed integers (via the INTEGER(smallint) declaration, smallint being set to 2) in order to reduce the size of the data written on disk for the storage of the bielectronic integral list and values (the value range of such integers is -32768 to 32767 which should sufficient in any case). 8-bits signed integers should not be used, since the maximum number of basis functions would be reduced to 127. 
+  INTEGER,PARAMETER :: smallint=2
   INTEGER(smallint),DIMENSION(:,:),ALLOCATABLE :: BILIST
   DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: RBIVALUES
   DOUBLE COMPLEX,DIMENSION(:),ALLOCATABLE :: CBIVALUES
@@ -115,6 +115,7 @@ CONTAINS
 FUNCTION OVERLAPVALUE(PHI_A,PHI_B) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of two gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   REAL(KIND=C_DOUBLE) :: VALUE
 
@@ -125,6 +126,7 @@ END FUNCTION OVERLAPVALUE
 FUNCTION KINETICVALUE(PHI_A,PHI_B) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the scalar product between the gradients of two gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   REAL(KIND=C_DOUBLE) :: VALUE
 
@@ -136,6 +138,7 @@ FUNCTION DERIVVALUE(PHI_A,PHI_B,DIMENSION) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to a space variable) of a gaussain basis function with another gaussian basis function (this kind of integrals appear in the variational formulation involving the Dirac operator).
 ! Note: if DIMENSION = 1 (respectively 2, 3) then partial derivative with respect to x (respectively y, z).
   USE iso_c_binding ; USE basis_parameters
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   INTEGER(KIND=C_INT),INTENT(IN) :: DIMENSION
   REAL(KIND=C_DOUBLE) :: VALUE
@@ -148,6 +151,7 @@ END FUNCTION DERIVVALUE
 FUNCTION POTENTIALVALUE(PHI_A,PHI_B,CENTER) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of two gaussian basis functions times a coulombic potential centered on a given point.
   USE iso_c_binding ; USE basis_parameters
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   REAL(KIND=C_DOUBLE),DIMENSION(3),INTENT(IN) :: CENTER
   REAL(KIND=C_DOUBLE) :: VALUE
@@ -159,9 +163,10 @@ END FUNCTION POTENTIALVALUE
 
 FUNCTION XDERIVVALUE(PHI_A,PHI_B,DIMENSION1,DIMENSION2) RESULT (VALUE)
 ! Function that computes the value of the integral over R^3 of the product of the partial derivative (with respect to the space variable x, y or z) of a gaussian basis function with another gaussian basis function, times x, y or z (this kind of integral appears in variational formulations involving the J operator).
-! Notes: - if DIMENSION1 = 1 (respectively 2, 3) then partial derivative with respect to x (respectively y, z).
-!        - if DIMENSION2 = 1 (respectively 2, 3) then the product is multiplied by x (respectively y, z).
+! Note: - if DIMENSION1 = 1 (respectively 2, 3) then partial derivative with respect to x (respectively y, z).
+!       - if DIMENSION2 = 1 (respectively 2, 3) then the product is multiplied by x (respectively y, z).
   USE iso_c_binding ; USE basis_parameters
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B
   INTEGER(KIND=C_INT),INTENT(IN) :: DIMENSION1,DIMENSION2
   REAL(KIND=C_DOUBLE) :: VALUE
@@ -174,6 +179,7 @@ END FUNCTION XDERIVVALUE
 FUNCTION COULOMBVALUE_nonrelativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four gaussian basis functions.
   USE iso_c_binding ; USE basis_parameters
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI_A,PHI_B,PHI_C,PHI_D
   REAL(KIND=C_DOUBLE) :: VALUE
 
@@ -184,62 +190,61 @@ FUNCTION COULOMBVALUE_nonrelativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
 END FUNCTION COULOMBVALUE_nonrelativistic
 
 FUNCTION APRIORI_ZERO(PHI1,PHI2,PHI3,PHI4) RESULT(VALUE)
-  ! Function that checks whether a given bielectronic integral can a priori be predicted to be zero
-  USE case_parameters ; USE basis_parameters ; USE scf_parameters
+! Function that checks whether a given bielectronic integral can a priori be predicted to be zero.
+  USE case_parameters ; USE data_parameters ; USE basis_parameters
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI1,PHI2,PHI3,PHI4
-  LOGICAL :: SC,VALUE
+  LOGICAL :: VALUE
+
+  LOGICAL :: SC
   INTEGER,DIMENSION(3) :: GLOBALMONOMIALDEGREE
 
+  VALUE=.FALSE.
   GLOBALMONOMIALDEGREE=PHI1%monomialdegree+PHI2%monomialdegree+PHI3%monomialdegree+PHI4%monomialdegree
-  ! If all functions have the same center and any monomial is odd, integral is zero
+! If all functions have the same center and any monomial is odd, integral is zero
   SC=((PHI1%center_id==PHI2%center_id).AND.(PHI2%center_id==PHI3%center_id).AND.(PHI3%center_id==PHI4%center_id))
-  IF(SC) THEN
-     IF(ANY(MOD(GLOBALMONOMIALDEGREE,2)==1)) THEN
-        VALUE = .TRUE.
-        RETURN
+  IF (SC) THEN
+     IF(ANY(MOD(GLOBALMONOMIALDEGREE,2)==1)) VALUE=.TRUE.
+  ELSE
+! Early support of point group symmetries
+! Plane symmetries
+     IF ((SYM_SX.AND.MOD(GLOBALMONOMIALDEGREE(1),2)==1).OR.(SYM_SY.AND.MOD(GLOBALMONOMIALDEGREE(2),2)==1).OR.(SYM_SZ.AND.MOD(GLOBALMONOMIALDEGREE(3),2)==1)) THEN
+        VALUE=.TRUE.
      END IF
   END IF
-
-  ! Plane symmetries
-  IF((SYM_SX .AND. MOD(GLOBALMONOMIALDEGREE(1),2) == 1).OR.&
-       &(SYM_SY .AND. MOD(GLOBALMONOMIALDEGREE(2),2) == 1).OR.&
-       &(SYM_SZ .AND. MOD(GLOBALMONOMIALDEGREE(3),2) == 1)) THEN
-     VALUE = .TRUE.
-     RETURN
-  END IF
-  
-  VALUE = .FALSE.
 END FUNCTION APRIORI_ZERO
 
 SUBROUTINE BUILDBILIST_nonrelativistic(PHI,NBAST,LISTSIZE)
-! Subroutine that generates the list (without redundancy as symmetries are taken into account) of the bielectronic integrals with nonzero value.
+! Subroutine that generates the list (without redundancy as index symmetries are taken into account) of the bielectronic integrals with nonzero value.
 ! Reference: R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974.
   USE case_parameters ; USE basis_parameters
+  IMPLICIT NONE
   TYPE(gaussianbasisfunction),DIMENSION(:),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NBAST
   INTEGER,INTENT(OUT) :: LISTSIZE
 
   INTEGER(smallint) :: I,J,K,L
-  LOGICAL :: SS = .TRUE.
+  LOGICAL :: SS
   
+  SS=.TRUE.
   OPEN(LUNIT,access='STREAM')
 ! determination of the number of elements (i.e., integer quadruples) that compose the list
+! Note: when dealing with the real general Hartree-Fock model, one must additionally check that the basis function have the same spin pairwise.
   LISTSIZE=0
   DO I=1,NBAST ; DO J=1,I ; DO K=1,J ; DO L=1,K
      IF (.NOT.APRIORI_ZERO(PHI(I),PHI(J),PHI(K),PHI(L))) THEN
-        IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (J <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (J > NBAST/2))).AND.&
-             &(((K <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((K > NBAST/2) .AND. (L > NBAST/2)))
-        IF(SS) THEN
+        IF (MODEL==4) &
+ &      SS=(((I<=NBAST/2).AND.(J<=NBAST/2)).OR.((I>NBAST/2).AND.(J>NBAST/2))).AND.(((K<=NBAST/2).AND.(L<=NBAST/2)).OR.((K>NBAST/2).AND.(L>NBAST/2)))
+        IF (SS) THEN
            LISTSIZE=LISTSIZE+1 ; WRITE(LUNIT)I,J,K,L
         END IF
-
-        IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (K <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (K > NBAST/2))).AND.&
-             &(((J <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((J > NBAST/2) .AND. (L > NBAST/2)))
+        IF (MODEL==4) &
+ &      SS=(((I<=NBAST/2).AND.(K<=NBAST/2)).OR.((I>NBAST/2).AND.(K>NBAST/2))).AND.(((J<=NBAST/2).AND.(L<=NBAST/2)).OR.((J>NBAST/2).AND.(L>NBAST/2)))
         IF ((K<J).AND.SS) THEN
            LISTSIZE=LISTSIZE+1 ; WRITE(LUNIT)I,K,J,L
         END IF
-        IF(MODEL == 4) SS = (((I <= NBAST/2) .AND. (L <= NBAST/2)) .OR. ((I > NBAST/2) .AND. (L > NBAST/2))).AND.&
-             &(((J <= NBAST/2) .AND. (K <= NBAST/2)) .OR. ((J > NBAST/2) .AND. (K > NBAST/2)))
+        IF (MODEL==4) &
+ &      SS=(((I<=NBAST/2).AND.(L<=NBAST/2)).OR.((I>NBAST/2).AND.(L>NBAST/2))).AND.(((J<=NBAST/2).AND.(K<=NBAST/2)).OR.((J>NBAST/2).AND.(K>NBAST/2)))
         IF ((J<I).AND.(L<K).AND.SS) THEN
            LISTSIZE=LISTSIZE+1 ; WRITE(LUNIT)I,L,J,K
         END IF
@@ -252,6 +257,7 @@ END SUBROUTINE BUILDBILIST_nonrelativistic
 FUNCTION COULOMBVALUE_relativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four 2-spinor basis functions.
   USE basis_parameters
+  IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI_A,PHI_B,PHI_C,PHI_D
   DOUBLE COMPLEX :: VALUE
 
@@ -262,10 +268,8 @@ FUNCTION COULOMBVALUE_relativistic(PHI_A,PHI_B,PHI_C,PHI_D) RESULT (VALUE)
      DO IA=1,PHI_A%nbrofcontractions(I) ; DO IB=1,PHI_B%nbrofcontractions(I)
         DO J=1,2
            DO JC=1,PHI_C%nbrofcontractions(J) ; DO JD=1,PHI_D%nbrofcontractions(J)
-              VALUE=VALUE+PHI_A%coefficients(I,IA)*CONJG(PHI_B%coefficients(I,IB))                                  &
- &                        *PHI_C%coefficients(J,JC)*CONJG(PHI_D%coefficients(J,JD))                                 &
- &                        *COULOMBVALUE(PHI_A%contractions(I,IA),PHI_B%contractions(I,IB),PHI_C%contractions(J,JC), &
- &                                      PHI_D%contractions(J,JD))
+              VALUE=VALUE+PHI_A%coefficients(I,IA)*CONJG(PHI_B%coefficients(I,IB))*PHI_C%coefficients(J,JC)*CONJG(PHI_D%coefficients(J,JD)) &
+ &                        *COULOMBVALUE(PHI_A%contractions(I,IA),PHI_B%contractions(I,IB),PHI_C%contractions(J,JC),PHI_D%contractions(J,JD))
            END DO ; END DO
         END DO
      END DO ; END DO
@@ -275,6 +279,7 @@ END FUNCTION COULOMBVALUE_relativistic
 FUNCTION COULOMBVALUE_precomputed(PHI_A,PHI_B,PHI_C,PHI_D,CLASS) RESULT (VALUE)
 ! Function that computes the value of the bielectronic integral between four 2-spinor basis functions from lists containing the precomputed values of the bielectronic integrals between scalar gaussian basis functions.
   USE basis_parameters
+  IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI_A,PHI_B,PHI_C,PHI_D
   CHARACTER(2),INTENT(IN) :: CLASS
   DOUBLE COMPLEX :: VALUE
@@ -286,10 +291,8 @@ FUNCTION COULOMBVALUE_precomputed(PHI_A,PHI_B,PHI_C,PHI_D,CLASS) RESULT (VALUE)
      DO IA=1,PHI_A%nbrofcontractions(I) ; DO IB=1,PHI_B%nbrofcontractions(I)
         DO J=1,2
            DO JC=1,PHI_C%nbrofcontractions(J) ; DO JD=1,PHI_D%nbrofcontractions(J)
-              VALUE=VALUE+PHI_A%coefficients(I,IA)*CONJG(PHI_B%coefficients(I,IB))                              &
- &                        *PHI_C%coefficients(J,JC)*CONJG(PHI_D%coefficients(J,JD))                             &
- &                        *PRECOMPUTEDCOULOMBVALUE(PHI_A%contidx(I,IA),PHI_B%contidx(I,IB),PHI_C%contidx(J,JC), &
- &                                                 PHI_D%contidx(J,JD),CLASS)
+              VALUE=VALUE+PHI_A%coefficients(I,IA)*CONJG(PHI_B%coefficients(I,IB))*PHI_C%coefficients(J,JC)*CONJG(PHI_D%coefficients(J,JD)) &
+ &                        *PRECOMPUTEDCOULOMBVALUE(PHI_A%contidx(I,IA),PHI_B%contidx(I,IB),PHI_C%contidx(J,JC),PHI_D%contidx(J,JD),CLASS)
            END DO ; END DO
         END DO
      END DO ; END DO
@@ -299,6 +302,7 @@ END FUNCTION COULOMBVALUE_precomputed
 SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
 ! Subroutine that generates the list (more or less without redundancy since the a priori symmetries for complex 2-spinor functions are taken into account) of the bielectronic integrals with nonzero value.
   USE case_parameters ; USE basis_parameters ; USE scf_parameters
+  IMPLICIT NONE
   TYPE(twospinor),DIMENSION(:),INTENT(IN) :: PHI
   INTEGER,DIMENSION(2),INTENT(IN) :: NBAS
   INTEGER,INTENT(OUT) :: LISTSIZE,SUBSIZE(3)
@@ -312,21 +316,17 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
   DO I=1,NBAS(1) ; DO J=1,NBAS(1) ; DO K=1,NBAS(1) ; DO L=1,NBAS(1)
      IF (L+K*NBAS(1)<=J+I*NBAS(1)) THEN
         DO I1=1,2
-           DO I2=1,PHI(I)%nbrofcontractions(I1)
-              DO I3=1,PHI(J)%nbrofcontractions(I1)
-                 DO I4=1,2
-                    DO I5=1,PHI(K)%nbrofcontractions(I4)
-                       DO I6=1,PHI(L)%nbrofcontractions(I4)
-                          IF(.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
-                             SUBSIZE(1)=SUBSIZE(1)+1
-                             WRITE(LUNIT)I,J,K,L,'LL'
-                             GO TO 1
-                          END IF
-                       END DO
-                    END DO
-                 END DO
+           DO I2=1,PHI(I)%nbrofcontractions(I1) ; DO I3=1,PHI(J)%nbrofcontractions(I1)
+              DO I4=1,2
+                 DO I5=1,PHI(K)%nbrofcontractions(I4) ; DO I6=1,PHI(L)%nbrofcontractions(I4)
+                    IF (.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
+                       SUBSIZE(1)=SUBSIZE(1)+1
+                       WRITE(LUNIT)I,J,K,L,'LL'
+                       GO TO 1
+                    END IF
+                 END DO ; END DO
               END DO
-           END DO
+           END DO ; END DO
         END DO
 1       CONTINUE
      END IF
@@ -335,21 +335,17 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
 ! LLSS-type integrals
      DO I=NBAS(1)+1,SUM(NBAS) ; DO J=NBAS(1)+1,SUM(NBAS) ; DO K=1,NBAS(1) ; DO L=1,NBAS(1)
         DO I1=1,2
-           DO I2=1,PHI(I)%nbrofcontractions(I1)
-              DO I3=1,PHI(J)%nbrofcontractions(I1)
-                 DO I4=1,2
-                    DO I5=1,PHI(K)%nbrofcontractions(I4)
-                       DO I6=1,PHI(L)%nbrofcontractions(I4)
-                             IF(.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
-                             WRITE(LUNIT)I,J,K,L,'SL'
-                             SUBSIZE(2)=SUBSIZE(2)+1
-                             GO TO 2
-                          END IF
-                       END DO
-                    END DO
-                 END DO
+           DO I2=1,PHI(I)%nbrofcontractions(I1) ; DO I3=1,PHI(J)%nbrofcontractions(I1)
+              DO I4=1,2
+                 DO I5=1,PHI(K)%nbrofcontractions(I4) ; DO I6=1,PHI(L)%nbrofcontractions(I4)
+                    IF (.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
+                       SUBSIZE(2)=SUBSIZE(2)+1
+                       WRITE(LUNIT)I,J,K,L,'SL'
+                       GO TO 2
+                    END IF
+                 END DO ; END DO
               END DO
-           END DO
+           END DO ; END DO
         END DO
 2       CONTINUE
      END DO; END DO ; END DO ; END DO
@@ -359,21 +355,17 @@ SUBROUTINE BUILDBILIST_relativistic(PHI,NBAS,LISTSIZE,SUBSIZE)
      DO I=NBAS(1)+1,SUM(NBAS) ; DO J=NBAS(1)+1,SUM(NBAS) ; DO K=NBAS(1)+1,SUM(NBAS) ; DO L=NBAS(1)+1,SUM(NBAS)
         IF (L+K*NBAS(2)<=J+I*NBAS(2)) THEN
            DO I1=1,2
-              DO I2=1,PHI(I)%nbrofcontractions(I1)
-                 DO I3=1,PHI(J)%nbrofcontractions(I1)
-                    DO I4=1,2
-                       DO I5=1,PHI(K)%nbrofcontractions(I4)
-                          DO I6=1,PHI(L)%nbrofcontractions(I4)
-                          IF(.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
-                                WRITE(LUNIT)I,J,K,L,'SS'
-                                SUBSIZE(3)=SUBSIZE(3)+1
-                                GO TO 3
-                             END IF
-                          END DO
-                       END DO
-                    END DO
+              DO I2=1,PHI(I)%nbrofcontractions(I1) ; DO I3=1,PHI(J)%nbrofcontractions(I1)
+                 DO I4=1,2
+                    DO I5=1,PHI(K)%nbrofcontractions(I4) ; DO I6=1,PHI(L)%nbrofcontractions(I4)
+                       IF (.NOT.APRIORI_ZERO(PHI(I)%contractions(I1,I2),PHI(J)%contractions(I1,I3),PHI(K)%contractions(I4,I5),PHI(L)%contractions(I4,I6))) THEN
+                          SUBSIZE(3)=SUBSIZE(3)+1
+                          WRITE(LUNIT)I,J,K,L,'SS'
+                          GO TO 3
+                       END IF
+                    END DO ; END DO
                  END DO
-              END DO
+              END DO ; END DO
            END DO
 3          CONTINUE
         END IF
@@ -387,6 +379,7 @@ END SUBROUTINE BUILDBILIST_relativistic
 SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
 ! Routine that computes the values of the bielectronic integrals over a cartesian gaussian basis, taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974). These values are next used to compute more efficiently the bielectronic integrals over a cartesian 2-spinor-type orbital basis in the relativistic case (see the GETPRECOMPUTEDCOULOMBVALUE function).
   USE basis_parameters ; USE scf_parameters
+  IMPLICIT NONE
   INTEGER,DIMENSION(2),INTENT(IN) :: NGBF  
   TYPE(gaussianbasisfunction),DIMENSION(SUM(NGBF)),INTENT(IN) :: GBF
 
@@ -399,14 +392,13 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
  &         LLIKJL(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2+NGBF(1)-2)/24),   &
  &         LLILJK(1:NGBF(1)*(NGBF(1)+1)*(NGBF(1)**2-3*NGBF(1)+2)/24))
   M=0 ; N=0 ; O=0
-  ! Here the first integrals are faster to compute than the last ones: therefore, schedule with CHUNK=1 to distribute work evenly.
+! Note: the the first integrals in the list are usually faster to compute than the last ones. Therefore, the schedule uses CHUNK=1 to distribute the work more evenly.
   !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L) SCHEDULE(STATIC,1)
   DO I=1,NGBF(1)
-     ! Note: the values of M, N and O need to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
-     M=(I-1)*(I)*(I+1)*(I+2)/24
-     N=(I-2)*(I-1)*(I)*(I+1)/24
-     O=(I-3)*(I-2)*(I-1)*(I)/24
-
+! Note: the values of the indices M, N and O need to be reinitialized when the loop is parallelized.
+     !$ M=(I-1)*I*(I+1)*(I+2)/24
+     !$ N=(I-2)*(I-1)*I*(I+1)/24
+     !$ O=(I-3)*(I-2)*(I-1)*I/24
      DO J=1,I ; DO K=1,J ; DO L=1,K
      IF (.NOT.APRIORI_ZERO(GBF(I),GBF(J),GBF(K),GBF(L))) THEN
         M=M+1 ; LLIJKL(M)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
@@ -432,12 +424,11 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
      WRITE(*,*)'- Computing SL integrals'
      ALLOCATE(SLIJKL(1:NGBF(1)*(NGBF(1)+1)*NGBF(2)*(NGBF(2)+1)/4))
      N=0
-     ! Here the first integrals are faster to compute than the last ones: therefore, schedule with CHUNK=1 to distribute work evenly.
+! Note: the the first integrals in the list are usually faster to compute than the last ones (less contractions). Therefore, the schedule uses CHUNK=1 to distribute the work more evenly.
      !$OMP PARALLEL DO PRIVATE(N,J,K,L) SCHEDULE(STATIC,1)
      DO I=NGBF(1)+1,SUM(NGBF)
-        ! Note: the value of N needs to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
-        N=NGBF(1)*(NGBF(1)+1)/2*(I-NGBF(1)-1)*(I-NGBF(1))/2
-        ! this takes N(N+1)/2*(I-N) iters
+! Note: the value of N needs to be reinitialized when the loop is parallelized.
+        !$ N=NGBF(1)*(NGBF(1)+1)/2*(I-NGBF(1)-1)*(I-NGBF(1))/2
         DO J=NGBF(1)+1,I ; DO K=1,NGBF(1) ; DO L=1,K
            IF (.NOT.APRIORI_ZERO(GBF(I),GBF(J),GBF(K),GBF(L))) THEN
               N=N+1 ; SLIJKL(N)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
@@ -454,12 +445,13 @@ SUBROUTINE PRECOMPUTEGBFCOULOMBVALUES(GBF,NGBF)
  &            SSIKJL(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2+NGBF(2)-2)/24),   &
  &            SSILJK(1:NGBF(2)*(NGBF(2)+1)*(NGBF(2)**2-3*NGBF(2)+2)/24))
      M=0 ; N=0 ; O=0
+! Note: the the first integrals in the list are usually faster to compute than the last ones. Therefore, the schedule uses CHUNK=1 to distribute the work more evenly.
      !$OMP PARALLEL DO PRIVATE(I,M,N,O,J,K,L) SCHEDULE(STATIC,1)
      DO I=NGBF(1)+1,SUM(NGBF)
-! Note: the values of M, N and O need to be reinitialized when the loop is parallel (this does nothing if the loop is sequential).
-        M=(I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)*(I-NGBF(1)+2)/24
-        N=(I-NGBF(1)-2)*(I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)/24
-        O=(I-NGBF(1)-3)*(I-NGBF(1)-2)*(I-NGBF(1)-1)*(I-NGBF(1))/24
+! Note: the values of M, N and O need to be reinitialized when the loop is parallelized.
+        !$ M=(I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)*(I-NGBF(1)+2)/24
+        !$ N=(I-NGBF(1)-2)*(I-NGBF(1)-1)*(I-NGBF(1))*(I-NGBF(1)+1)/24
+        !$ O=(I-NGBF(1)-3)*(I-NGBF(1)-2)*(I-NGBF(1)-1)*(I-NGBF(1))/24
         DO J=NGBF(1)+1,I ; DO K=NGBF(1)+1,J ; DO L=NGBF(1)+1,K
         IF (.NOT.APRIORI_ZERO(GBF(I),GBF(J),GBF(K),GBF(L))) THEN
            M=M+1 ; SSIJKL(M)=COULOMBVALUE(GBF(I),GBF(J),GBF(K),GBF(L))
@@ -487,6 +479,7 @@ FUNCTION PRECOMPUTEDCOULOMBVALUE(I,J,K,L,CLASS) RESULT(VALUE)
 ! Functions that returns the value of a precomputed bielectronic integral of class LL, SL or SS between four (real) cartesian gaussian basis functions stored in a list taking into account the eightfold permutational symmetry of the integrals (see R. Ahlrichs, Methods for efficient evaluation of integrals for gaussian type basis sets, Theoret. Chim. Acta, 33, 157-167, 1974).
 ! note: this function is called for the computation of bielectronic integrals over a (complex) 2-spinor, cartesian gaussian-type orbital basis, which does not naturally possess as many symmetries as a real scalar gaussian basis.
   USE basis_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: I,J,K,L
   CHARACTER(2),INTENT(IN) :: CLASS
   DOUBLE COMPLEX :: VALUE
@@ -556,6 +549,7 @@ END FUNCTION PRECOMPUTEDCOULOMBVALUE
 
 SUBROUTINE DEALLOCATE_INTEGRALS
   USE scf_parameters
+  IMPLICIT NONE
 ! Routine that deallocate the arrays containing the values of the bielectronic integrals over a cartesian gaussian basis.
   DEALLOCATE(LLIJKL,LLIKJL,LLILJK)
   IF (SSINTEGRALS) DEALLOCATE(SSIJKL,SSIKJL,SSILJK)

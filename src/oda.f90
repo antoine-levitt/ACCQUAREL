@@ -1,8 +1,9 @@
 SUBROUTINE ODA_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! Optimal Damping Algorithm (non-relativistic case: restricted closed-shell Hartree-Fock formalism)
-! Reference: E. Cancès and C. Le Bris, Can we outperform the DIIS approach for electronic structure calculations?, Internat. J. Quantum Chem., 79(2), 2000.
+! Optimal Damping Algorithm (restricted closed-shell Hartree-Fock formalism)
+! Reference: E. Cancès and C. Le Bris, Can we outperform the DIIS approach for electronic structure calculations?, Internat. J. Quantum Chem., 79(2), 82-90, 2000.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -109,11 +110,12 @@ SUBROUTINE ODA_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   CLOSE(16) ; CLOSE(17) ;CLOSE(18)
 END SUBROUTINE ODA_RHF
 
-SUBROUTINE ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! Optimal Damping Algorithm (non-relativistic case: general Hartree-Fock formalism)
-! Reference: E. Cancès and C. Le Bris, Can we outperform the DIIS approach for electronic structure calculations?, Internat. J. Quantum Chem., 79(2), 2000.
+SUBROUTINE ODA_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+! Optimal Damping Algorithm (real general Hartree-Fock formalism)
+! Reference: E. Cancès and C. Le Bris, Can we outperform the DIIS approach for electronic structure calculations?, Internat. J. Quantum Chem., 79(2),82-90,  2000.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -147,7 +149,7 @@ SUBROUTINE ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   WRITE(*,*)'# ITER =',ITER
 
 ! Assembly and diagonalization of the Fock matrix associated to the pseudo-density matrix
-  CALL BUILDTEFM_GHF(PTTEFM,NBAST,PHI,PTDM)
+  CALL BUILDTEFM_RGHF(PTTEFM,NBAST,PHI,PTDM)
   PFM=POEFM+PTTEFM
   IF(.NOT.(RESUME .AND. ITER == 1)) THEN
      CALL EIGENSOLVER(PFM,PCFS,NBAST,EIG,EIGVEC,INFO)
@@ -158,8 +160,8 @@ SUBROUTINE ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   PDM1=PDM
   CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE)
 ! Computation of the energy associated to the density matrix
-  CALL BUILDTEFM_GHF(PTEFM,NBAST,PHI,PDM)
-  ETOT=ENERGY_GHF(POEFM,PTEFM,PDM,NBAST)
+  CALL BUILDTEFM_RGHF(PTEFM,NBAST,PHI,PDM)
+  ETOT=ENERGY_RGHF(POEFM,PTEFM,PDM,NBAST)
   WRITE(*,*)'E(D_n)=',ETOT
 ! Numerical convergence check
   CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
@@ -177,14 +179,14 @@ SUBROUTINE ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      IF (BETA>0.D0) THEN
         WRITE(*,*)'Warning: internal computation error (beta>0).'
         write(*,*) BETA
-        BETA = 0
+        BETA=0
      END IF
      ! IF (BETA>0.D0) THEN
      !    WRITE(*,*)'Warning: internal computation error (beta>0).'
      !    write(*,*) BETA
      !    GO TO 4
      ! ELSE
-        CALL BUILDTEFM_GHF(PTTEFM,NBAST,PHI,PDMDIF)
+        CALL BUILDTEFM_RGHF(PTTEFM,NBAST,PHI,PDMDIF)
         ALPHA=TRACEOFPRODUCT(PTTEFM,PDMDIF,NBAST)
         WRITE(*,*)'alpha =',ALPHA,'beta =',BETA
         IF (ALPHA>0.D0) THEN
@@ -205,9 +207,9 @@ SUBROUTINE ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END IF
      ! END IF
      ETOT1=ETOT
-     CALL BUILDTEFM_GHF(PTTEFM,NBAST,PHI,PTDM)
+     CALL BUILDTEFM_RGHF(PTTEFM,NBAST,PHI,PTDM)
 ! Energy associated to the pseudo density matrix
-     ETTOT=ENERGY_GHF(POEFM,PTTEFM,PTDM,NBAST)
+     ETTOT=ENERGY_RGHF(POEFM,PTTEFM,PTDM,NBAST)
      WRITE(*,*)'E(tilde{D}_n)=',ETTOT
      GO TO 1
   END IF
@@ -227,4 +229,4 @@ SUBROUTINE ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   CLOSE(9)
 7 DEALLOCATE(PDM,PDM1,PTDM,PDMDIF,PTEFM,PTTEFM,PFM)
   CLOSE(16) ; CLOSE(17) ;CLOSE(18)
-END SUBROUTINE ODA_GHF
+END SUBROUTINE ODA_RGHF

@@ -198,7 +198,7 @@ SUBROUTINE DRIVER_nonrelativistic
 
 ! Computation of the discretization basis
   IF(MODEL == 4) THEN
-     CALL FORMBASIS_GHF(PHI,NBAS)
+     CALL FORMBASIS_RGHF(PHI,NBAS)
   ELSE
      CALL FORMBASIS(PHI,NBAS)
   END IF
@@ -208,7 +208,7 @@ SUBROUTINE DRIVER_nonrelativistic
   WRITE(*,'(/,a)')'* Computation and assembly of the overlap matrix'
   ALLOCATE(POM(1:NBAST*(NBAST+1)/2))
   IF(MODEL == 4) THEN
-     CALL BUILDOM_GHF(POM,PHI,NBAST)
+     CALL BUILDOM_RGHF(POM,PHI,NBAST)
   ELSE
      CALL BUILDOM(POM,PHI,NBAST)
   END IF
@@ -233,7 +233,7 @@ SUBROUTINE DRIVER_nonrelativistic
   WRITE(*,'(a)')'* Computation and assembly of the core hamiltonian matrix'
   ALLOCATE(POEFM(1:NBAST*(NBAST+1)/2))
   IF(MODEL == 4) THEN
-     CALL BUILDOEFM_GHF(POEFM,PHI,NBAST)
+     CALL BUILDOEFM_RGHF(POEFM,PHI,NBAST)
   ELSE
      CALL BUILDOEFM(POEFM,PHI,NBAST)
   END IF
@@ -299,7 +299,7 @@ SUBROUTINE DRIVER_nonrelativistic
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
            CASE (4)
-           CALL ROOTHAAN_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+           CALL ROOTHAAN_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE (2)
         WRITE(*,'(/,a)')' level-shifting algorithm'
@@ -311,7 +311,7 @@ SUBROUTINE DRIVER_nonrelativistic
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
            CASE (4)
-           CALL LEVELSHIFTING_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+           CALL LEVELSHIFTING_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE (3)
         WRITE(*,'(/,a)')' DIIS algorithm'
@@ -323,7 +323,7 @@ SUBROUTINE DRIVER_nonrelativistic
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
            CASE (4)
-           CALL DIIS_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+           CALL DIIS_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE (4)
         WRITE(*,'(/,a)')' Optimal damping algorithm (ODA)'
@@ -335,7 +335,7 @@ SUBROUTINE DRIVER_nonrelativistic
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
            CASE (4)
-           CALL ODA_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+           CALL ODA_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
         CASE(6)
         WRITE(*,*)' Roothaan/Gradient algorithm'
@@ -386,6 +386,7 @@ SUBROUTINE DRIVER_boson_star
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE common_functions
   USE metric_nonrelativistic ; USE scf_tools ; USE rootfinding_tools ; USE constants
+  IMPLICIT NONE
   INTEGER :: NBAST,ITER,I,J,INFO
   INTEGER,TARGET :: RANK
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
@@ -532,7 +533,7 @@ SUBROUTINE DRIVER_boson_star
 ! Computation of the energy associated to the density matrix
   CALL BUILDCOULOMB(PTEFM,NBAST,PHI,PDM)
   PTEFM=KAPPA*MASS*PTEFM/(4.D0*PI)
-  ETOT=ENERGY_HF(POEFM,PTEFM,PDM,NBAST)
+  ETOT=ELECTRONIC_ENERGY_HF(POEFM,PTEFM,PDM,NBAST)
   WRITE(*,*)'E(D_n)=',ETOT
 ! Numerical convergence check
   CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)

@@ -3,10 +3,13 @@ F95 = g95
 #F95 = gfortran
 #F95 = ifort
 
-# common to compilers and linker
+# flags which are common to compilers and linkers
 DEBUGFFLAGS = -fbounds-check -fimplicit-none -ffpe-trap=invalid,zero,denormal
+
 PRODFFLAGS = -fimplicit-none
+
 COMMONFLAGS = -O3 -g
+
 FFLAGS = $(PRODFFLAGS) $(COMMONFLAGS)
 
 ifndef ASPICROOT

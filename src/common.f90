@@ -28,6 +28,7 @@ CONTAINS
 FUNCTION ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ETOT)
 ! Function that computes the Dirac-Fock total energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
   USE data_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
   DOUBLE PRECISION :: ETOT
@@ -37,6 +38,7 @@ END FUNCTION ENERGY_relativistic
 
 FUNCTION ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ETOT)
   USE data_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFMC,PTEFMO,PDMC,PDMO
   DOUBLE PRECISION :: ETOT
@@ -44,34 +46,10 @@ FUNCTION ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ETOT)
   ETOT=ELECTRONIC_ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N)+INTERNUCLEAR_ENERGY
 END FUNCTION ENERGY_AOCOSDHF
 
-FUNCTION ENERGY_HF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
-! Function that computes the Hartree-Fock energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given system, POEFM and PTEFM containing respectively the (core hamiltonian) matrix and the (two-electron) part of the Fock matrix (both stored similarly).
-  INTEGER,INTENT(IN) :: N
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
-  DOUBLE PRECISION :: ENERGY
-  
-  INTEGER :: I,J,IJ
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PEM
-
-  PEM=POEFM+0.5D0*PTEFM
-  
-  ENERGY=0.D0
-  IJ=0
-  DO J=1,N
-     DO I=1,J
-        IJ=IJ+1
-        IF (I.NE.J) THEN
-           ENERGY=ENERGY+2.D0*PEM(IJ)*PDM(IJ)
-        ELSE
-           ENERGY=ENERGY+PEM(IJ)*PDM(IJ)
-        END IF
-     END DO
-  END DO
-END FUNCTION ENERGY_HF
-
 FUNCTION ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
 ! Function that computes the restricted closed-shell Hartree-Fock total energy associated to a density matrix (whose upper triangular parts are stored in packed form) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
   USE data_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
   DOUBLE PRECISION :: ETOT
@@ -90,8 +68,20 @@ FUNCTION ENERGY_UHF(POEFM,PTEFM,PEMS,PTDM,PSDM,N) RESULT(ETOT)
   ETOT=ELECTRONIC_ENERGY_UHF(POEFM,PTEFM,PEMS,PTDM,PSDM,N)+INTERNUCLEAR_ENERGY
 END FUNCTION ENERGY_UHF
 
+FUNCTION ENERGY_RGHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
+! Function that computes the real general Hartree-Fock total energy associated to a density matrix (whose upper triangular parts are stored in packed form) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
+  USE data_parameters
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: N
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
+  DOUBLE PRECISION :: ETOT
+
+  ETOT=ELECTRONIC_ENERGY_HF(POEFM,PTEFM,PDM,N)+INTERNUCLEAR_ENERGY
+END FUNCTION ENERGY_RGHF
+
 FUNCTION ELECTRONIC_ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
 ! Function that computes the Dirac-Fock electronic energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
   DOUBLE PRECISION :: ENERGY
@@ -114,18 +104,10 @@ FUNCTION ELECTRONIC_ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
   END DO
 END FUNCTION ELECTRONIC_ENERGY_relativistic
 
-FUNCTION ENERGY_GHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
-  USE data_parameters
-  INTEGER,INTENT(IN) :: N
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
-  DOUBLE PRECISION :: ETOT
-
-  ETOT=ENERGY_HF(POEFM,PTEFM,PDM,N)+INTERNUCLEAR_ENERGY
-END FUNCTION ENERGY_GHF
-
 FUNCTION ELECTRONIC_ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ENERGY)
 ! Function that computes average-of-configuration Dirac-Hartree-Fock electronic energy associated the closed- and open-shell density matrices (whose upper triangular parts are stored in packed form).
   USE data_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFMC,PTEFMO,PDMC,PDMO
   DOUBLE PRECISION :: ENERGY
@@ -151,8 +133,35 @@ FUNCTION ELECTRONIC_ENERGY_AOCOSDHF(POEFM,PTEFMC,PTEFMO,PDMC,PDMO,N) RESULT(ENER
   END DO
 END FUNCTION ELECTRONIC_ENERGY_AOCOSDHF
 
+FUNCTION ELECTRONIC_ENERGY_HF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
+! Function that computes the Hartree-Fock energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given system, POEFM and PTEFM containing respectively the (core hamiltonian) matrix and the (two-electron) part of the Fock matrix (both stored similarly).
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: N
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
+  DOUBLE PRECISION :: ENERGY
+  
+  INTEGER :: I,J,IJ
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PEM
+
+  PEM=POEFM+0.5D0*PTEFM
+  
+  ENERGY=0.D0
+  IJ=0
+  DO J=1,N
+     DO I=1,J
+        IJ=IJ+1
+        IF (I.NE.J) THEN
+           ENERGY=ENERGY+2.D0*PEM(IJ)*PDM(IJ)
+        ELSE
+           ENERGY=ENERGY+PEM(IJ)*PDM(IJ)
+        END IF
+     END DO
+  END DO
+END FUNCTION ELECTRONIC_ENERGY_HF
+
 FUNCTION ELECTRONIC_ENERGY_RHF(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
 ! Function that computes the restricted closed-shell Hartree-Fock electronic energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
   DOUBLE PRECISION :: ENERGY
@@ -203,6 +212,7 @@ END FUNCTION ELECTRONIC_ENERGY_UHF
 FUNCTION FREEENERGY_HF(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
 ! Function that computes the free energy (of a Hartree(-Fock) model with temperature) associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given system, POEFM and PTEFM containing respectively the (core hamiltonian) matrix and the (two-electron) part of the Fock matrix (both stored similarly).
   USE matrix_tools ; USE metric_nonrelativistic
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PTEFM,PDM
   DOUBLE PRECISION,INTENT(IN) :: TEMPERATURE
@@ -228,7 +238,7 @@ FUNCTION FREEENERGY_HF(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
   END DO
   PTMP=PACK(MATMUL(Z,MATMUL(TMP,TRANSPOSE(Z))),N)
   
-  ENRG=ENERGY_HF(POEFM,PTEFM,PDM,N)+TEMPERATURE*TRACEOFPRODUCT(PTMP,PS,N)
+  ENRG=ELECTRONIC_ENERGY_HF(POEFM,PTEFM,PDM,N)+TEMPERATURE*TRACEOFPRODUCT(PTMP,PS,N)
   RETURN
 1 IF (INFO<0) THEN
      WRITE(*,*)'Subroutine DSPEV: the',-INFO,'-th argument had an illegal value'

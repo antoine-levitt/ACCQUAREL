@@ -1,5 +1,6 @@
 SUBROUTINE FORMDM_relativistic(PDM,EIGVEC,NBAST,LOON,HOON)
 ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON,HOON
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
@@ -15,6 +16,7 @@ END SUBROUTINE FORMDM_relativistic
 SUBROUTINE FORMDM_nonrelativistic_nonorthogonal(PDM,EIGVEC,NBAST,LOON,HOON)
 ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format). Same as FORMDM_nonrelativistic, but does not expect orthogonal eigenvectors
   USE metric_nonrelativistic ; USE matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON,HOON
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
@@ -22,13 +24,13 @@ SUBROUTINE FORMDM_nonrelativistic_nonorthogonal(PDM,EIGVEC,NBAST,LOON,HOON)
 
   INTEGER :: I,J
 
-  EIGVEC_GS = EIGVEC
-  S = UNPACK(PS,NBAST)
+  EIGVEC_GS=EIGVEC
+  S=UNPACK(PS,NBAST)
 
   PDM=0.D0
   DO I=LOON,HOON
      DO J=LOON,I-1
-        EIGVEC_GS(:,I) = EIGVEC_GS(:,I) - dot_product(EIGVEC_GS(:,J),MATMUL(S,EIGVEC_GS(:,I))) * EIGVEC_GS(:,J)
+        EIGVEC_GS(:,I)=EIGVEC_GS(:,I) - dot_product(EIGVEC_GS(:,J),MATMUL(S,EIGVEC_GS(:,I))) * EIGVEC_GS(:,J)
      END DO
      EIGVEC_GS(:,I) = EIGVEC_GS(:,I) / SQRT(dot_product(EIGVEC_GS(:,I),MATMUL(S,EIGVEC_GS(:,I))))
      CALL DSPR('U',NBAST,1.D0,EIGVEC(:,I),1,PDM)
@@ -38,6 +40,7 @@ END SUBROUTINE FORMDM_nonrelativistic_nonorthogonal
 
 SUBROUTINE FORMDM_nonrelativistic(PDM,EIGVEC,NBAST,LOON,HOON)
 ! Assembly of the density matrix from selected eigenvectors associated to (occupied) electronic orbitals (only the upper triangular part of the matrix is stored in packed format).
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON,HOON
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PDM
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
@@ -52,6 +55,7 @@ END SUBROUTINE FORMDM_nonrelativistic
 
 SUBROUTINE FORMPROJ(PPROJM,EIGVEC,NBAST,LOON)
 ! Assembly of the matrix of the projector on the "positive" space (i.e., the electronic states) associated to a Dirac-Fock Hamiltonian (only the upper triangular part of the matrix is stored in packed format).
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,LOON
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PPROJM
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
@@ -67,6 +71,7 @@ END SUBROUTINE FORMPROJ
 SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
 ! Computation and assembly of the overlap matrix between basis functions, i.e., the Gram matrix of the basis with respect to the $L^2(\mathbb{R}^3,\mathbb{C}^4)$ inner product (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -107,8 +112,9 @@ SUBROUTINE BUILDOM_relativistic(POM,PHI,NBAST,NBAS)
 END SUBROUTINE BUILDOM_relativistic
 
 SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
-! Computation and assembly of the overlap matrix between basis functions, i.e. the Gram matrix of the basis with respacet to the $L^2(\mathbb{R}^3)$ inner product (only the upper triangular part of the matrix is stored in packed format).
+! Computation and assembly of the overlap matrix between basis functions, i.e. the Gram matrix of the basis with respacet to the $L^2(\mathbb{R}^3)$ inner product (only the upper triangular part of the matrix is stored in packed format), for the RHF, ROHF or UHF models.
   USE basis_parameters ; USE integrals
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -122,22 +128,23 @@ SUBROUTINE BUILDOM_nonrelativistic(POM,PHI,NBAST)
   END DO
 END SUBROUTINE BUILDOM_nonrelativistic
 
-SUBROUTINE BUILDOM_GHF(POM,PHI,NBAST)
-  ! Computation and assembly of the overlap matrix between basis functions, i.e. the Gram matrix of the basis with respacet to the $L^2(\mathbb{R}^3)$ inner product (only the upper triangular part of the matrix is stored in packed format).
+SUBROUTINE BUILDOM_RGHF(POM,PHI,NBAST)
+! Computation and assembly of the block-diagonal overlap matrix between basis functions, i.e. the Gram matrix of the basis with respacet to the $L^2(\mathbb{R}^3)$ inner product (only the upper triangular part of the matrix is stored in packed format), in the real general Hartree-Fock formalism.
   USE basis_parameters ; USE integrals ; USE matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POM
   DOUBLE PRECISION,DIMENSION(NBAST/2*(NBAST/2+1)/2) :: POM_nonrelativistic
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
 
-  ! matrix is block-diagonal
   CALL BUILDOM_nonrelativistic(POM_nonrelativistic,PHI(1:NBAST/2),NBAST/2)
   CALL BUILD_BLOCK_DIAGONAL(POM,POM_nonrelativistic,NBAST/2)
-END SUBROUTINE BUILDOM_GHF
+END SUBROUTINE BUILDOM_RGHF
 
 SUBROUTINE BUILDKPFM_nonrelativistic(PKPFM,PHI,NBAST)
 ! Computation and assembly of the kinetic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PKPFM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -155,6 +162,7 @@ END SUBROUTINE BUILDKPFM_nonrelativistic
 SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
 ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed form)
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE integrals
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -164,7 +172,6 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
   DOUBLE COMPLEX :: TMP,VALUE
   
   POEFM=(0.D0,0.D0)
-  ! potential energy for L spinors
   DO J=1,NBAS(1)
      DO I=1,J
         VALUE=(0.D0,0.D0)
@@ -181,80 +188,79 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
         POEFM(I+(J-1)*J/2)=VALUE
      END DO
   END DO
-  IF(MODEL == 3) THEN
-  ! schrodinger kinetic energy
-  DO J=1,NBAS(1)
-     DO I=1,J
-        VALUE=(0.D0,0.D0)
-        DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K)
-              DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE+PHI(I)%coefficients(K,M)*PHI(J)%coefficients(K,L)*&
-                      &KINETICVALUE(PHI(I)%contractions(K,M),PHI(J)%contractions(K,L))/2
-              END DO
-           END DO
-        END DO
-        POEFM(I+(J-1)*J/2)=POEFM(I+(J-1)*J/2) + VALUE
-     END DO
-  END DO
-  ELSE
-  ! kinetic energy alpha.p
-  DO J=NBAS(1)+1,SUM(NBAS)
-     DO I=1,NBAS(1)
-        VALUE=(0.D0,0.D0)
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE-C*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(1,L))                   &
- &                        *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(1,L),3))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(1)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE-C*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))               &
- &                        *DCMPLX(DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),2),  &
- &                                DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),1))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE-C*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
- &                        *DCMPLX(-DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),2),  &
- &                                DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),1))
-           END DO
-        END DO
-        DO L=1,PHI(I)%nbrofcontractions(2)
-           DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE+C*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(2,L))                   &
- &                        *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(2,L),3))
-           END DO 
-        END DO
-        POEFM(I+(J-1)*J/2)=VALUE
-     END DO
-  END DO
-  !potential energy for S spinors
-  DO J=NBAS(1)+1,SUM(NBAS)
-     DO I=NBAS(1)+1,J
-        VALUE=(0.D0,0.D0)
-        DO K=1,2
-           DO L=1,PHI(I)%nbrofcontractions(K) 
-              DO M=1,PHI(J)%nbrofcontractions(K)
-                 TMP=2.D0*C*C*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
-                 DO N=1,NBN
-                    TMP=TMP+Z(N)*POTENTIALVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),CENTER(:,N))
+  IF(MODEL==3) THEN
+! CGHF model: Schrodinger kinetic energy
+     DO J=1,NBAS(1)
+        DO I=1,J
+           VALUE=(0.D0,0.D0)
+           DO K=1,2
+              DO L=1,PHI(I)%nbrofcontractions(K)
+                 DO M=1,PHI(J)%nbrofcontractions(K)
+                    VALUE=VALUE+PHI(I)%coefficients(K,M)*PHI(J)%coefficients(K,L)                     &
+ &                              *KINETICVALUE(PHI(I)%contractions(K,M),PHI(J)%contractions(K,L))/2.D0
                  END DO
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))*TMP
               END DO
            END DO
+           POEFM(I+(J-1)*J/2)=POEFM(I+(J-1)*J/2)+VALUE
         END DO
-        POEFM(I+(J-1)*J/2)=VALUE
      END DO
-  END DO
+  ELSE
+     DO J=NBAS(1)+1,SUM(NBAS)
+        DO I=1,NBAS(1)
+           VALUE=(0.D0,0.D0)
+           DO L=1,PHI(I)%nbrofcontractions(1)
+              DO M=1,PHI(J)%nbrofcontractions(1)
+                 VALUE=VALUE-C*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(1,L))                    &
+ &                           *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(1,L),3))
+              END DO
+           END DO
+           DO L=1,PHI(I)%nbrofcontractions(1)
+              DO M=1,PHI(J)%nbrofcontractions(2)
+                 VALUE=VALUE-C*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))               &
+ &                           *DCMPLX(DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),2), &
+ &                                   DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L),1))
+              END DO
+           END DO
+           DO L=1,PHI(I)%nbrofcontractions(2)
+              DO M=1,PHI(J)%nbrofcontractions(1)
+                 VALUE=VALUE-C*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
+ &                           *DCMPLX(-DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),2), &
+ &                                   DERIVVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L),1))
+              END DO
+           END DO
+           DO L=1,PHI(I)%nbrofcontractions(2)
+              DO M=1,PHI(J)%nbrofcontractions(2)
+                 VALUE=VALUE+C*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(2,L))                    &
+ &                           *DCMPLX(0.D0,DERIVVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(2,L),3))
+              END DO 
+           END DO
+           POEFM(I+(J-1)*J/2)=VALUE
+        END DO
+     END DO
+     DO J=NBAS(1)+1,SUM(NBAS)
+        DO I=NBAS(1)+1,J
+           VALUE=(0.D0,0.D0)
+           DO K=1,2
+              DO L=1,PHI(I)%nbrofcontractions(K) 
+                 DO M=1,PHI(J)%nbrofcontractions(K)
+                    TMP=2.D0*C*C*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
+                    DO N=1,NBN
+                       TMP=TMP+Z(N)*POTENTIALVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),CENTER(:,N))
+                    END DO
+                    VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))*TMP
+                 END DO
+              END DO
+           END DO
+           POEFM(I+(J-1)*J/2)=VALUE
+        END DO
+     END DO
   END IF
 END SUBROUTINE BUILDOEFM_relativistic
 
 SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
 ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
   USE data_parameters ; USE basis_parameters ; USE integrals
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -274,23 +280,23 @@ SUBROUTINE BUILDOEFM_nonrelativistic(POEFM,PHI,NBAST)
   END DO
 END SUBROUTINE BUILDOEFM_nonrelativistic
 
-SUBROUTINE BUILDOEFM_GHF(POEFM,PHI,NBAST)
-  ! Computation and assembly of the monoelectronic part of the Fock matrix (only the upper triangular part of the matrix is stored in packed format).
+SUBROUTINE BUILDOEFM_RGHF(POEFM,PHI,NBAST)
+! Computation and assembly of the monoelectronic part of the block-diagonal Fock matrix in the real general Hartree-Fock formalism (only the upper triangular part of the matrix is stored in packed format).
   USE data_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POEFM
   DOUBLE PRECISION,DIMENSION(NBAST/2*(NBAST/2+1)/2) :: POEFM_nonrelativistic
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
 
-  ! the one-electron Fock operator does not couple spins, matrix is block-diagonal
   CALL BUILDOEFM_nonrelativistic(POEFM_nonrelativistic,PHI(1:NBAST/2),NBAST/2)
   CALL BUILD_BLOCK_DIAGONAL(POEFM,POEFM_nonrelativistic,NBAST/2)
-END SUBROUTINE BUILDOEFM_GHF
+END SUBROUTINE BUILDOEFM_RGHF
 
 SUBROUTINE BUILDTEFM_relativistic(PTEFM,NBAST,PHI,PDM)
-  
 ! Computation and assembly of the bielectronic part of the Fock matrix associated to a given density matrix using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -371,6 +377,7 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
 ! Computation and assembly of the two-electron part of the Fock matrix associated to a given density matrix in the restricted closed-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
 ! Note: G(D)=2J(D)-K(D), with J(D) the Coulomb term and K(D) the exchange term.
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -498,10 +505,11 @@ SUBROUTINE BUILDTEFM_RHF(PTEFM,NBAST,PHI,PDM)
   PTEFM=PACK(TEFM,NBAST)
 END SUBROUTINE BUILDTEFM_RHF
 
-SUBROUTINE BUILDTEFM_GHF(PTEFM,NBAST,PHI,PDM)
-! Computation and assembly of the two-electron part of the Fock matrix associated to a given density matrix in the restricted closed-shell Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
+SUBROUTINE BUILDTEFM_RGHF(PTEFM,NBAST,PHI,PDM)
+! Computation and assembly of the two-electron part of the Fock matrix associated to a given density matrix in the real general Hartree-Fock formalism, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
 ! Note: G(D)=J(D)-K(D), with J(D) the Coulomb term and K(D) the exchange term.
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTEFM
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2) :: PCM,PEM
@@ -510,13 +518,13 @@ SUBROUTINE BUILDTEFM_GHF(PTEFM,NBAST,PHI,PDM)
 
   CALL BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
   CALL BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
-
   PTEFM=PCM-PEM
-END SUBROUTINE BUILDTEFM_GHF
+END SUBROUTINE BUILDTEFM_RGHF
 
 SUBROUTINE BUILDCOULOMB_relativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -575,8 +583,8 @@ END SUBROUTINE BUILDCOULOMB_relativistic
 
 SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
 ! Computation and assembly of the Coulomb term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  ! The formula is CM(I,J) = sum over k,l of (IJ|KL) D(I,J)
   USE scf_parameters ; USE basis_parameters ; USE integrals ; use matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PCM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -589,17 +597,16 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
 
   CM=0.D0
   DM=UNPACK(PDM,NBAST)
-
-#define ACTION(I,J,K,L) CM(I,J) = CM(I,J) + INTGRL*DM(K,L)
+#define ACTION(I,J,K,L) CM(I,J)=CM(I,J)+INTGRL*DM(K,L)
 #include "forall.f90"
 #undef ACTION
-  
   PCM=PACK(CM,NBAST)
 END SUBROUTINE BUILDCOULOMB_nonrelativistic
 
 SUBROUTINE BUILDEXCHANGE_relativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -658,8 +665,8 @@ END SUBROUTINE BUILDEXCHANGE_relativistic
 
 SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
 ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  ! The formula is EM(I,K) = sum over J,L of (IJ|KL) D(L,J)
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PEM
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -672,18 +679,16 @@ SUBROUTINE BUILDEXCHANGE_nonrelativistic(PEM,NBAST,PHI,PDM)
 
   EM=0.D0
   DM=UNPACK(PDM,NBAST)
-  
-#define ACTION(I,J,K,L) EM(I,K) = EM(I,K) + INTGRL*DM(L,J)
+#define ACTION(I,J,K,L) EM(I,K)=EM(I,K)+INTGRL*DM(L,J)
 #include "forall.f90"
 #undef ACTION
-  
-  
   PEM=PACK(EM,NBAST)
 END SUBROUTINE BUILDEXCHANGE_nonrelativistic
 
 SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
 ! Computation and assembly of the matrix associated to one of the three components of the spin angular momentum operator S=-i/4\alpha^\alpha (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PSAMCM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -701,13 +706,13 @@ SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
         VALUE=(0.D0,0.D0)
         DO L=1,PHI(I)%nbrofcontractions(1)
            DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))    &
  &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(2)
            DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))    &
  &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))
            END DO
         END DO
@@ -719,13 +724,13 @@ SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
         VALUE=(0.D0,0.D0)
         DO L=1,PHI(I)%nbrofcontractions(1)
            DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))   &
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))    &
  &                        *OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(2)
            DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))   &
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))    &
  &                        *OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L))   
            END DO
         END DO
@@ -738,13 +743,13 @@ SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
         VALUE=(0.D0,0.D0)
         DO L=1,PHI(I)%nbrofcontractions(1)
            DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
+              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                 &
  &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(2)
            DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                 &
  &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
            END DO
         END DO
@@ -756,13 +761,13 @@ SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
         VALUE=(0.D0,0.D0)
         DO L=1,PHI(I)%nbrofcontractions(1)
            DO M=1,PHI(J)%nbrofcontractions(2)
-              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                &
+              VALUE=VALUE-.5D0*PHI(J)%coefficients(2,M)*CONJG(PHI(I)%coefficients(1,L))                 &
  &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(2,M),PHI(I)%contractions(1,L)))
            END DO
         END DO
         DO L=1,PHI(I)%nbrofcontractions(2)
            DO M=1,PHI(J)%nbrofcontractions(1)
-              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                &
+              VALUE=VALUE+.5D0*PHI(J)%coefficients(1,M)*CONJG(PHI(I)%coefficients(2,L))                 &
  &                        *DCMPLX(0.D0,OVERLAPVALUE(PHI(J)%contractions(1,M),PHI(I)%contractions(2,L)))
            END DO
         END DO
@@ -776,7 +781,7 @@ SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                        &
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
  &                           *.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
               END DO
            END DO
@@ -790,7 +795,7 @@ SUBROUTINE BUILDSAMCM(PSAMCM,PHI,NBAST,NBAS,COMPONENT)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                        &
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
  &                           *.5D0*(-1.D0)**K*OVERLAPVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))
               END DO
            END DO
@@ -804,6 +809,7 @@ END SUBROUTINE BUILDSAMCM
 SUBROUTINE BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
 ! Computation and assembly of the matrix associated to one of the three components of the orbital angular momentum operator L=x^p (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: POAMCM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -822,8 +828,8 @@ SUBROUTINE BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,2)  &
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                          &
+ &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,2)   &
  &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,3))
               END DO
            END DO
@@ -837,8 +843,8 @@ SUBROUTINE BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,2)  &
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                          &
+ &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,2)   &
  &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,3))
               END DO
            END DO
@@ -853,8 +859,8 @@ SUBROUTINE BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,3)  &
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                          &
+ &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,3)   &
  &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,1))
               END DO
            END DO
@@ -868,8 +874,8 @@ SUBROUTINE BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,3)  &
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                          &
+ &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,3)   &
  &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),3,1))
               END DO
            END DO
@@ -884,8 +890,8 @@ SUBROUTINE BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)  &
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                          &
+ &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)   &
  &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,2))
               END DO
            END DO
@@ -899,8 +905,8 @@ SUBROUTINE BUILDOAMCM(POAMCM,PHI,NBAST,NBAS,COMPONENT)
         DO K=1,2
            DO L=1,PHI(I)%nbrofcontractions(K)
               DO M=1,PHI(J)%nbrofcontractions(K)
-                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                         &
- &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)  &
+                 VALUE=VALUE-PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))                          &
+ &                           *DCMPLX(0.D0,XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),2,1)   &
  &                                        -XDERIVVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L),1,2))
               END DO
            END DO
@@ -914,6 +920,7 @@ END SUBROUTINE BUILDOAMCM
 SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
 ! Computation and assembly of the matrix associated to one of the three components of the total angular momentum operator J=L+S (only the upper triangular part of the matrix is stored in packed format).
   USE basis_parameters ; USE integrals
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE COMPLEX,DIMENSION(NBAST*(NBAST+1)/2),INTENT(OUT) :: PTAMCM
   TYPE(twospinor),DIMENSION(NBAST),INTENT(IN) :: PHI
@@ -927,81 +934,78 @@ SUBROUTINE BUILDTAMCM(PTAMCM,PHI,NBAST,NBAS,COMPONENT)
   PTAMCM=PSAMCM+POAMCM
 END SUBROUTINE BUILDTAMCM
 
-SUBROUTINE BUILDA(PA,NBAST,NBO,PHI,EIGVEC,EIG)
-  ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  ! The formula is EM(I,K) = sum over J,L of (IJ|KL) D(L,J)
+SUBROUTINE BUILDA(PA,NBAST,NBO,PHI,EIG,EIGVEC)
+! Computation and assembly of the matrix A defined by equation (8c) in the reference below.
+! Reference: G. B. Bacskay, A quadratically convergent Hartree-Fock (QC-SCF) method. Application to closed shell systems, Chem. Phys., 61(3), 385-404, 1981.
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
-  USE case_parameters ; USE data_parameters ; USE basis_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,NBO
-  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO),NBO*(NBAST-NBO)) :: A
-  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO)*(NBO*(NBAST-NBO)+1)/2) :: PA
+  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO)*(NBO*(NBAST-NBO)+1)/2),INTENT(OUT) :: PA
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-  DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(IN) :: EIG
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
 
-  DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EM,DM
   INTEGER(smallint) :: I,J,K,L
-  INTEGER :: N,OI,OJ,VA,VB
+  INTEGER :: N,NBV,OI,OJ,VA,VB,IA,JB
   DOUBLE PRECISION :: INTGRL
+  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO),NBO*(NBAST-NBO)) :: A
 
-  A = 0
-
+  NBV=NBAST-NBO
+  A=0.D0
   DO OI=1,NBO
-     DO VA=1,NBAST-NBO
-        A((OI-1)*(NBAST-NBO)+VA,(OI-1)*(NBAST-NBO)+VA)=(EIG(NBO+VA)-EIG(OI))
+     DO VA=1,NBV
+        IA=NBV*(OI-1)+VA
+        A(IA,IA)=EIG(NBO+VA)-EIG(OI)
      END DO
   END DO
-
 #define ACTION(I,J,K,L) \
   DO OI=1,NBO ;\
-     DO VA=1,NBAST-NBO ;\
+     DO VA=1,NBV ;\
         DO OJ=1,NBO ;\
-           DO VB=1,NBAST-NBO ;\
-              A((OI-1)*(NBAST-NBO)+VA,(OJ-1)*(NBAST-NBO)+VB)=A((OI-1)*(NBAST-NBO)+VA,(OJ-1)*(NBAST-NBO)+VB)+INTGRL*(EIGVEC(J,OI)*EIGVEC(I,NBO+VA)*EIGVEC(K,OJ)*EIGVEC(L,NBO+VB) -EIGVEC(L,OI)*EIGVEC(I,NBO+VA)*EIGVEC(K,OJ)*EIGVEC(J,NBO+VB));\
+           DO VB=1,NBV ;\
+              IA=NBV*(OI-1)+VA ; JB=NBV*(OJ-1)+VB ;\
+              A(IA,JB)=A(IA,JB)+INTGRL*EIGVEC(I,NBO+VA)*EIGVEC(K,OJ)*(EIGVEC(J,OI)*EIGVEC(L,NBO+VB)-EIGVEC(J,NBO+VB)*EIGVEC(L,OI)) ;\
            END DO ;\
         END DO ;\
      END DO ;\
   END DO
-
 #include "forall.f90"
 #undef ACTION
-  
-  PA = PACK(A,(NBAST-NBO)*NBO)
-  
+  PA=PACK(A,(NBAST-NBO)*NBO)
 END SUBROUTINE BUILDA
 
-SUBROUTINE BUILDB(PB,NBAST,NBO,PHI,EIGVEC,EIG)
-  ! Computation and assembly of the exchange term in the Fock matrix associated to a given density matrix, using a list of the nonzero integrals (only the upper triangular part of the matrix is stored in packed format).
-  ! The formula is EM(I,K) = sum over J,L of (IJ|KL) D(L,J)
+SUBROUTINE BUILDB(PB,NBAST,NBO,PHI,EIG,EIGVEC)
+! Computation and assembly of the matrix B defined by equation (8d) in the reference below.
+! Reference: G. B. Bacskay, A quadratically convergent Hartree-Fock (QC-SCF) method. Application to closed shell systems, Chem. Phys., 61(3), 385-404, 1981.
   USE scf_parameters ; USE basis_parameters ; USE integrals ; USE matrix_tools
-  USE case_parameters ; USE data_parameters ; USE basis_parameters
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST,NBO
-  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO),NBO*(NBAST-NBO)) :: B
-  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO)*(NBO*(NBAST-NBO)+1)/2) :: PB
+  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO)*(NBO*(NBAST-NBO)+1)/2),INTENT(OUT) :: PB
   TYPE(gaussianbasisfunction),DIMENSION(NBAST),INTENT(IN) :: PHI
-  DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(IN) :: EIG
+  DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(IN) :: EIGVEC
 
-  DOUBLE PRECISION,DIMENSION(NBAST,NBAST) :: EM,DM
   INTEGER(smallint) :: I,J,K,L
-  INTEGER :: N,OI,OJ,VA,VB
+  INTEGER :: N,NBV,OI,OJ,VA,VB,IA,JB
   DOUBLE PRECISION :: INTGRL
+  DOUBLE PRECISION,DIMENSION(NBO*(NBAST-NBO),NBO*(NBAST-NBO)) :: B
 
+  NBV=NBAST-NBO
+  B=0.D0
 #define ACTION(I,J,K,L) \
   DO OI=1,NBO ;\
-     DO VA=1,NBAST-NBO ;\
+     DO VA=1,NBV ;\
         DO OJ=1,NBO ;\
-           DO VB=1,NBAST-NBO ;\
-              B((OI-1)*(NBAST-NBO)+VA,(OJ-1)*(NBAST-NBO)+VB)=B((OI-1)*(NBAST-NBO)+VA,(OJ-1)*(NBAST-NBO)+VB)+INTGRL*(EIGVEC(J,OI)*EIGVEC(I,NBO+VA)*EIGVEC(L,OJ)*EIGVEC(K,NBO+VB) -EIGVEC(L,OI)*EIGVEC(I,NBO+VA)*EIGVEC(J,OJ)*EIGVEC(K,NBO+VB));\
+           DO VB=1,NBV ;\
+              IA=NBV*(OI-1)+VA ; JB=NBV*(OJ-1)+VB ;\
+              B(IA,VB)=B(IA,JB)+INTGRL*EIGVEC(I,OI)*EIGVEC(K,OJ)*(EIGVEC(J,NBO+VA)*EIGVEC(L,NBO+VB)-EIGVEC(J,NBO+VB)*EIGVEC(L,NBO+VA)) ;\
            END DO ;\
         END DO ;\
      END DO ;\
   END DO
-
 #include "forall.f90"
 #undef ACTION
-
-  PB = PACK(B,NBO*(NBAST-NBO))
+  PB=PACK(B,NBO*(NBAST-NBO))
 END SUBROUTINE BUILDB
 
 MODULE matrices

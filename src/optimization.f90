@@ -5,6 +5,7 @@ SUBROUTINE mnbrak(ax,bx,cx,fa,fb,fc,func)
 ! Subroutine for initially braketing a minimum
 ! Reference: W. H. Press, B. P. Flannery, S. A. Teukolsky and W. T. Vetterling, Numerical Recipes in Fortran 90: the art of parallel scientific computing, Cambridge University Press, 1986-1996.
 ! Given a function func, and given distinct initial points ax and bx, this routine searches in the downhill direction (defined by the function as evaluated at the initial points) and returns new points ax, bx, cx that bracket a minimum of the function. Also returned are the function values at the three points, fa, fb, and fc.
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(INOUT) :: ax,bx
   DOUBLE PRECISION,INTENT(OUT) :: cx,fa,fb,fc
   INTERFACE
@@ -71,6 +72,7 @@ FUNCTION golden(ax,bx,cx,func,tol,xmin)
 ! Golden Section Search
 ! Reference: W. H. Press, B. P. Flannery, S. A. Teukolsky and W. T. Vetterling, Numerical Recipes in Fortran 90: the art of parallel scientific computing, Cambridge University Press, 1986-1996.
 ! Given a function func, and given a bracketing triplet of abscissas ax, bx, cx (such that bx is between ax and cx, and func(bx) is less than both func(ax) and func(cx)), this routine performs a golden section search for the minimum, isolating it to a fractional precision of about tol. The abscissa of the minimum is returned as xmin, and the minimum function value is returned as golden, the returned function value.
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: ax,bx,cx,tol
   DOUBLE PRECISION,INTENT(OUT) :: xmin
   DOUBLE PRECISION :: golden
@@ -117,6 +119,7 @@ FUNCTION brent(ax,bx,cx,func,tol,xmin)
 ! Brent's method
 ! Reference: W. H. Press, B. P. Flannery, S. A. Teukolsky and W. T. Vetterling, Numerical Recipes in Fortran 90: the art of parallel scientific computing, Cambridge University Press, 1986-1996.
 ! Given a function func, and given a bracketing triplet of abscissas ax, bx, cx (such that bx is between ax and cx, and func(bx) is less than both func(ax) and func(cx)), this routine isolates the minimum to a fractional precision of about tol using Brent’s method. The abscissa of the minimum is returned as xmin, and the minimum function value is returned as brent, the returned function value.
+  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: ax,bx,cx,tol
   DOUBLE PRECISION,INTENT(OUT) :: xmin
   DOUBLE PRECISION :: brent

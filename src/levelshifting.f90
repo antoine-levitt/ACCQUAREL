@@ -3,6 +3,7 @@ SUBROUTINE LEVELSHIFTING_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,R
 ! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_relativistic ; USE scf_tools ; USE setup_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE COMPLEX,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -93,6 +94,7 @@ SUBROUTINE LEVELSHIFTING_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 ! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE setup_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -177,11 +179,12 @@ SUBROUTINE LEVELSHIFTING_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
 END SUBROUTINE LEVELSHIFTING_RHF
 
-SUBROUTINE LEVELSHIFTING_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
-! Level-shifting algorithm (restricted closed-shell Hartree-Fock formalism)
+SUBROUTINE LEVELSHIFTING_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
+! Level-shifting algorithm (real general Hartree-Fock formalism)
 ! Reference: V. R. Saunders and I. H. Hillier, A "level-shifting" method for converging closed shell Hartree-Fock wave functions, Int. J. Quantum Chem., 7(4), 699-705, 1973.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE common_functions
   USE matrices ; USE matrix_tools ; USE metric_nonrelativistic ; USE scf_tools ; USE setup_tools
+  IMPLICIT NONE
   INTEGER,INTENT(IN) :: NBAST
   DOUBLE PRECISION,DIMENSION(NBAST),INTENT(OUT) :: EIG
   DOUBLE PRECISION,DIMENSION(NBAST,NBAST),INTENT(OUT) :: EIGVEC
@@ -231,8 +234,8 @@ SUBROUTINE LEVELSHIFTING_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   PDM1=PDM
   CALL FORMDM(PDM,EIGVEC,NBAST,1,NBE)
 ! Computation of the energy associated to the density matrix
-  CALL BUILDTEFM_GHF(PTEFM,NBAST,PHI,PDM)
-  ETOT=ENERGY_GHF(POEFM,PTEFM,PDM,NBAST)
+  CALL BUILDTEFM_RGHF(PTEFM,NBAST,PHI,PDM)
+  ETOT=ENERGY_RGHF(POEFM,PTEFM,PDM,NBAST)
   WRITE(*,*)'E(D_n)=',ETOT
 ! Numerical convergence check
   CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
@@ -266,4 +269,4 @@ SUBROUTINE LEVELSHIFTING_GHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
 4 WRITE(*,*)'(called from subroutine LEVELSHIFTING)'
 5 DEALLOCATE(PDM,PDM1,PTEFM,PFM)
   CLOSE(16) ; CLOSE(17) ; CLOSE(18)
-END SUBROUTINE LEVELSHIFTING_GHF
+END SUBROUTINE LEVELSHIFTING_RGHF
