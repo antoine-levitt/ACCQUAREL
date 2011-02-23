@@ -196,8 +196,8 @@ SUBROUTINE BUILDOEFM_relativistic(POEFM,PHI,NBAST,NBAS)
            DO K=1,2
               DO L=1,PHI(I)%nbrofcontractions(K)
                  DO M=1,PHI(J)%nbrofcontractions(K)
-                    VALUE=VALUE+PHI(I)%coefficients(K,M)*PHI(J)%coefficients(K,L)                     &
- &                              *KINETICVALUE(PHI(I)%contractions(K,M),PHI(J)%contractions(K,L))/2.D0
+                    VALUE=VALUE+PHI(J)%coefficients(K,M)*CONJG(PHI(I)%coefficients(K,L))              &
+ &                              *KINETICVALUE(PHI(J)%contractions(K,M),PHI(I)%contractions(K,L))/2.D0
                  END DO
               END DO
            END DO
