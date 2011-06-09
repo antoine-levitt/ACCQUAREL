@@ -26,7 +26,7 @@ FUNCTION THETA(PDM,POEFM,N,PHI,METHOD) RESULT (PDMNEW)
   DOUBLE PRECISION :: RESIDUAL
   DOUBLE PRECISION,DIMENSION(N) :: EIG
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2) :: PTEFM,PFM,PDMOLD,PPROJM
-  DOUBLE COMPLEX,DIMENSION(N,N) :: EIGVEC,DM,SF,TSF
+  DOUBLE COMPLEX,DIMENSION(N,N) :: EIGVEC,DM,SF,TSF,TMP,ISRS
 
   IF (METHOD=='N') THEN
      PDMNEW = PDM
@@ -54,8 +54,9 @@ FUNCTION THETA(PDM,POEFM,N,PHI,METHOD) RESULT (PDMNEW)
         PDMNEW=ABCBA(PPROJM,PS,PDMOLD,N)
      ELSEIF(METHOD=='S') THEN
 ! OR
-! computation of the "positive" spectral projector via the sign function obtained by polynomial recursion
-        DM=UNPACK(PDMOLD,N) ; SF=SIGN(PFM+C*C*PS,N)
+! computation of the "positive" spectral projector via the sign function
+        DM=UNPACK(PDMOLD,N) ; TMP=UNPACK(PFM+C*C*PS,N) ; ISRS=UNPACK(PISRS,N)
+        SF=SIGN_FUNCTION(MATMUL(UNPACK(PIS,N),TMP)/NORM(MATMUL(ISRS,MATMUL(TMP,ISRS)),N,'F'),N)
         TSF=TRANSPOSE(CONJG(SF))
         PDMNEW=PACK((DM+MATMUL(DM,TSF)+MATMUL(SF,DM+MATMUL(DM,TSF)))/4.D0,N)
      END IF
@@ -85,37 +86,6 @@ FUNCTION THETA(PDM,POEFM,N,PHI,METHOD) RESULT (PDMNEW)
   END DO
 1 WRITE(*,*)'(called from subroutine THETA)'
 END FUNCTION THETA
-
-FUNCTION SIGN(PA,N) RESULT (SA)
-! Function that computes the sign function of the hermitian matrix of a selfadjoint operator, which upper triangular part is stored in packed form, using a polynomial recursion (PINVS contains the inverse of the overlap matrix, which upper triangular part is stored in packed form).
-! Note: the result is an unpacked matrix due to subsequent use.
-  USE matrix_tools ; USE metric_relativistic
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N
-  DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA
-  DOUBLE COMPLEX,DIMENSION(N,N) :: SA
-
-  DOUBLE COMPLEX,DIMENSION(N,N) :: A,ISRS
-
-  INTEGER,PARAMETER :: ITERMAX=50
-  DOUBLE PRECISION,PARAMETER :: TOL=1.D-15
-  INTEGER :: I,ITER
-
-  A=UNPACK(PA,N) ; ISRS=UNPACK(PISRS,N)
-  SA=MATMUL(UNPACK(PIS,N),A)/NORM(MATMUL(ISRS,MATMUL(A,ISRS)),N,'F')
-  ITER=0
-  DO
-     ITER=ITER+1
-     A=SA
-     SA=(3.D0*SA-MATMUL(SA,MATMUL(SA,SA)))/2.D0
-     IF (NORM(SA-A,N,'F')<TOL) THEN
-        RETURN
-     ELSE IF (ITER==ITERMAX) THEN
-        WRITE(*,*)'Function SIGN: no convergence after ',ITER,' iteration(s).'
-        STOP
-     END IF
-  END DO
-END FUNCTION SIGN
 END MODULE
 
 FUNCTION DFE(LAMBDA) RESULT (ETOT)
@@ -169,7 +139,7 @@ SUBROUTINE ESA(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
   IF (METHOD=='D') THEN
      WRITE(*,*)'Function $Theta$ computed using diagonalization'
   ELSEIF(METHOD=='S') THEN
-     WRITE(*,*)'Function $Theta$ computed using polynomial recursion'
+     WRITE(*,*)'Function $Theta$ computed using matrix sign function'
   ELSE
      WRITE(*,*)'Function $Theta$ ignored'
   END IF
