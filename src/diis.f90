@@ -95,7 +95,6 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      IF (ITER==1) THEN
         PTDM=PDM
      ELSE
-! TO DO: check LINEAR DEPENDENCE???
         WRITE(*,*)'Dimension of the density matrix simplex =',MSET
 ! Computation of the new pseudo-density matrix
 ! assembly and solving of the linear system associated to the DIIS equations
@@ -115,12 +114,14 @@ SUBROUTINE DIIS_relativistic(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         CALL ZHPSV('U',MSET+1,1,PBM,IPIV,DIISV,MSET+1,INFO)
         DEALLOCATE(IPIV,PBM)
         IF (INFO/=0) GO TO 4
+! TO DO: If the procedure fails, the data from the oldest iterations should be thrown out until the system of equations becomes solvable.
 ! assembly of the pseudo-density matrix
         PTDM=(0.D0,0.D0)
         DO I=1,MSET
            PTDM=PTDM+DIISV(I)*PDMSET(I,:)
         END DO
         DEALLOCATE(DIISV)
+! Note that, sometimes, some of the coefficients are negative, so that the extrapolated density matrix does not belong to the convex set. However, there seems to be no benefit of constraining coefficients over a convex set within the DIIS scheme (see Kudin, Scuseria, Cancès 2002).
      END IF
      GO TO 1
   END IF
@@ -247,7 +248,6 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      IF (ITER==1) THEN
         PTDM=PDM
      ELSE
-! TO DO: check LINEAR DEPENDENCE by computing a Gram determinant??
         WRITE(*,*)'Dimension of the density matrix simplex =',MSET
 ! Computation of the new pseudo-density matrix
 ! assembly and solving of the linear system associated to the DIIS equations
@@ -266,12 +266,14 @@ SUBROUTINE DIIS_RHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         CALL DSPSV('U',MSET+1,1,PBM,IPIV,DIISV,MSET+1,INFO)
         DEALLOCATE(IPIV,PBM)
         IF (INFO/=0) GO TO 4
+! TO DO: If the procedure fails, the data from the oldest iterations should be thrown out until the system of equations becomes solvable.
 ! assembly of the pseudo-density matrix
         PTDM=0.D0
         DO I=1,MSET
            PTDM=PTDM+DIISV(I)*PDMSET(I,:)
         END DO
         DEALLOCATE(DIISV)
+! Note: sometimes, some of the coefficients are negative, so that the extrapolated density matrix does not belong to the convex set. However, there seems to be no benefit of constraining coefficients over a convex set within the DIIS scheme (see Kudin, Scuseria, Cancès 2002).
      END IF
      GO TO 1
   END IF
@@ -398,7 +400,6 @@ SUBROUTINE DIIS_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
      IF (ITER==1) THEN
         PTDM=PDM
      ELSE
-! TO DO: check LINEAR DEPENDENCE by computing a Gram determinant??
         WRITE(*,*)'Dimension of the density matrix simplex =',MSET
 ! Computation of the new pseudo-density matrix
 ! assembly and solving of the linear system associated to the DIIS equations
@@ -417,12 +418,14 @@ SUBROUTINE DIIS_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         CALL DSPSV('U',MSET+1,1,PBM,IPIV,DIISV,MSET+1,INFO)
         DEALLOCATE(IPIV,PBM)
         IF (INFO/=0) GO TO 4
+! TO DO: If the procedure fails, the data from the oldest iterations should be thrown out until the system of equations becomes solvable.
 ! assembly of the pseudo-density matrix
         PTDM=0.D0
         DO I=1,MSET
            PTDM=PTDM+DIISV(I)*PDMSET(I,:)
         END DO
         DEALLOCATE(DIISV)
+! Note: sometimes, some of the coefficients are negative, so that the extrapolated density matrix does not belong to the convex set. However, there seems to be no benefit of constraining coefficients over a convex set within the DIIS scheme (see Kudin, Scuseria, Cancès 2002).
      END IF
      GO TO 1
   END IF
