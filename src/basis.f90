@@ -421,17 +421,17 @@ SUBROUTINE FORMBASIS_nonrelativistic(PHI,NBAS)
      END DO
   ELSE
      NBAS=NUMBER_OF_TERMS
-     open(22)
+!     open(22)
      ALLOCATE(PHI(1:SUM(NBAS)))
      DO I=1,SUM(NBAS)
         PHI(I)%center=(/0.D0,0.D0,0.D0/)
         PHI(I)%nbrofexponents=1
         PHI(I)%exponents(1)=FIRST_TERM*COMMON_RATIO**(I-1)
-        write(22,*)FIRST_TERM*COMMON_RATIO**(I-1)
+!        write(22,*)FIRST_TERM*COMMON_RATIO**(I-1)
         PHI(I)%coefficients(1)=1.D0
         PHI(I)%monomialdegree=(/0,0,0/)
      END DO
-     close(22)
+!     close(22)
   END IF
   WRITE(*,'(a,i4)')' Total number of basis functions =',SUM(NBAS)
 END SUBROUTINE FORMBASIS_nonrelativistic

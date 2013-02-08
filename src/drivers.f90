@@ -382,29 +382,35 @@ SUBROUTINE DRIVER_nonrelativistic
 END SUBROUTINE DRIVER_nonrelativistic
 
 SUBROUTINE DRIVER_boson_star
-! Preliminary driver for the boson star model (G. Aki, J. Dolbeault: a Hartree model with temperature for boson stars)
+! Preliminary driver for a boson star model (G. Aki, J. Dolbeault: a Hartree model with temperature for boson stars)
+! Reference: G. Aki, J. Dolbeault, and C. Sparber, Thermal effects in gravitational Hartree systems, Ann. H. Poincaré, 12(6), 1055-1079, 2011.
   USE case_parameters ; USE data_parameters ; USE basis_parameters ; USE scf_parameters
   USE basis ; USE integrals ; USE matrices ; USE matrix_tools ; USE common_functions
   USE metric_nonrelativistic ; USE scf_tools ; USE rootfinding_tools ; USE constants
+  USE gnufor2
   IMPLICIT NONE
-  INTEGER :: NBAST,ITER,I,J,INFO
-  INTEGER,TARGET :: RANK
+  INTEGER :: ITER,RITER,I,J,INFO
+  INTEGER,TARGET :: RANK,NBAST
   INTEGER,DIMENSION(:),ALLOCATABLE :: NBAS
   DOUBLE PRECISION :: MU,ETOT,ETOT1,SHIFT
-  DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: POEFM,PTEFM,PFM,PDM,PDM1,PTMP,LAMBDA
+  DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: POEFM,PTEFM,PFM,PDM,PDM1,PTMP,LAMBDA,OLDLAMBDA
   DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: PTTEFM,PTDM,PDMDIF
   DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE,TARGET :: POM,PIOM,PSROM,PISROM,PCFOM,EIG
   DOUBLE PRECISION,DIMENSION(:,:),ALLOCATABLE :: EIGVEC
   TYPE(gaussianbasisfunction),DIMENSION(:),ALLOCATABLE :: PHI
   LOGICAL :: NUMCONV
+! graphical plots
+  DOUBLE PRECISION :: ITERATIONARRAY(MAXITR),ENERGYARRAY(MAXITR)
+  DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: TEMPERATUREARRAY,MUARRAY,RANKARRAY
 
-! boucle sur la temperature
-  INTEGER :: K
+! loop on temperature
+  INTEGER :: TEMPMAXITR,K
 
 ! test
 !  DOUBLE PRECISION :: RCOND
 !  INTEGER,DIMENSION(:),ALLOCATABLE :: IPIV,IWORK
 !  DOUBLE PRECISION,DIMENSION(:),ALLOCATABLE :: PA,WORK
+  DOUBLE PRECISION :: LAMBDADIFF
   DOUBLE PRECISION,PARAMETER :: SCALING=32.15530615624011D0
 
 ! Computation of the discretization basis
@@ -436,7 +442,7 @@ SUBROUTINE DRIVER_boson_star
   ALLOCATE(PCFOM(1:NBAST*(NBAST+1)/2))
   PCFOM=POM
   CALL DPPTRF('U',NBAST,PCFOM,INFO) !; PCFS=>PCFOM
-  IF (INFO/=0) GO TO 5
+  IF (INFO/=0) GO TO 3
 ! Computation and assembly of the matrix of the free hamiltonian
   WRITE(*,'(a)')'* Computation and assembly of the hamiltonian matrix'
   ALLOCATE(POEFM(1:NBAST*(NBAST+1)/2))
@@ -448,7 +454,7 @@ SUBROUTINE DRIVER_boson_star
   WRITE(*,'(a)')'* Computation of the bielectronic integrals'
   IF (USEDISK) THEN
      ALLOCATE(BILIST(1:1,1:4))
-     OPEN(LUNIT,access='STREAM') ; OPEN(BIUNIT,access='STREAM')
+     OPEN(LUNIT,ACCESS='STREAM') ; OPEN(BIUNIT,ACCESS='STREAM')
      DO I=1,BINMBR
         READ(LUNIT)BILIST(1,:)
         WRITE(BIUNIT)BILIST(1,:),COULOMBVALUE(PHI(BILIST(1,1)),PHI(BILIST(1,2)),PHI(BILIST(1,3)),PHI(BILIST(1,4)))
@@ -458,7 +464,7 @@ SUBROUTINE DRIVER_boson_star
      CLOSE(LUNIT,STATUS='DELETE') ; CLOSE(BIUNIT)
   ELSE
      ALLOCATE(BILIST(1:BINMBR,1:4),RBIVALUES(1:BINMBR))
-     OPEN(LUNIT,access='STREAM')
+     OPEN(LUNIT,ACCESS='STREAM')
      !$OMP PARALLEL DO SCHEDULE(STATIC, 1)
      DO I=1,BINMBR
         READ(LUNIT)BILIST(I,:)
@@ -474,17 +480,17 @@ SUBROUTINE DRIVER_boson_star
   ALLOCATE(EIG(1:NBAST),EIGVEC(1:NBAST,1:NBAST))
   ALLOCATE(PDM(1:NBAST*(NBAST+1)/2),PDM1(1:NBAST*(NBAST+1)/2))
   ALLOCATE(PTEFM(1:NBAST*(NBAST+1)/2),PFM(1:NBAST*(NBAST+1)/2),PTMP(1:NBAST*(NBAST+1)/2))
-  ALLOCATE(LAMBDA(1:NBAST))
+  ALLOCATE(LAMBDA(1:NBAST),OLDLAMBDA(1:NBAST))
   ALLOCATE(PTTEFM(1:NBAST*(NBAST+1)/2),PTDM(1:NBAST*(NBAST+1)/2),PDMDIF(1:NBAST*(NBAST+1)/2))
 
 ! Initialisation
   CALL EIGENSOLVER(POEFM,PCFOM,NBAST,EIG,EIGVEC,INFO)
-  IF (INFO/=0) GO TO 6
-  OPEN(33)
-  DO I=1,NBAST
-     write(33,*)EIG(I)
-  END DO
-  CLOSE(33)
+  IF (INFO/=0) GO TO 4
+!  OPEN(33)
+!  DO I=1,NBAST
+!     write(33,*)EIG(I)
+!  END DO
+!  CLOSE(33)
   RANK=1 ; CALL FORMDM(PDM,EIGVEC,NBAST,1,1) ; PDM=MASS*PDM
   PDM1=0.D0
   LAMBDA=0.D0 ;
@@ -494,114 +500,146 @@ SUBROUTINE DRIVER_boson_star
   CALL BUILDCOULOMB(PTEFM,NBAST,PHI,PDM)
   PTEFM=KAPPA*MASS*PTEFM/(4.D0*PI)
 
-  DO K=0,1000
+  ITERATIONARRAY=(/ (I,I=1,MAXITR) /)
+  TEMPMAXITR=50
+  ALLOCATE(TEMPERATUREARRAY(0:TEMPMAXITR),MUARRAY(0:TEMPMAXITR),RANKARRAY(0:TEMPMAXITR))
+  DO K=0,TEMPMAXITR
 ! TEMPERATURE LOOP
-     TEMPERATURE=DBLE(K)*0.0001
-  ITER=0
-! ROOTHAAN'S ALGORITHM LOOP
-1 CONTINUE
-  ITER=ITER+1
-  WRITE(*,*)' '
-  WRITE(*,*)'# ITER =',ITER
-! Assembly and diagonalization of the Fock matrix associated to the density matrix
-  PFM=POEFM+PTEFM
-  CALL EIGENSOLVER(PFM,PCFOM,NBAST,EIG,EIGVEC,INFO)
-  IF (INFO/=0) GO TO 6
-  IF (TEMPERATURE>0.D0) THEN
-! Computation (using the bisection method) of the lagrangian multiplier $\mu$ associated to the constraint on the trace of the density matrix
-     MU_I=>EIG ; RANK_P=>RANK
-     MU=RTBIS(FUNCFORMU,EIG(1),EIG(NBAST),1.D-16)
-     WRITE(*,*)'mu=',MU
-     WRITE(*,*)'Residual f(mu)=',FUNCFORMU(MU)
-! Computation of the updated occupation numbers
-     DO I=1,NBAST
-        IF (MU-EIG(I)>0.D0) THEN
-           LAMBDA(I)=RECIP_DENTFUNC((MU-EIG(I))/TEMPERATURE)
-           RANK=I
-        ELSE
-           LAMBDA(I)=0.D0
-        END IF
-!        WRITE(*,*)'lambda_',I,'=',LAMBDA(I)
-     END DO
-     write(*,*)'Rank(gamma)=',RANK,', sumlambda_i=',SUM(LAMBDA)
-  END IF
-! Assembly of the density matrix
-  PDM1=PDM ; PDM=0.D0
-  DO I=1,RANK
-     CALL DSPR('U',NBAST,LAMBDA(I),EIGVEC(:,I),1,PDM)
-  END DO
-! Computation of the energy associated to the density matrix
-  CALL BUILDCOULOMB(PTEFM,NBAST,PHI,PDM)
-  PTEFM=KAPPA*MASS*PTEFM/(4.D0*PI)
-  ETOT=ELECTRONIC_ENERGY_HF(POEFM,PTEFM,PDM,NBAST)
-  WRITE(*,*)'E(D_n)=',ETOT
-! Numerical convergence check
-  CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV)
-  IF (NUMCONV) THEN
-! Convergence reached
-     GO TO 2
-  ELSE IF (ITER==MAXITR) THEN
-! Maximum number of iterations reached without convergence
-     GO TO 3
-  ELSE
-! Convergence not reached, increment
-     ETOT1=ETOT
-     GO TO 1
-  END IF
-! MESSAGES
-2 WRITE(*,*)' ' ; WRITE(*,*)'Convergence after',ITER,'iterations.'
-  OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
-  DO I=1,NBAST
-     WRITE(9,*)I,EIG(I)
-  END DO
-  CLOSE(9)
-  WRITE(33,*)TEMPERATURE,ETOT,MU,RANK
-! plot of the eigenfunction associated a pure state
-  IF (RANK==1) THEN
+     TEMPERATURE=DBLE(K)*1.D-4
+     TEMPERATUREARRAY(K)=TEMPERATURE
+     WRITE(*,*)' ' ; WRITE(*,*)'*** TEMPERATURE=',TEMPERATURE ; WRITE(*,*)' '
+     ITER=0
+1    ITER=ITER+1
      WRITE(*,*)' '
-     WRITE(*,*)'The minimizer is achieved by a pure state.'
-     OPEN(9,FILE='gnuplot.batch',STATUS='UNKNOWN',ACTION='WRITE')
-     DO J=1,NBAST
-        WRITE(9,*)'psi',J-1,'(x)=',SCALING**2,'*(\'
+     WRITE(*,*)'# ITER =',ITER
+     IF (TEMPERATURE>0.D0) THEN
+! Computation of the Lagrange multiplier $\mu$ associated to the constraint on the trace of the density matrix
+        MU_I=>EIG ; RANK_P=>NBAST
+        MU=RTBIS(FUNCFORMU,EIG(1),EIG(NBAST),1.D-16)
+        WRITE(*,*)'mu=',MU,' (residual = ',FUNCFORMU(MU),')'
+! Computation of the updated occupation numbers
+        OLDLAMBDA=LAMBDA ; LAMBDA=0.D0
         DO I=1,NBAST
-           IF (EIGVEC(I,J)>=0.D0) THEN
-              WRITE(9,*)'+',EIGVEC(I,J),'*exp(-',FIRST_TERM*COMMON_RATIO**(I-1),'*(',SCALING,'*x)**2)\'
-           ELSE
-              WRITE(9,*)EIGVEC(I,J),'*exp(-',FIRST_TERM*COMMON_RATIO**(I-1),'*(',SCALING,'*x)**2)\'
+           IF (MU-EIG(I)>0.D0) THEN
+              LAMBDA(I)=RECIP_DENTFUNC((MU-EIG(I))/TEMPERATURE)
+              RANK=I
+              WRITE(*,*)'lambda_',I,'=',LAMBDA(I)
            END IF
         END DO
-        WRITE(9,*)')'
-     END DO
-     CLOSE(9)
-  ELSE IF (RANK>1) THEN
-     WRITE(*,*)' '
-     WRITE(*,*)'The minimizer is achieved by a mixed state.'
-  END IF
-  GO TO 4
-3 WRITE(*,*)' ' ; WRITE(*,*)'No convergence after',ITER,'iterations.'
-  OPEN(9,FILE='eigenvalues.txt',STATUS='UNKNOWN',ACTION='WRITE')
-  DO I=1,NBAST
-     WRITE(9,*)I,EIG(I)
+        write(*,*)'rank = ',RANK
+     END IF
+     RITER=0
+! ROOTHAAN'S ALGORITHM LOOP
+10   CONTINUE
+     RITER=RITER+1
+! Assembly and diagonalization of the Fock matrix associated to the density matrix
+     PFM=POEFM+PTEFM
+     CALL EIGENSOLVER(PFM,PCFOM,NBAST,EIG,EIGVEC,INFO)
+     IF (INFO/=0) GO TO 4
+! Assembly of the density matrix
+     PDM1=PDM ; PDM=0.D0
+     IF (TEMPERATURE>0.D0) THEN
+        DO I=1,RANK
+           CALL DSPR('U',NBAST,LAMBDA(I),EIGVEC(:,I),1,PDM)
+        END DO
+     ELSE
+        CALL FORMDM(PDM,EIGVEC,NBAST,1,1) ; PDM=MASS*PDM
+     END IF
+! Computation of the energy associated to the density matrix
+     CALL BUILDCOULOMB(PTEFM,NBAST,PHI,PDM)
+     PTEFM=KAPPA*MASS*PTEFM/(4.D0*PI)
+! Hartree energy
+!     ETOT=ELECTRONIC_ENERGY_HF(POEFM,PTEFM,PDM,NBAST)
+! Total free energy
+     ETOT=FREEENERGY(POEFM,PTEFM,PDM,NBAST,TEMPERATURE,ENTROPY_FUNCTION)
+     ENERGYARRAY(RITER)=ETOT
+!     WRITE(*,*)'E(D_n)=',ETOT
+! Numerical convergence check
+     CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV,.FALSE.)
+     IF (NUMCONV) THEN
+! Convergence reached
+!        CALL PLOT(ITERATIONARRAY(1:RITER),ENERGYARRAY(1:RITER),persist='no',terminal='png')
+        CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV,.TRUE.)
+        GO TO 20
+     ELSE IF (RITER==MAXITR) THEN
+! Maximum number of iterations reached without convergence
+        CALL PLOT(ITERATIONARRAY,ENERGYARRAY,persist='no',terminal='png')
+        CALL CHECKNUMCONV(PDM,PDM1,POEFM+PTEFM,NBAST,ETOT,ETOT1,TRSHLD,NUMCONV,.TRUE.)
+        GO TO 30
+     ELSE
+! Convergence not reached, increment
+        ETOT1=ETOT
+        GO TO 10
+     END IF
+! MESSAGES
+20   WRITE(*,*)' ' ; WRITE(*,*)'Roothaan algorithm: convergence after',RITER,'iterations.'
+     WRITE(*,*)'E(D)=',ETOT
+     IF (TEMPERATURE==0.D0) THEN
+        WRITE(*,*)' '
+        WRITE(*,*)'The predicted critical temperature is T_c =',(EIG(2)-EIG(1))/DENTFUNC(MASS)
+        OPEN(9,FILE='gnuplot.batch',STATUS='UNKNOWN',ACTION='WRITE')
+        DO J=1,NBAST
+           WRITE(9,*)'psi',J-1,'(x)=',SCALING**2,'*(\'
+           DO I=1,NBAST
+              IF (EIGVEC(I,J)>=0.D0) THEN
+                 WRITE(9,*)'+',EIGVEC(I,J),'*exp(-',FIRST_TERM*COMMON_RATIO**(I-1),'*(',SCALING,'*x)**2)\'
+              ELSE
+                 WRITE(9,*)EIGVEC(I,J),'*exp(-',FIRST_TERM*COMMON_RATIO**(I-1),'*(',SCALING,'*x)**2)\'
+              END IF
+           END DO
+           WRITE(9,*)')'
+        END DO
+        CLOSE(9)
+     END IF
+     GO TO 40
+30   WRITE(*,*)' ' ; WRITE(*,*)'Roothaan algorithm: no convergence after',RITER,'iterations.'
+40   CONTINUE
+! END OF ROOTHAAN'S ALGORITHM LOOP
+     IF (TEMPERATURE>0.D0) THEN
+        LAMBDADIFF=MAXVAL(ABS(LAMBDA-OLDLAMBDA))
+        WRITE(*,*)LAMBDADIFF
+        IF (LAMBDADIFF<=TRSHLD) THEN
+           WRITE(*,*)' ' ; WRITE(*,*)'Convergence after',ITER,'iterations.'
+           IF (RANK==1) THEN
+              WRITE(*,*)' '
+              WRITE(*,*)'The minimizer is achieved by a pure state.'
+           ELSE IF (RANK>1) THEN
+              WRITE(*,*)' '
+              WRITE(*,*)'The minimizer is achieved by a mixed state.'
+           END IF
+           GO TO 2
+        ELSE IF (ITER==30) THEN
+! Maximum number of iterations reached without convergence
+           WRITE(*,*)' ' ; WRITE(*,*)'No convergence after',ITER,'iterations.'
+           GO TO 2
+        ELSE
+! Convergence not reached, increment
+           GO TO 1
+        END IF
+2       MUARRAY(K)=MU; RANKARRAY(K)=RANK
+        WRITE(33,*)TEMPERATURE,ETOT,MU,RANK,ITER
+     ELSE
+        RANKARRAY(K)=RANK
+     END IF
   END DO
-  CLOSE(9)
-!  GO TO 4
-4 CONTINUE
-  END DO
-  DEALLOCATE(LAMBDA,EIG,EIGVEC,POEFM,PTEFM,PFM,PDM,PDM1)
+  CALL PLOT(TEMPERATUREARRAY(1:TEMPMAXITR),MUARRAY(1:TEMPMAXITR),persist='no',terminal='png',filename='mu.png')
+  CALL PLOT(TEMPERATUREARRAY,RANKARRAY,persist='no',terminal='png',filename='rank.png')
+  DEALLOCATE(LAMBDA,OLDLAMBDA,EIG,EIGVEC,POEFM,PTEFM,PFM,PDM,PDM1)
   DEALLOCATE(PTTEFM,PTDM,PDMDIF)
+  DEALLOCATE(TEMPERATUREARRAY,MUARRAY,RANKARRAY)
   IF (USEDISK) THEN
-     OPEN(BIUNIT,access='STREAM') ; CLOSE(BIUNIT,STATUS='DELETE')
+     OPEN(BIUNIT,ACCESS='STREAM') ; CLOSE(BIUNIT,STATUS='DELETE')
   ELSE
      DEALLOCATE(BILIST,RBIVALUES)
   END IF
-  GO TO 7
+  GO TO 5
   RETURN
-5 IF (INFO<0) THEN
+3 IF (INFO<0) THEN
      WRITE(*,*)'Subroutine DPPTRF: the',-INFO,'-th argument had an illegal value'
   ELSE
      WRITE(*,*)'Subroutine DPPTRF: the leading minor of order',INFO,'is not positive definite, &
     &and the factorization could not be completed'
   END IF
-6 WRITE(*,*)'(called from subroutine DRIVER_boson_star)'
-7 DEALLOCATE(POM,PIOM,PSROM,PISROM,NBAS,PHI)
+4 WRITE(*,*)'(called from subroutine DRIVER_boson_star)'
+5 DEALLOCATE(POM,PIOM,PSROM,PISROM,NBAS,PHI)
 END SUBROUTINE DRIVER_boson_star
