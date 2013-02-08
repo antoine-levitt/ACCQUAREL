@@ -592,6 +592,20 @@ FUNCTION EXPONENTIAL_complex(T,A,N) result(EXPTA)
   STOP
 END FUNCTION EXPONENTIAL_complex
 
+FUNCTION TRACE_real(A,N) RESULT (TRACE)
+  ! Function that computes the trace of a symmetric matrix, which upper triangular part is stored in packed format.
+  INTEGER,INTENT(IN) :: N
+  DOUBLE PRECISION,DIMENSION(N,N),INTENT(IN) :: A
+  DOUBLE PRECISION :: TRACE
+
+  INTEGER :: I
+
+  TRACE=0.D0
+  DO I=1,N
+     TRACE=TRACE+A(I,I)
+  END DO
+END FUNCTION TRACE_real
+
 FUNCTION TRACE_symmetric(PA,N) RESULT (TRACE)
 ! Function that computes the trace of a symmetric matrix, which upper triangular part is stored in packed format.
   IMPLICIT NONE
@@ -1064,4 +1078,14 @@ SUBROUTINE LOOKFOR(NUNIT,SUBSTRING,INFO)
   RETURN
 2 INFO=1
 END SUBROUTINE LOOKFOR
+
+
+FUNCTION GETENV(STR) RESULT(RES)
+  CHARACTER(*),INTENT(IN) :: STR
+  CHARACTER(40) :: RESSTR
+  DOUBLE PRECISION :: RES
+  CALL GET_ENVIRONMENT_VARIABLE(STR,RESSTR)
+  READ(RESSTR,*), RES
+END FUNCTION GETENV
+
 END MODULE
