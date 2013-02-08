@@ -597,9 +597,80 @@ SUBROUTINE BUILDCOULOMB_nonrelativistic(PCM,NBAST,PHI,PDM)
 
   CM=0.D0
   DM=UNPACK(PDM,NBAST)
-#define ACTION(I,J,K,L) CM(I,J)=CM(I,J)+INTGRL*DM(K,L)
-#include "forall.f90"
-#undef ACTION
+!#define ACTION(I,J,K,L) CM(I,J)=CM(I,J)+INTGRL*DM(K,L)
+!#include "forall.f90"
+!#undef ACTION
+! replacement
+  IF (.NOT.DIRECT.AND.USEDISK) OPEN(BIUNIT,form='UNFORMATTED')
+  DO N=1,BINMBR
+     IF (DIRECT) THEN
+! the values of the bielectronic integrals are computed "on the fly"
+        I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
+        INTGRL=COULOMBVALUE(PHI(I),PHI(J),PHI(K),PHI(L))
+     ELSE
+        IF (USEDISK) THEN
+! the list and values of the bielectronic integrals are read on disk
+           READ(BIUNIT)I,J,K,L,INTGRL
+        ELSE
+! the list and values of the bielectronic integrals are read in memory
+           I=BILIST(N,1) ; J=BILIST(N,2) ; K=BILIST(N,3) ; L=BILIST(N,4)
+           INTGRL=RBIVALUES(N)
+        END IF
+     END IF
+! 1 value for the 4 indices
+     IF ((I==J).AND.(J==K).AND.(K==L)) THEN
+        CM(I,I)=CM(I,I)+INTGRL*DM(I,I)
+! 2 distinct values for the 4 indices
+     ELSE IF ((I>J).AND.(J==K).AND.(K==L)) THEN
+        CM(I,J)=CM(I,J)+INTGRL*DM(J,J)
+        CM(J,I)=CM(J,I)+INTGRL*DM(J,J)
+        CM(J,J)=CM(J,J)+INTGRL*(DM(I,J)+DM(J,I))
+     ELSE IF ((I==J).AND.(J==K).AND.(K>L)) THEN
+        CM(L,I)=CM(L,I)+INTGRL*DM(I,I)
+        CM(I,L)=CM(I,L)+INTGRL*DM(I,I)
+        CM(I,I)=CM(I,I)+INTGRL*(DM(L,I)+DM(I,L))
+     ELSE IF ((I==J).AND.(J>K).AND.(K==L)) THEN
+        CM(I,I)=CM(I,I)+INTGRL*DM(K,K)
+        CM(K,K)=CM(K,K)+INTGRL*DM(I,I)
+     ELSE IF ((I==K).AND.(K>J).AND.(J==L)) THEN
+        CM(I,J)=CM(I,J)+INTGRL*(DM(I,J)+DM(J,I))
+        CM(J,I)=CM(J,I)+INTGRL*(DM(J,I)+DM(I,J))
+! 3 distinct values for the 4 indices
+     ELSE IF ((I==K).AND.(K>J).AND.(J>L)) THEN
+        CM(I,J)=CM(I,J)+INTGRL*(DM(I,L)+DM(L,I))
+        CM(J,I)=CM(J,I)+INTGRL*(DM(I,L)+DM(L,I))
+        CM(I,L)=CM(I,L)+INTGRL*(DM(I,J)+DM(J,I))
+        CM(L,I)=CM(L,I)+INTGRL*(DM(I,J)+DM(J,I))
+     ELSE IF ((I>J).AND.(J==K).AND.(K>L)) THEN
+        CM(J,I)=CM(J,I)+INTGRL*(DM(J,L)+DM(L,J))
+        CM(I,J)=CM(I,J)+INTGRL*(DM(J,L)+DM(L,J))
+        CM(J,L)=CM(J,L)+INTGRL*(DM(J,I)+DM(I,J))
+        CM(L,J)=CM(L,J)+INTGRL*(DM(J,I)+DM(I,J))
+     ELSE IF ((I>K).AND.(K>J).AND.(J==L)) THEN
+        CM(J,I)=CM(J,I)+INTGRL*(DM(J,K)+DM(K,J))
+        CM(I,J)=CM(I,J)+INTGRL*(DM(J,K)+DM(K,J))
+        CM(J,K)=CM(J,K)+INTGRL*(DM(J,I)+DM(I,J))
+        CM(K,J)=CM(K,J)+INTGRL*(DM(J,I)+DM(I,J))
+     ELSE IF ((I>J).AND.(I>K).AND.(K==L)) THEN
+        CM(I,J)=CM(I,J)+INTGRL*DM(K,K)
+        CM(J,I)=CM(J,I)+INTGRL*DM(K,K)
+        CM(K,K)=CM(K,K)+INTGRL*(DM(I,J)+DM(J,I))
+     ELSE IF ((I==J).AND.(J>K).AND.(K>L)) THEN
+        CM(K,L)=CM(K,L)+INTGRL*DM(I,I)
+        CM(L,K)=CM(L,K)+INTGRL*DM(I,I)
+        CM(I,I)=CM(I,I)+INTGRL*(DM(K,L)+DM(L,K))
+! 4 distinct values for the 4 indices
+     ELSE IF (    ((I>J).AND.(J>K).AND.(K>L)) &
+              .OR.((I>K).AND.(K>J).AND.(J>L)) &
+              .OR.((I>K).AND.(K>L).AND.(L>J))) THEN
+        CM(I,J)=CM(I,J)+INTGRL*(DM(K,L)+DM(L,K))
+        CM(J,I)=CM(J,I)+INTGRL*(DM(K,L)+DM(L,K))
+        CM(K,L)=CM(K,L)+INTGRL*(DM(I,J)+DM(J,I))
+        CM(L,K)=CM(L,K)+INTGRL*(DM(I,J)+DM(J,I))
+     END IF
+  END DO
+  IF (.NOT.DIRECT.AND.USEDISK) CLOSE(BIUNIT)
+! end of replacement
   PCM=PACK(CM,NBAST)
 END SUBROUTINE BUILDCOULOMB_nonrelativistic
 

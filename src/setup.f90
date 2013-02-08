@@ -164,7 +164,7 @@ MODULE data_parameters
   DOUBLE PRECISION :: MASS
 ! temperature
   DOUBLE PRECISION :: TEMPERATURE
-! exponent for the function defining the Tsallis-related entropy term
+! exponent for the entropy generating function
   DOUBLE PRECISION :: MB
 !
   INTEGER,POINTER :: RANK_P
@@ -189,7 +189,7 @@ SUBROUTINE SETUP_DATA
      READ(100,*) TEMPERATURE
      WRITE(*,'(a,f5.3)')' * Temperature = ',TEMPERATURE
      READ(100,*) MB
-     WRITE(*,'(a,f5.3)')' * Exponent for the function defining the Tsallis-related entropy term = ',MB
+     WRITE(*,'(a,f5.3)')' * Exponent for the entropy generating function = ',MB
      WRITE(*,'(a)')' --- **** ---'
   ELSE
      CALL LOOKFOR(100,'## DESCRIPTION OF THE MOLECULAR SYSTEM',INFO)
@@ -394,7 +394,8 @@ SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
   END DO
 END SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
 
-! Various functions for the Hartree model with temperature
+! Various functions for the Hartree model with temperature (Hwtemp model)
+
 FUNCTION POSITIVE_PART(X) RESULT(FUNC)
   IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
@@ -408,15 +409,25 @@ FUNCTION POSITIVE_PART(X) RESULT(FUNC)
 END FUNCTION POSITIVE_PART
 
 FUNCTION ENTROPY_FUNCTION(X) RESULT(FUNC)
+! entropy generating function beta
   IMPLICIT NONE
-! beta test function for the entropy
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
   FUNC=POSITIVE_PART(X)**MB/MB
 END FUNCTION ENTROPY_FUNCTION
 
+FUNCTION DENTFUNC(X) RESULT(FUNC)
+! derivative of the entropy generating function beta
+  IMPLICIT NONE
+  DOUBLE PRECISION,INTENT(IN) :: X
+  DOUBLE PRECISION :: FUNC
+
+  FUNC=POSITIVE_PART(X)**(MB-1.D0)
+END FUNCTION DENTFUNC
+
 FUNCTION RECIP_DENTFUNC(X) RESULT(FUNC)
+! reciprocal function of the derivative of the entropy generating function beta
   IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
@@ -429,6 +440,7 @@ FUNCTION RECIP_DENTFUNC(X) RESULT(FUNC)
 END FUNCTION RECIP_DENTFUNC
 
 FUNCTION DRECIP_DENTFUNC(X) RESULT(FUNC)
+! derivative of the reciprocal function of the derivative of the entropy generating function beta
   IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
@@ -436,7 +448,7 @@ FUNCTION DRECIP_DENTFUNC(X) RESULT(FUNC)
   IF (X<0.D0) THEN
      STOP'beta is not a bijection on R_-'
   ELSE IF (X==0.D0) THEN
-     STOP'No derivative at origin'
+     STOP'beta is not differentiable at the origin'
   ELSE
      FUNC=X**((2.D0-MB)/(MB-1.D0))/(MB-1.D0)
   END IF
@@ -453,9 +465,7 @@ FUNCTION FUNCFORMU(X) RESULT(FUNC)
   FUNC=-MASS
   DO I=1,RANK_P
      Y=(X-MU_I(I))/TEMPERATURE
-     IF (Y>=0.D0) THEN
-        FUNC=FUNC+RECIP_DENTFUNC(Y)
-     END IF
+     IF (Y>0.D0) FUNC=FUNC+RECIP_DENTFUNC(Y)
   END DO
 END FUNCTION FUNCFORMU
 
@@ -470,8 +480,10 @@ SUBROUTINE RDENTFUNCD(X,FVAL,FDERIV)
   FVAL=-MASS ; FDERIV=0.D0
   DO I=1,RANK_P
      Y=(X-MU_I(I))/TEMPERATURE
-     FVAL=FVAL+RECIP_DENTFUNC(Y)
-     FDERIV=FDERIV+DRECIP_DENTFUNC(Y)
+     IF (Y>0.D0) THEN
+        FVAL=FVAL+RECIP_DENTFUNC(Y)
+        FDERIV=FDERIV+DRECIP_DENTFUNC(Y)
+     END IF
   END DO
 END SUBROUTINE RDENTFUNCD
 END MODULE
@@ -663,7 +675,7 @@ END MODULE
 MODULE scf_parameters
 ! number of different SCF algorithms to be used
   INTEGER :: NBALG
-! SCF algorithm index (1: Roothaan, 2: level-shifting, 3: DIIS, 4: ODA (non-relativistic case only), 5: Eric Séré's (relativistic case only))
+! SCF algorithm index (1: Roothaan, 2: level-shifting, 3: DIIS, 4: ODA (non-relativistic case only), 5: \'Eric S\'er\'e's (relativistic case only))
   INTEGER,DIMENSION(5) :: ALG
 ! threshold for numerical convergence
   DOUBLE PRECISION :: TRSHLD

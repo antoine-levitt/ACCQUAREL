@@ -229,8 +229,8 @@ FUNCTION ELECTRONIC_ENERGY_UHF(POEFM,PTEFM,PEMS,PTDM,PSDM,N) RESULT(ENERGY)
   END DO
 END FUNCTION ELECTRONIC_ENERGY_UHF
 
-FUNCTION FREEENERGY_HF(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
-! Function that computes the free energy (of a Hartree(-Fock) model with temperature) associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given system, POEFM and PTEFM containing respectively the (core hamiltonian) matrix and the (two-electron) part of the Fock matrix (both stored similarly).
+FUNCTION FREEENERGY(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
+! Function that computes the free energy of a Hartree model with temperature associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given system, POEFM and PTEFM containing respectively the (core hamiltonian) matrix and the (two-electron) part of the Fock matrix (both stored similarly), FUNC being the entropy generating function defining the entropy functional.
   USE matrix_tools ; USE metric_nonrelativistic
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
@@ -249,6 +249,8 @@ FUNCTION FREEENERGY_HF(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
   DOUBLE PRECISION,DIMENSION(3*N) :: WORK
   DOUBLE PRECISION,DIMENSION(N,N) :: Z,TMP
 
+  DOUBLE PRECISION :: ENTTERM
+
   PTMP=PDM
   CALL DSPEV('V','U',N,PTMP,W,Z,N,WORK,INFO)
   IF (INFO/=0) GO TO 1
@@ -257,7 +259,7 @@ FUNCTION FREEENERGY_HF(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
      TMP(I,I)=FUNC(W(I))
   END DO
   PTMP=PACK(MATMUL(Z,MATMUL(TMP,TRANSPOSE(Z))),N)
-  
+
   ENRG=ELECTRONIC_ENERGY_HF(POEFM,PTEFM,PDM,N)+TEMPERATURE*TRACEOFPRODUCT(PTMP,PS,N)
   RETURN
 1 IF (INFO<0) THEN
@@ -268,5 +270,5 @@ FUNCTION FREEENERGY_HF(POEFM,PTEFM,PDM,N,TEMPERATURE,FUNC) RESULT(ENRG)
   END IF
   WRITE(*,*)'(called from function FREEENERGY)'
   STOP
-END FUNCTION FREEENERGY_HF
+END FUNCTION FREEENERGY
 END MODULE

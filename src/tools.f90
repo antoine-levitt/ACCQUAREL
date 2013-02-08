@@ -72,6 +72,10 @@ INTERFACE INVERSE
   MODULE PROCEDURE INVERSE_real,INVERSE_complex,INVERSE_symmetric,INVERSE_hermitian
 END INTERFACE
 
+INTERFACE SIGN_FUNCTION
+  MODULE PROCEDURE SIGN_FUNCTION_complex
+END INTERFACE
+
 INTERFACE SQUARE_ROOT
   MODULE PROCEDURE SQUARE_ROOT_symmetric,SQUARE_ROOT_hermitian
 END INTERFACE
@@ -488,6 +492,32 @@ FUNCTION INVERSE_hermitian(PA,N) RESULT(PINVA)
 3 WRITE(*,*)'(called from function INVERSE)'
   STOP
 END FUNCTION INVERSE_hermitian
+
+FUNCTION SIGN_FUNCTION_complex(A,N) RESULT (SA)
+! Function that computes the sign function of a complex square matrix, which is supposed to have no eigenvalues on the imaginary axis (so that the function is defined), by the Newton--Schulz iteration.
+! Reference: Günther Schulz, Iterative Berechnung der reziproken Matrix, Z. Angew. Math. Mech., 13, 57-59, 1933.
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: N
+  DOUBLE COMPLEX,DIMENSION(N,N),INTENT(IN) :: A
+  DOUBLE COMPLEX,DIMENSION(N,N) :: SA
+
+  INTEGER,PARAMETER :: ITERMAX=50
+  DOUBLE PRECISION,PARAMETER :: TOL=1.D-15
+  INTEGER :: I,ITER
+  DOUBLE COMPLEX,DIMENSION(N,N) :: OLDSA
+
+  ITER=0 ; SA=A
+  DO
+     ITER=ITER+1 ; OLDSA=SA
+     SA=(3.D0*SA-MATMUL(SA,MATMUL(SA,SA)))/2.D0
+     IF (NORM(SA-OLDSA,N,'F')<TOL) THEN
+        RETURN
+     ELSE IF (ITER==ITERMAX) THEN
+        WRITE(*,*)'Function SIGN_FUNCTION: no convergence after ',ITER,' iteration(s).'
+        STOP
+     END IF
+  END DO
+END FUNCTION SIGN_FUNCTION_complex
 
 FUNCTION SQUARE_ROOT_symmetric(PA,N) RESULT(PSQRA)
 ! Function that computes the square root of a symmetric, positive-definite matrix which upper triangular part is stored in packed format (its square root being stored as such).

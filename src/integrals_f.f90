@@ -19,7 +19,7 @@ MODULE integrals
 
 INTERFACE
   REAL(KIND=C_DOUBLE) FUNCTION unrolloverlap(nbrofprimitives_a,center_a,exponents_a,coefficients_a,monomialdegree_a, &
- &                       nbrofprimitives_b,center_b,exponents_b,coefficients_b,monomialdegree_b)                     &
+ &                                           nbrofprimitives_b,center_b,exponents_b,coefficients_b,monomialdegree_b) &
  & BIND(C,NAME="unrolloverlap")
     USE iso_c_binding
     INTEGER(KIND=C_INT),VALUE :: nbrofprimitives_a,nbrofprimitives_b

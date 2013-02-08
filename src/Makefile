@@ -12,10 +12,6 @@ COMMONFLAGS = -O3 -g
 
 FFLAGS = $(PRODFFLAGS) $(COMMONFLAGS)
 
-ifndef ASPICROOT
-   ASPICROOT=../A.S.P.I.C
-endif
-
 ifeq ($(F95),g95)
    F95FLAGS = -c -ffree-line-length-huge $(FLAGS) -fmod=$(MODDIR) $(FFLAGS)
    LD = g95
@@ -57,11 +53,12 @@ ifeq ($(shell uname),Darwin)
 endif
 ifeq ($(shell uname),Linux)
 ## linux ubuntu
-   ASPICLIBS = $(ASPICLIBPATH) -lgIntegrals -lchemics -lxmlParser -lgaussian -lpolynome -lcontainor -laspicUtils $(XERCESCLIBPATH) -lxerces-c -L/usr/lib/gcc/i686-linux-gnu/4.4/ -lstdc++
+   ASPICLIBS = $(ASPICLIBPATH) -lgIntegrals -lchemics -lxmlParser -lgaussian -lpolynome -lcontainor -laspicUtils $(XERCESCLIBPATH) -lxerces-c -L/usr/lib/gcc/i686-linux-gnu/4.6/ -lstdc++
 endif
 
 ## ACCQUAREL code ##
 OBJ =				\
+ $(OBJDIR)gnufor2.o		\
  $(OBJDIR)expokit.o		\
  $(OBJDIR)optimization.o	\
  $(OBJDIR)rootfinding.o		\
@@ -89,6 +86,15 @@ $(TARGET) :  $(OBJ)
 	$(LD) $(LDFLAGS) $(OBJ) -o $(EXEDIR)$(TARGET) $(FLIBS) $(ASPICLIBS)
 	@echo " ----------- $(TARGET) created ----------- "
 
+# external subroutines
+
+$(OBJDIR)%.o : $(SRCDIR)external/%.f90
+	$(F95) $(F95FLAGS) -o $@ $<
+
+$(OBJDIR)%.o : $(SRCDIR)external/%.f
+	$(F95) $(F95FLAGS) -o $@ $<
+
+# main code subroutines
 $(OBJDIR)%.o : $(SRCDIR)%.F90
 	$(F95) $(F95FLAGS) -o $@ $<
 
