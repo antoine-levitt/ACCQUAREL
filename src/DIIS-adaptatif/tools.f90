@@ -1,38 +1,33 @@
 MODULE constants
   DOUBLE PRECISION,PARAMETER :: PI=3.14159265358979323846D0
-! speed of light in the vacuum in atomic units (for the relativistic case)
-! Note : One has $c=\frac{e^2h_e}{\hbar\alpha}$,where $\alpha$ is the fine structure constant,$c$ is the speed of light in the vacuum,$e$ is the elementary charge,$\hbar$ is the reduced Planck constant and $k_e$ is the Coulomb constant. In Hartree atomic units,the numerical values of the electron mass,the elementary charge,the reduced Planck constant and the Coulomb constant are all unity by definition,so that $c=\alpha^{-1}$. The value chosen here is the one recommended in: P. J. Mohr,B. N. Taylor,and D. B. Newell,CODATA recommended values of the fundamental physical constants: 2006.
-  DOUBLE PRECISION,PARAMETER :: SPEED_OF_LIGHT=137.035999967994D0
 END MODULE
 
 MODULE random
 CONTAINS
+  ! call this once
+  SUBROUTINE INIT_RANDOM()
+    ! initialises random generator
+    ! based on http://gcc.gnu.org/onlinedocs/gfortran/RANDOM_005fSEED.html#RANDOM_005fSEED
+    INTEGER :: i, n, clock
+    INTEGER, DIMENSION(:), ALLOCATABLE :: seed
 
-SUBROUTINE INIT_RANDOM_SEED()
-! Initialization of the seed of the pseudorandom number generator used by RANDOM_NUMBER based on the system's time (this routine must be called once).
-  IMPLICIT NONE
-  INTEGER :: I,N,CLOCK
-  INTEGER,DIMENSION(:),ALLOCATABLE :: SEED
+    CALL RANDOM_SEED(size = n)
+    ALLOCATE(seed(n))
 
-  CALL RANDOM_SEED(SIZE=N)
-  ALLOCATE(SEED(N))
+    CALL SYSTEM_CLOCK(COUNT=clock)
 
-  CALL SYSTEM_CLOCK(COUNT=CLOCK)
+    seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+    CALL RANDOM_SEED(PUT = seed)
 
-  SEED=CLOCK+37*(/(I-1,I=1,N)/)
-  CALL RANDOM_SEED(PUT=SEED)
+    DEALLOCATE(seed)
+  END SUBROUTINE INIT_RANDOM
 
-  DEALLOCATE(SEED)
-END SUBROUTINE INIT_RANDOM_SEED
-
-FUNCTION GET_RANDOM(N) RESULT(RANDOM_ARRAY)
-! Function that returns an array of random numbers of size N in (0,1)
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N
-  REAL,DIMENSION(N) :: RANDOM_ARRAY
-
-  CALL RANDOM_NUMBER(RANDOM_ARRAY)
-END FUNCTION GET_RANDOM
+  ! returns an array of random numbers of size N in (0, 1)
+  FUNCTION GET_RANDOM(N) RESULT(r)
+    REAL, DIMENSION(N) :: r
+    INTEGER :: N
+    CALL RANDOM_NUMBER(r)
+  END FUNCTION get_random
 END MODULE random
 
 MODULE matrix_tools
@@ -56,10 +51,6 @@ INTERFACE ABC_CBA
   MODULE PROCEDURE ABC_CBA_symmetric,ABC_CBA_hermitian
 END INTERFACE
 
-INTERFACE BUILD_BLOCK_DIAGONAL
-   MODULE PROCEDURE BUILD_BLOCK_DIAGONAL_symmetric
-END INTERFACE BUILD_BLOCK_DIAGONAL
-
 INTERFACE FINNERPRODUCT
   MODULE PROCEDURE FROBENIUSINNERPRODUCT_real,FROBENIUSINNERPRODUCT_complex
 END INTERFACE
@@ -70,10 +61,6 @@ END INTERFACE
 
 INTERFACE INVERSE
   MODULE PROCEDURE INVERSE_real,INVERSE_complex,INVERSE_symmetric,INVERSE_hermitian
-END INTERFACE
-
-INTERFACE SIGN_FUNCTION
-  MODULE PROCEDURE SIGN_FUNCTION_complex
 END INTERFACE
 
 INTERFACE SQUARE_ROOT
@@ -101,12 +88,12 @@ INTERFACE COMMUTATOR
 END INTERFACE
 
 INTERFACE PRINTMATRIX
-   MODULE PROCEDURE PRINTMATRIX_symmetric,PRINTMATRIX_hermitian,PRINTMATRIX_complex,PRINTMATRIX_real
+   MODULE PROCEDURE PRINTMATRIX_symmetric,PRINTMATRIX_hermitian
 END INTERFACE
 
 INTERFACE READMATRIX
-   MODULE PROCEDURE READMATRIX_complex,READMATRIX_real
-END INTERFACE READMATRIX
+   MODULE PROCEDURE READMATRIX_symmetric,READMATRIX_hermitian
+END INTERFACE
 
 CONTAINS
 
@@ -125,7 +112,7 @@ FUNCTION PACK_symmetric(A,N) RESULT (PA)
   DO J=1,N
      DO I=1,J
         IJ=IJ+1
-        PA(IJ)=(A(I,J)+A(J,I))/2.D0
+        PA(IJ)=A(I,J)
      END DO
   END DO
 END FUNCTION PACK_symmetric
@@ -144,7 +131,6 @@ FUNCTION PACK_hermitian(A,N) RESULT (PA)
      DO I=1,J
         IJ=IJ+1
         PA(IJ)=A(I,J)
-        PA(IJ)=(A(I,J)+conjg(A(J,I)))/2.D0
      END DO
   END DO
 END FUNCTION PACK_hermitian
@@ -182,7 +168,7 @@ FUNCTION UNPACK_hermitian(PA,N) RESULT (A)
 END FUNCTION UNPACK_hermitian
 
 FUNCTION ABA_symmetric(PA,PB,N) RESULT (PC)
-! Function that computes the product ABA,where A and B are two symmetric matrices,which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
+! Function that computes the product ABA, where A and B are two symmetric matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB
@@ -233,7 +219,7 @@ FUNCTION ABA_symmetric(PA,PB,N) RESULT (PC)
 END FUNCTION ABA_symmetric
 
 FUNCTION ABA_hermitian(PA,PB,N) RESULT (PC)
-! Function that computes the product ABA,where A and B are two hermitian matrices,which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
+! Function that computes the product ABA, where A and B are two hermitian matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB
@@ -281,14 +267,10 @@ FUNCTION ABA_hermitian(PA,PB,N) RESULT (PC)
         END DO
      END DO
   END DO
-
-  DO I=1,N
-     PC(I*(I+1)/2)=REAL(PC(I*(I+1)/2))
-  END DO
 END FUNCTION ABA_hermitian
 
 FUNCTION ABCBA_symmetric(PA,PB,PC,N) RESULT (PD)
-! Function that computes the product ABCBA,where A,B,and C are three symmetric matrices,which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
+! Function that computes the product ABCBA, where A, B, and C are three symmetric matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB,PC
@@ -301,17 +283,20 @@ FUNCTION ABCBA_symmetric(PA,PB,PC,N) RESULT (PD)
 END FUNCTION ABCBA_symmetric
 
 FUNCTION ABCBA_hermitian(PA,PB,PC,N) RESULT (PD)
-! Function that computes the product ABCBA,where A,B,and C are three hermitian matrices,which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
+! Function that computes the product ABCBA, where A, B, and C are three hermitian matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB,PC
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2) :: PD
 
-  PD=ABA(PA,ABA(PB,PC,N),N)
+  DOUBLE COMPLEX,DIMENSION(N,N) :: A,B,C
+
+  A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; C=UNPACK(PC,N)
+  PD=PACK(MATMUL(A,MATMUL(B,MATMUL(C,MATMUL(B,A)))),N)
 END FUNCTION ABCBA_hermitian
 
 FUNCTION ABC_CBA_symmetric(PA,PB,PC,N) RESULT (PD)
-! Function that computes the sum ABC+CBA,where A,B,and C are three symmetric matrices,which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
+! Function that computes the sum ABC+CBA, where A, B, and C are three symmetric matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB,PC
@@ -324,7 +309,7 @@ FUNCTION ABC_CBA_symmetric(PA,PB,PC,N) RESULT (PD)
 END FUNCTION ABC_CBA_symmetric
 
 FUNCTION ABC_CBA_hermitian(PA,PB,PC,N) RESULT (PD)
-! Function that computes the sum ABC+CBA,where A,B,and C are three hermitian matrices,which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
+! Function that computes the sum ABC+CBA, where A, B, and C are three hermitian matrices, which upper triangular parts are stored in packed format (the resulting matrix being also stored as such).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB,PC
@@ -335,21 +320,6 @@ FUNCTION ABC_CBA_hermitian(PA,PB,PC,N) RESULT (PD)
   A=UNPACK(PA,N) ; B=UNPACK(PB,N) ; C=UNPACK(PC,N)
   PD=PACK(MATMUL(A,MATMUL(B,C))+MATMUL(C,MATMUL(B,A)),N)
 END FUNCTION ABC_CBA_hermitian
-
-
-SUBROUTINE BUILD_BLOCK_DIAGONAL_symmetric(PB,PA,N)
-! Subroutine that forms the block-diagonal symmetric matrix B of order 2N from a symmetric matrix A of size N,both of which have their upper triangular parts are stored in packed format.
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N
-  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA
-  DOUBLE PRECISION,DIMENSION(N*2*(N*2+1)/2),INTENT(OUT) :: PB
-
-  DOUBLE PRECISION,DIMENSION(2*N,2*N) :: B
-
-  B=0.D0
-  B(1:N,1:N)=UNPACK(PA,N) ; B(N+1:2*N,N+1:2*N)=B(1:N,1:N)
-  PB=PACK(B,2*N)
-END SUBROUTINE BUILD_BLOCK_DIAGONAL_symmetric
 
 ! diverse linear algebra routines
 
@@ -374,7 +344,7 @@ FUNCTION INVERSE_real(A,N) RESULT(INVA)
      WRITE(*,*)'Subroutine DGETRF: the',-INFO,'-th argument had an illegal value'
   ELSE
      WRITE(*,*)'Subroutine DGETRF: U(',INFO,',',INFO,') is exactly zero. The factorization &
-    &has been completed,but the factor U is exactly singular,and division by zero will &
+    &has been completed, but the factor U is exactly singular, and division by zero will &
     &occur if it is used to solve a system of equations'
   END IF
   GO TO 3
@@ -409,7 +379,7 @@ FUNCTION INVERSE_complex(A,N) RESULT(INVA)
      WRITE(*,*)'Subroutine ZGETRF: the',-INFO,'-th argument had an illegal value'
   ELSE
      WRITE(*,*)'Subroutine ZGETRF: U(',INFO,',',INFO,') is exactly zero. The factorization &
-    &has been completed,but the factor U is exactly singular,and division by zero will &
+    &has been completed, but the factor U is exactly singular, and division by zero will &
     &occur if it is used to solve a system of equations'
   END IF
   GO TO 3
@@ -444,7 +414,7 @@ FUNCTION INVERSE_symmetric(PA,N) RESULT(PINVA)
      WRITE(*,*)'Subroutine DSPTRF: the',-INFO,'-th argument had an illegal value'
   ELSE
      WRITE(*,*)'Subroutine DSPTRF: D(',INFO,',',INFO,') is exactly zero. The factorization &
-    &has been completed,but the block diagonal matrix D is exactly singular,and division &
+    &has been completed, but the block diagonal matrix D is exactly singular, and division &
     &by zero will occur if it is used to solve a system of equations'
   END IF
   GO TO 3
@@ -479,7 +449,7 @@ FUNCTION INVERSE_hermitian(PA,N) RESULT(PINVA)
      WRITE(*,*)'Subroutine ZHPTRF: the',-INFO,'-th argument had an illegal value'
   ELSE
      WRITE(*,*)'Subroutine ZHPTRF: D(',INFO,',',INFO,') is exactly zero. The factorization &
-    &has been completed,but the block diagonal matrix D is exactly singular,and division &
+    &has been completed, but the block diagonal matrix D is exactly singular, and division &
     &by zero will occur if it is used to solve a system of equations'
   END IF
   GO TO 3
@@ -493,34 +463,8 @@ FUNCTION INVERSE_hermitian(PA,N) RESULT(PINVA)
   STOP
 END FUNCTION INVERSE_hermitian
 
-FUNCTION SIGN_FUNCTION_complex(A,N) RESULT (SA)
-! Function that computes the sign function of a complex square matrix,which is supposed to have no eigenvalues on the imaginary axis (so that the function is defined),by the Newton--Schulz iteration.
-! Reference: Günther Schulz,Iterative Berechnung der reziproken Matrix,Z. Angew. Math. Mech.,13,57-59,1933.
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N
-  DOUBLE COMPLEX,DIMENSION(N,N),INTENT(IN) :: A
-  DOUBLE COMPLEX,DIMENSION(N,N) :: SA
-
-  INTEGER,PARAMETER :: ITERMAX=50
-  DOUBLE PRECISION,PARAMETER :: TOL=1.D-15
-  INTEGER :: I,ITER
-  DOUBLE COMPLEX,DIMENSION(N,N) :: OLDSA
-
-  ITER=0 ; SA=A
-  DO
-     ITER=ITER+1 ; OLDSA=SA
-     SA=(3.D0*SA-MATMUL(SA,MATMUL(SA,SA)))/2.D0
-     IF (NORM(SA-OLDSA,N,'F')<TOL) THEN
-        RETURN
-     ELSE IF (ITER==ITERMAX) THEN
-        WRITE(*,*)'Function SIGN_FUNCTION: no convergence after ',ITER,' iteration(s).'
-        STOP
-     END IF
-  END DO
-END FUNCTION SIGN_FUNCTION_complex
-
 FUNCTION SQUARE_ROOT_symmetric(PA,N) RESULT(PSQRA)
-! Function that computes the square root of a symmetric,positive-definite matrix which upper triangular part is stored in packed format (its square root being stored as such).
+! Function that computes the square root of a symmetric, positive-definite matrix which upper triangular part is stored in packed format (its square root being stored as such).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA
@@ -541,7 +485,7 @@ FUNCTION SQUARE_ROOT_symmetric(PA,N) RESULT(PSQRA)
 1 IF (INFO<0) THEN
      WRITE(*,*)'Subroutine DSPEV: the',-INFO,'-th argument had an illegal value'
   ELSE
-     WRITE(*,*)'Subroutine DSPEV: the algorithm failed to converge; ',INFO,&
+     WRITE(*,*)'Subroutine DSPEV: the algorithm failed to converge; ',INFO, &
     &'off-diagonal elements of an intermediate tridiagonal form did not converge to zero'
   END IF
   WRITE(*,*)'(called from function SQUARE_ROOT)'
@@ -549,7 +493,7 @@ FUNCTION SQUARE_ROOT_symmetric(PA,N) RESULT(PSQRA)
 END FUNCTION SQUARE_ROOT_symmetric
 
 FUNCTION SQUARE_ROOT_hermitian(PA,N) RESULT(PSQRA)
-! Function that computes the square root of an hermitian,positive-definite matrix which upper triangular part is stored in packed format (its square root being stored as such).
+! Function that computes the square root of an hermitian, positive-definite matrix which upper triangular part is stored in packed format (its square root being stored as such).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA
@@ -571,7 +515,7 @@ FUNCTION SQUARE_ROOT_hermitian(PA,N) RESULT(PSQRA)
 1 IF (INFO<0) THEN
      WRITE(*,*)'Subroutine ZHPEV: the',-INFO,'-th argument had an illegal value'
   ELSE
-     WRITE(*,*)'Subroutine ZHPEV: the algorithm failed to converge; ',INFO,&
+     WRITE(*,*)'Subroutine ZHPEV: the algorithm failed to converge; ',INFO, &
     &'off-diagonal elements of an intermediate tridiagonal form did not converge to zero'
   END IF
   WRITE(*,*)'(called from function SQUARE_ROOT)'
@@ -579,7 +523,7 @@ FUNCTION SQUARE_ROOT_hermitian(PA,N) RESULT(PSQRA)
 END FUNCTION SQUARE_ROOT_hermitian
 
 FUNCTION EXPONENTIAL_real(T,A,N) result(EXPTA)
-! Function that computes the matrix exponential exp(tA),where A is an N-by-N real matrix and t is a real scalar,using the Expokit software package (http://www.maths.uq.edu.au/expokit/).
+! Function that computes the matrix exponential exp(tA), where A is an N-by-N real matrix and t is a real scalar, using the Expokit software package (http://www.maths.uq.edu.au/expokit/).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,INTENT(IN) :: T
@@ -601,7 +545,7 @@ FUNCTION EXPONENTIAL_real(T,A,N) result(EXPTA)
 END FUNCTION EXPONENTIAL_real
 
 FUNCTION EXPONENTIAL_complex(T,A,N) result(EXPTA)
-! Function that computes the matrix exponential exp(tA),where A is an N-by-N complex matrix and t is a real scalar,using the Expokit software package (http://www.maths.uq.edu.au/expokit/).
+! Function that computes the matrix exponential exp(tA), where A is an N-by-N complex matrix and t is a real scalar, using the Expokit software package (http://www.maths.uq.edu.au/expokit/).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,INTENT(IN) :: T
@@ -623,7 +567,7 @@ FUNCTION EXPONENTIAL_complex(T,A,N) result(EXPTA)
 END FUNCTION EXPONENTIAL_complex
 
 FUNCTION TRACE_symmetric(PA,N) RESULT (TRACE)
-! Function that computes the trace of a symmetric matrix,which upper triangular part is stored in packed format.
+! Function that computes the trace of a symmetric matrix, which upper triangular part is stored in packed format.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA
@@ -638,7 +582,7 @@ FUNCTION TRACE_symmetric(PA,N) RESULT (TRACE)
 END FUNCTION TRACE_symmetric
 
 FUNCTION TRACE_hermitian(PA,N) RESULT (TRACE)
-! Function that computes the trace of a hermitian matrix,which upper triangular part is stored in packed format.
+! Function that computes the trace of a hermitian matrix, which upper triangular part is stored in packed format.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA
@@ -687,7 +631,7 @@ FUNCTION TRACEOFPRODUCT_complex(A,B,N) RESULT (TRACE)
 END FUNCTION TRACEOFPRODUCT_complex
 
 FUNCTION TRACEOFPRODUCT_symmetric(PA,PB,N) RESULT (TRACE)
-! Function that computes the trace of the product of two symmetric matrices A and B,which upper triangular parts are stored in packed format. 
+! Function that computes the trace of the product of two symmetric matrices A and B, which upper triangular parts are stored in packed format. 
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB
@@ -709,7 +653,7 @@ FUNCTION TRACEOFPRODUCT_symmetric(PA,PB,N) RESULT (TRACE)
 END FUNCTION TRACEOFPRODUCT_symmetric
 
 FUNCTION TRACEOFPRODUCT_hermitian(PA,PB,N) RESULT (TRACE)
-! Function that computes the trace of the product of two hermitian matrices A and B,which upper triangular parts are stored in packed format.
+! Function that computes the trace of the product of two hermitian matrices A and B, which upper triangular parts are stored in packed format.
   IMPLICIT NONE 
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB
@@ -764,19 +708,8 @@ FUNCTION FROBENIUSINNERPRODUCT_complex(A,B,N) RESULT (FIP)
   END DO
 END FUNCTION FROBENIUSINNERPRODUCT_complex
 
-SUBROUTINE NORM_check_norm(CHAR)
-  CHARACTER(1),INTENT(IN) :: CHAR
-  IF((CHAR /= 'F') .AND. &
-       &(CHAR /= 'I') .AND. &
-       &(CHAR /= '1') .AND. &
-       &(CHAR /= 'M')) THEN
-     WRITE(*,*) 'Invalid norm'
-     STOP
-  END IF
-END SUBROUTINE NORM_check_norm
-
 FUNCTION NORM_real(M,N,CHAR) RESULT (NORM)
-! Function that computes the one norm,or the Frobenius norm,or the infinity norm of a real matrix.
+! Function that computes the one norm, or the Frobenius norm, or the infinity norm of a real matrix.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N,N),INTENT(IN) :: M
@@ -786,12 +719,19 @@ FUNCTION NORM_real(M,N,CHAR) RESULT (NORM)
   DOUBLE PRECISION,DIMENSION(N) :: WORK
   DOUBLE PRECISION,EXTERNAL :: DLANGE
 
-  CALL NORM_check_norm(CHAR)
-  NORM=DLANGE(CHAR,N,N,M,N,WORK)
+  IF (CHAR=='1') THEN
+     NORM=DLANGE('1',N,N,M,N,WORK)
+  ELSE IF (CHAR=='F') THEN
+     NORM=DLANGE('F',N,N,M,N,WORK)
+  ELSE IF (CHAR=='I') THEN
+     NORM=DLANGE('I',N,N,M,N,WORK)
+  ELSE
+     STOP'undefined matrix norm'
+  END IF  
 END FUNCTION NORM_real
 
 FUNCTION NORM_complex(M,N,CHAR) RESULT (NORM)
-! Function that computes the one norm,or the Frobenius norm,or the infinity norm of a complex matrix.
+! Function that computes the one norm, or the Frobenius norm, or the infinity norm of a complex matrix.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N,N),INTENT(IN) :: M
@@ -801,12 +741,19 @@ FUNCTION NORM_complex(M,N,CHAR) RESULT (NORM)
   DOUBLE PRECISION,DIMENSION(N) :: WORK
   DOUBLE PRECISION,EXTERNAL :: ZLANGE
 
-  CALL NORM_check_norm(CHAR)
-  NORM=ZLANGE(CHAR,N,N,M,N,WORK)
+  IF (CHAR=='1') THEN
+     NORM=ZLANGE('1',N,N,M,N,WORK)
+  ELSE IF (CHAR=='F') THEN
+     NORM=ZLANGE('F',N,N,M,N,WORK)
+  ELSE IF (CHAR=='I') THEN
+     NORM=ZLANGE('I',N,N,M,N,WORK)
+  ELSE
+     STOP'undefined matrix norm'
+  END IF  
 END FUNCTION NORM_complex
 
 FUNCTION NORM_symmetric(PM,N,CHAR) RESULT (NORM)
-! Function that returns the one norm,or the Frobenius norm,or the infinity norm of a real symmetric matrix,which upper triangular part is stored in packed format.
+! Function that returns the one norm, or the Frobenius norm, or the infinity norm of a real symmetric matrix, which upper triangular part is stored in packed format.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PM
@@ -816,12 +763,19 @@ FUNCTION NORM_symmetric(PM,N,CHAR) RESULT (NORM)
   DOUBLE PRECISION,DIMENSION(N) :: WORK
   DOUBLE PRECISION,EXTERNAL :: DLANSP
 
-  CALL NORM_check_norm(CHAR)
-  NORM=DLANSP(CHAR,'U',N,PM,WORK)
+  IF (CHAR=='1') THEN
+     NORM=DLANSP('1','U',N,PM,WORK)
+  ELSE IF (CHAR=='F') THEN
+     NORM=DLANSP('F','U',N,PM,WORK)
+  ELSE IF (CHAR=='I') THEN
+     NORM=DLANSP('I','U',N,PM,WORK)
+  ELSE
+     STOP'Function NORM: undefined matrix norm.'
+  END IF
 END FUNCTION NORM_symmetric
 
 FUNCTION NORM_hermitian(PM,N,CHAR) RESULT (NORM)
-! Function that returns the one norm,or the Frobenius norm,or the infinity norm of a hermitian matrix,which upper triangular part is stored in packed format.
+! Function that returns the one norm, or the Frobenius norm, or the infinity norm of a hermitian matrix, which upper triangular part is stored in packed format.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PM
@@ -831,12 +785,19 @@ FUNCTION NORM_hermitian(PM,N,CHAR) RESULT (NORM)
   DOUBLE PRECISION,DIMENSION(N) :: WORK
   DOUBLE PRECISION,EXTERNAL :: ZLANHP
 
-  CALL NORM_check_norm(CHAR)
-  NORM=ZLANHP(CHAR,'U',N,PM,WORK)
+  IF (CHAR=='1') THEN
+     NORM=ZLANHP('1','U',N,PM,WORK)
+  ELSE IF (CHAR=='F') THEN
+     NORM=ZLANHP('F','U',N,PM,WORK)
+  ELSE IF (CHAR=='I') THEN
+     NORM=ZLANHP('I','U',N,PM,WORK)
+  ELSE
+     STOP'Function NORM: undefined matrix norm.'
+  END IF
 END FUNCTION NORM_hermitian
 
 SUBROUTINE EIGENSOLVER_symmetric_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
-! Subroutine that computes all the eigenvalues and the eigenvectors of a real generalized symmetric-definite eigenproblem,of the form A*x=(lambda)*B*x. Here A and B are assumed to be symmetric,their upper triangular part being stored in packed format,and B is also positive definite. It is also assumed that the Cholesky factorization of B has previously been computed and stored in packed format.
+! Subroutine that computes all the eigenvalues and the eigenvectors of a real generalized symmetric-definite eigenproblem, of the form A*x=(lambda)*B*x. Here A and B are assumed to be symmetric, their upper triangular part being stored in packed format, and B is also positive definite. It is also assumed that the Cholesky factorization of B has previously been computed and stored in packed format.
 ! Note: it is a simplification of LAPACK's DSPGV subroutine.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
@@ -878,7 +839,7 @@ SUBROUTINE EIGENSOLVER_symmetric_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
 END SUBROUTINE EIGENSOLVER_symmetric_prefactorized
 
 SUBROUTINE EIGENSOLVER_hermitian_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
-! Subroutine that computes all the eigenvalues and the eigenvectors of a complex generalized hermitian-definite eigenproblem,of the form A*x=(lambda)*B*x. Here A and B are assumed to be hermitian,their upper triangular part being stored in packed format,and B is also positive definite. It is also assumed that the Cholesky factorization of B has previously been computed and stored in packed format.
+! Subroutine that computes all the eigenvalues and the eigenvectors of a complex generalized hermitian-definite eigenproblem, of the form A*x=(lambda)*B*x. Here A and B are assumed to be hermitian, their upper triangular part being stored in packed format, and B is also positive definite. It is also assumed that the Cholesky factorization of B has previously been computed and stored in packed format.
 ! Note: it is a simplification of LAPACK's ZHPGV subroutine.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
@@ -920,7 +881,7 @@ SUBROUTINE EIGENSOLVER_hermitian_prefactorized(PA,PCFB,N,EIG,EIGVEC,INFO)
 END SUBROUTINE EIGENSOLVER_hermitian_prefactorized
 
 FUNCTION COMMUTATOR_symmetric(PA,PB,PS,N) RESULT (C)
-! Function that computes the "commutator" [A,B]=ABS-SBA in a discrete nonorthonormal basis,A and B being two symmetric matrices of size N (only the upper triangular part of the matrices is stored in packed format) and S being the overlap matrix of the basis (stored similarly).
+! Function that computes the "commutator" [A,B]=ABS-SBA in a discrete nonorthonormal basis, A and B being two symmetric matrices of size N (only the upper triangular part of the matrices is stored in packed format) and S being the overlap matrix of the basis (stored similarly).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB,PS
@@ -933,7 +894,7 @@ FUNCTION COMMUTATOR_symmetric(PA,PB,PS,N) RESULT (C)
 END FUNCTION COMMUTATOR_symmetric
 
 FUNCTION COMMUTATOR_hermitian(PA,PB,PS,N) RESULT (C)
-! Function that computes the "commutator" [A,B]=ABS-SBA in a discrete nonorthonormal basis,A and B being two hermitian matrices of size N (only the upper triangular part of the matrices is stored in packed format) and S being the overlap matrix of the basis (stored similarly).
+! Function that computes the "commutator" [A,B]=ABS-SBA in a discrete nonorthonormal basis, A and B being two hermitian matrices of size N (only the upper triangular part of the matrices is stored in packed format) and S being the overlap matrix of the basis (stored similarly).
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PA,PB,PS
@@ -945,79 +906,117 @@ FUNCTION COMMUTATOR_hermitian(PA,PB,PS,N) RESULT (C)
   C=MATMUL(MATMUL(A,B),S)-MATMUL(S,MATMUL(B,A))
 END FUNCTION COMMUTATOR_hermitian
 
-! input/output routines for matrices
-
-SUBROUTINE READMATRIX_real(MAT,N,LOGUNIT)
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N,LOGUNIT
-  DOUBLE PRECISION,DIMENSION(N,N),INTENT(OUT) :: MAT
-
-  INTEGER :: I
-  DOUBLE PRECISION,DIMENSION(N) :: LINE
-
-  DO I=1,N
-     READ(LOGUNIT,*)LINE
-     MAT(I,:)=LINE
-  END DO
-END SUBROUTINE READMATRIX_REAL
-
-SUBROUTINE READMATRIX_complex(MAT,N,LOGUNIT_REAL,LOGUNIT_IMAG)
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N,LOGUNIT_REAL,LOGUNIT_IMAG
-  DOUBLE COMPLEX,DIMENSION(N,N),INTENT(OUT) :: MAT
-
-  DOUBLE PRECISION,DIMENSION(N,N) :: R,I
-
-  CALL READMATRIX_real(R,N,LOGUNIT_REAL)
-  CALL READMATRIX_real(I,N,LOGUNIT_IMAG)
-  MAT=DCMPLX(R,I)
-END SUBROUTINE READMATRIX_complex
-
-SUBROUTINE PRINTMATRIX_real(MAT,N,LOGUNIT)
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N,LOGUNIT
-  DOUBLE PRECISION,DIMENSION(N,N),INTENT(IN) :: MAT
-
-  INTEGER :: I
-
-  DO I=1,N
-     WRITE(LOGUNIT,*)MAT(I,:)
-  END DO
-END SUBROUTINE PRINTMATRIX_real
-
-SUBROUTINE PRINTMATRIX_complex(MAT,N,LOGUNIT_REAL,LOGUNIT_IMAG)
-  IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N,LOGUNIT_REAL,LOGUNIT_IMAG
-  DOUBLE COMPLEX,DIMENSION(N,N),INTENT(IN) :: MAT
-
-  INTEGER :: I
-
-  DO I=1,N
-     IF (LOGUNIT_REAL==LOGUNIT_IMAG) THEN
-        WRITE(LOGUNIT_REAL,*)MAT(I,:)
-     ELSE
-        WRITE(LOGUNIT_REAL,*)REAL(MAT(I,:))
-        WRITE(LOGUNIT_IMAG,*)AIMAG(MAT(I,:))
-     END IF
-  END DO
-END SUBROUTINE PRINTMATRIX_complex
-
 SUBROUTINE PRINTMATRIX_symmetric(PMAT,N,LOGUNIT)
+! Subroutine that prints in the file LOGUNIT a symmetric matrix of size N*N stored in packed format.
   IMPLICIT NONE
   INTEGER,INTENT(IN) :: N,LOGUNIT
   DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: PMAT
 
-  CALL PRINTMATRIX_real(UNPACK(PMAT,N),N,LOGUNIT)
+  INTEGER :: I,J,IJ
+
+  OPEN(UNIT=LOGUNIT)
+  WRITE(LOGUNIT,*)N
+  DO I=1,N
+     DO J=1,N
+        IF (J<I) THEN
+           WRITE(LOGUNIT,'(2I3,a6)')I,J,'     x'
+        ELSE
+           WRITE(LOGUNIT,'(2I3,E20.12)')I,J,PMAT(I+(J-1)*J/2)
+        END IF
+     END DO
+  END DO
+  CLOSE(LOGUNIT)
 END SUBROUTINE PRINTMATRIX_symmetric
 
-SUBROUTINE PRINTMATRIX_hermitian(PMAT,N,LOGUNIT_REAL,LOGUNIT_IMAG)
+SUBROUTINE PRINTMATRIX_hermitian(PMAT,N,LOGUNIT)
+! Subroutine that prints in the file LOGUNIT a hermitian matrix of size N*N stored in packed format.
   IMPLICIT NONE
-  INTEGER,INTENT(IN) :: N,LOGUNIT_REAL,LOGUNIT_IMAG
+  INTEGER,INTENT(IN) :: N,LOGUNIT
   DOUBLE COMPLEX,DIMENSION(N*(N+1)/2),INTENT(IN) :: PMAT
 
-  CALL PRINTMATRIX_complex(UNPACK(PMAT,N),N,LOGUNIT_REAL,LOGUNIT_IMAG)
+  INTEGER :: I,J,IJ
+
+  OPEN(UNIT=LOGUNIT)
+  WRITE(LOGUNIT,*)N
+  DO I=1,N
+     DO J=1,N
+        IF (J<I) THEN
+           WRITE(LOGUNIT,'(2I3,a6)')I,J,'     x'
+        ELSE
+           WRITE(LOGUNIT,'(2I3,2E20.12)')I,J,PMAT(I+(J-1)*J/2)
+        END IF
+     END DO
+  END DO
+  CLOSE(LOGUNIT)
 END SUBROUTINE PRINTMATRIX_hermitian
-END MODULE matrix_tools
+
+SUBROUTINE READMATRIX_symmetric(LOGUNIT,N,PMAT)
+! Subroutine that produces a packed format matrix from a matrix printed with PRINTMATRIX subroutine in the file LOGUNIT
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: LOGUNIT,N
+  DOUBLE PRECISION,DIMENSION(:),INTENT(OUT) :: PMAT
+
+  INTEGER :: I,J,K,L
+  DOUBLE PRECISION :: IJ
+  INTEGER :: NB
+
+  OPEN(UNIT=LOGUNIT,STATUS='old',ACTION='READ')
+  READ(LOGUNIT,*)NB
+
+  IF (NB==N) THEN
+     DO I=1,N
+	DO J=1,N
+	   IF (J>=I) THEN
+		READ(LOGUNIT,*)K,L,IJ
+		PMAT(K+(L-1)*L/2)=IJ
+	   ELSE
+		READ(LOGUNIT,*)
+	   END IF
+	END DO
+     END DO
+  ELSE
+     WRITE(*,*)'Matrix size is different from size input'
+  END IF
+  CLOSE(LOGUNIT)
+END SUBROUTINE READMATRIX_symmetric
+
+SUBROUTINE READMATRIX_hermitian(LOGUNIT,N,PMAT)
+! Subroutine that produces a packed format matrix from a matrix printed with PRINTMATRIX subroutine in the file LOGUNIT
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: LOGUNIT,N
+  DOUBLE COMPLEX,DIMENSION(:),INTENT(OUT) :: PMAT
+
+  INTEGER :: I,J,K,L
+  DOUBLE PRECISION :: IJ
+  INTEGER :: NB
+
+  OPEN(UNIT=LOGUNIT,STATUS='old',ACTION='READ')
+  READ(LOGUNIT,*)NB
+
+  IF (NB==N) THEN
+     DO I=1,N
+	DO J=1,N
+	   IF (J>=I) THEN
+		READ(LOGUNIT,*)K,L,IJ
+		PMAT(K+(L-1)*L/2)=IJ
+	   ELSE
+		READ(LOGUNIT,*)
+	   END IF
+	END DO
+     END DO
+  ELSE
+     WRITE(*,*)'Matrix size is different from size input'
+  END IF
+  CLOSE(LOGUNIT)
+END SUBROUTINE READMATRIX_hermitian
+
+!FUNCTION ORTHOGONALIZER_real(Y,MAT) RESULT (YO)
+! Function that computes the difference between Y and its projection onto the vector space spanned by the columns of MAT
+!  IMPLICIT NONE
+
+!END FUNCTION
+
+END MODULE
 
 MODULE mathematical_functions
 INTERFACE DFACT
@@ -1092,6 +1091,7 @@ SUBROUTINE LOOKFOR(NUNIT,SUBSTRING,INFO)
 1 READ(100,'(a)',ERR=2,END=2) STRING
   IF (INDEX(STRING,SUBSTRING)==0) GOTO 1
   RETURN
-2 INFO=1
+2 WRITE(*,*)'Subroutine LOOKFOR: text string "',SUBSTRING,'" was not found in file.'
+  INFO=1
 END SUBROUTINE LOOKFOR
 END MODULE

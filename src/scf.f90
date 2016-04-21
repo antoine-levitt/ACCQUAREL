@@ -66,7 +66,7 @@ SUBROUTINE CHECKNUMCONV_relativistic(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV,
   WRITE(18,'(e22.14)')FNCMT
   IF (FNCMT<=TRSHLD) CONVC=.TRUE.
 ! Note: this criterion is not used to assert convergence
-  WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
+  WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO,'Ha'
   WRITE(16,'(e22.14)')ETOTN
 
   IF (CONVD.AND.CONVC) THEN
@@ -107,7 +107,7 @@ SUBROUTINE CHECKNUMCONV_RHF(PDMN,PDMO,PFM,N,ETOTN,ETOTO,TRSHLD,NUMCONV,VERBOSE)
   WRITE(18,'(e22.14)')FNCMT
   IF (FNCMT<=TRSHLD) CONVC=.TRUE.
 ! Note: this criterion is not used to assert convergence
-  IF (VERBOSE) WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
+  IF (VERBOSE) WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO,'Ha'
   WRITE(16,'(e22.14)')ETOTN
 
   IF (CONVD.AND.CONVC) THEN
@@ -148,7 +148,7 @@ SUBROUTINE CHECKNUMCONV_UHF(PDMA,PDMB,PTDMO,PFMA,PFMB,N,ETOTN,ETOTO,TRSHLD,NUMCO
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n^b),D_n^b] =',FNCMTB
   IF ((FNCMTA<=TRSHLD).AND.(FNCMTB<=TRSHLD)) CONVC=.TRUE.
 ! Note: this criterion is not used to assert convergence
-  WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
+  WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO,'Ha'
 
   IF (CONVD.AND.CONVC) THEN
      NUMCONV=.TRUE.
@@ -191,7 +191,7 @@ SUBROUTINE CHECKNUMCONV_AOCOSDHF(PDMCN,PDMON,PDMCO,PDMOO,PFMC,PFMO,N,ETOTN,ETOTO
   WRITE(*,*)'Frobenius norm of the commutator [F(D_n^o),D_n^o] =',FNCMTO
   IF ((FNCMTC<=TRSHLD).AND.(FNCMTO<=TRSHLD)) CONVC=.TRUE.
 ! Note: this criterion is not used to assert convergence
-  WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO
+  WRITE(*,*)'Difference of the energies E_n-E_{n-1} =',ETOTN-ETOTO,'Ha'
 
   IF (CONVD.AND.CONVC) THEN
      NUMCONV=.TRUE.

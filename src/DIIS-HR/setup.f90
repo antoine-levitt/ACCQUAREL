@@ -1,7 +1,7 @@
 MODULE case_parameters
 ! relativistic or non-relativistic case flag
   LOGICAL :: RELATIVISTIC
-! apparent speed of light (can be defined by the user via a scaling factor) 
+! speed of light. Might be defined by the user via a scale factor 
   DOUBLE PRECISION :: C
 ! approximation index (1 is Hartree, 2 is Hartree-Fock) 
   INTEGER :: APPROXIMATION
@@ -10,28 +10,27 @@ MODULE case_parameters
 CONTAINS
 
 SUBROUTINE SETUP_CASE
-  USE constants ; USE setup_tools
-  IMPLICIT NONE
-  DOUBLE PRECISION :: SCALING_FACTOR
+  USE setup_tools
+! speed of light in the vacuum in atomic units (for the relativistic case)
+! Note : One has $c=\frac{e^2h_e}{\hbar\alpha}$, where $\alpha$ is the fine structure constant, $c$ is the speed of light in the vacuum, $e$ is the elementary charge, $\hbar$ is the reduced Planck constant and $k_e$ is the Coulomb constant. In Hartree atomic units, the numerical values of the electron mass, the elementary charge, the reduced Planck constant and the Coulomb constant are all unity by definition, so that $c=\alpha^{-1}$. The value chosen here is the one recommended in: P. J. Mohr, B. N. Taylor, and D. B. Newell, CODATA recommended values of the fundamental physical constants: 2006.
+  DOUBLE PRECISION,PARAMETER :: SPEED_OF_LIGHT=137.035999967994D0
+  DOUBLE PRECISION :: SCALING_FACTOR=1.D0
   CHARACTER(2) :: CHAR
   INTEGER :: INFO
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## CASE',INFO)
-  IF (INFO/=0) STOP' The computational case is not given.'
+  IF (INFO/=0) STOP
   READ(100,'(a2)') CHAR
   IF (CHAR=='RE') THEN
      RELATIVISTIC=.TRUE.
      WRITE(*,'(a)')' Relativistic case'
-     REWIND(100)
-     CALL LOOKFOR(100,'## SPEED OF LIGHT SCALING FACTOR',INFO)
+     CALL LOOKFOR(100,'## SPEED OF LIGHT SCALE FACTOR',INFO)
      IF (INFO==0) THEN
         READ(100,*) SCALING_FACTOR
-     ELSE
-        SCALING_FACTOR=1.D0
      END IF
-     C=SCALING_FACTOR*SPEED_OF_LIGHT
-     WRITE(*,'(a,f20.12)')' Speed of light c = ',C
+     C = SCALING_FACTOR*SPEED_OF_LIGHT
+     WRITE(*,'(a,f16.8)')' Speed of light c = ',C
   ELSE IF (CHAR=='NO') THEN
      RELATIVISTIC=.FALSE.
      WRITE(*,'(a)')' Non-relativistic case'
@@ -44,13 +43,12 @@ END SUBROUTINE SETUP_CASE
 
 SUBROUTINE SETUP_APPROXIMATION
   USE setup_tools
-  IMPLICIT NONE
   CHARACTER(12) :: CHAR
   INTEGER :: INFO
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## APPROXIMATION',INFO)
-  IF (INFO/=0) STOP' The approximation type is not given.'
+  IF (INFO/=0) STOP
   READ(100,'(a12)') CHAR
   IF (LEN_TRIM(CHAR)==7) THEN
      APPROXIMATION=1
@@ -68,13 +66,12 @@ END SUBROUTINE SETUP_APPROXIMATION
 
 SUBROUTINE SETUP_FORMALISM
   USE setup_tools
-  IMPLICIT NONE
   CHARACTER(3) :: CHAR
   INTEGER :: INFO
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## MODEL',INFO)
-  IF (INFO/=0) STOP' The formalism is not given.'
+  IF (INFO/=0) STOP
   READ(100,'(a3)') CHAR
   IF (RELATIVISTIC) THEN
      IF (APPROXIMATION==2) THEN
@@ -84,9 +81,6 @@ SUBROUTINE SETUP_FORMALISM
         ELSE IF (CHAR=='OSD') THEN
            MODEL=2
            WRITE(*,'(a)')' Average-of-configuration open-shell formalism'
-        ELSE IF (CHAR=='CGH') THEN
-           MODEL=3
-           WRITE(*,'(a)')' Complex General Hartree-Fock'
         ELSE
            GO TO 1
         END IF
@@ -101,29 +95,21 @@ SUBROUTINE SETUP_FORMALISM
         END IF
      ELSE IF (APPROXIMATION==2) THEN
         IF (CHAR=='RHF') THEN
-! Restricted Hartree-Fock (RHF) formalism (doubly occupied orbitals)
+! Restricted (closed-shell) Hartree-Fock (RHF) formalism (doubly occupied orbitals)
            MODEL=1
-           WRITE(*,'(a)')' (Real) Restricted Hartree-Fock (RHF) formalism'
+           WRITE(*,'(a)')' Restricted (closed-shell) Hartree-Fock (RHF) formalism'
         ELSE IF (CHAR=='UHF') THEN
-! Unrestricted Hartree-Fock (UHF) formalism (different orbitals for different spins (DODS method))
+! Unrestricted (open-shell) Hartree-Fock (UHF) formalism (different orbitals for different spins (DODS method))
 ! Reference: J. A. Pople and R. K. Nesbet, Self-consistent orbitals for radicals, J. Chem. Phys., 22(3), 571-572, 1954.
            MODEL=2
-           WRITE(*,'(a)')' (Real) Unrestricted (open-shell) Hartree-Fock (UHF) formalism'
+           WRITE(*,'(a)')' Unrestricted (open-shell) Hartree-Fock (UHF) formalism'
         ELSE IF (CHAR=='ROH') THEN
 ! Restricted Open-shell Hartree-Fock (ROHF) formalism
 ! Reference: C. C. J. Roothaan, Self-consistent field theory for open shells of electronic systems, Rev. Modern Phys., 32(2), 179-185, 1960.
            MODEL=3
-           WRITE(*,'(a)')' (Real) Restricted Open-shell Hartree-Fock (ROHF) formalism'
+           WRITE(*,'(a)')' Restricted Open-shell Hartree-Fock (ROHF) formalism'
            WRITE(*,*)'Option not implemented yet!'
            STOP
-        ELSE IF (CHAR=='RGH') THEN
-! Real General Hartree-Fock (RGHF) formalism
-           MODEL=4
-           WRITE(*,'(a)')' Real General Hartree-Fock formalism'
-!        ELSE IF (CHAR=='CGH') THEN
-! Complex General Hartree-Fock (CGHF) formalism
-!           MODEL=5
-!           WRITE(*,'(a)')' Complex General Hartree-Fock formalism'
         ELSE
            GO TO 1
         END IF
@@ -143,11 +129,8 @@ MODULE data_parameters
   INTEGER :: NBN
 ! atomic numbers of the nuclei
   INTEGER,DIMENSION(10) :: Z
-! positions of the nucleii (in atomic units)
+! positions of the nucleii
   DOUBLE PRECISION,DIMENSION(3,10) :: CENTER
-! flags for the point group symmetries of the molecular system
-! - plane symmetries
-  LOGICAL :: SYM_SX,SYM_SY,SYM_SZ
 ! total number of electrons in the molecular system
   INTEGER :: NBE
 ! total number of electrons in the closed shells (open-shell DHF formalism)
@@ -156,7 +139,7 @@ MODULE data_parameters
   INTEGER :: NBEOS,NBOOS
 ! respective numbers of electrons of $\alpha$ and $\beta$ spin (UHF and ROHF formalisms)
   INTEGER :: NBEA,NBEB
-! internuclear repulsion energy (in atomic units (Hartrees))
+! internuclear repulsion energy
   DOUBLE PRECISION :: INTERNUCLEAR_ENERGY
 ! ** DATA FOR BOSON STAR MODEL **
   DOUBLE PRECISION,PARAMETER :: KAPPA=-1.D0
@@ -164,7 +147,7 @@ MODULE data_parameters
   DOUBLE PRECISION :: MASS
 ! temperature
   DOUBLE PRECISION :: TEMPERATURE
-! exponent for the entropy generating function
+! exponent for the function defining the Tsallis-related entropy term
   DOUBLE PRECISION :: MB
 !
   INTEGER,POINTER :: RANK_P
@@ -181,7 +164,7 @@ SUBROUTINE SETUP_DATA
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   IF (.NOT.RELATIVISTIC.AND.APPROXIMATION==1) THEN
      CALL LOOKFOR(100,'## DESCRIPTION OF THE BOSON STAR',INFO)
-     IF (INFO/=0) STOP' The description of the boson star is not given.'
+     IF (INFO/=0) STOP
      WRITE(*,'(a)')' --- **** ---'
      READ(100,*) NAME
      READ(100,*) MASS
@@ -189,13 +172,13 @@ SUBROUTINE SETUP_DATA
      READ(100,*) TEMPERATURE
      WRITE(*,'(a,f5.3)')' * Temperature = ',TEMPERATURE
      READ(100,*) MB
-     WRITE(*,'(a,f5.3)')' * Exponent for the entropy generating function = ',MB
+     WRITE(*,'(a,f5.3)')' * Exponent for the function defining the Tsallis-related entropy term = ',MB
      WRITE(*,'(a)')' --- **** ---'
   ELSE
      CALL LOOKFOR(100,'## DESCRIPTION OF THE MOLECULAR SYSTEM',INFO)
-     IF (INFO/=0) STOP' The description of the molecular system is not given.'
+     IF (INFO/=0) STOP
      WRITE(*,'(a)')' --- Molecular system ---'
-     READ(100,'(1/,a)')NAME
+     READ(100,'(3/,a)')NAME
      WRITE(*,'(a,a)')' ** NAME: ',NAME
      READ(100,'(i2)') NBN
      DO N=1,NBN
@@ -205,17 +188,17 @@ SUBROUTINE SETUP_DATA
         WRITE(*,'(a,3(f16.8))')'   Center position = ',CENTER(:,N)
      END DO
      CALL INTERNUCLEAR_REPULSION_ENERGY
-     WRITE(*,'(a,f16.8,a)')' * Internuclear repulsion energy of the system = ',INTERNUCLEAR_ENERGY,' Ha'
+     WRITE(*,'(a,f16.8)')' * Internuclear repulsion energy of the system = ',INTERNUCLEAR_ENERGY
      READ(100,'(i3)') NBE
      WRITE(*,'(a,i3)')' * Total number of electrons in the system = ',NBE
      IF (RELATIVISTIC) THEN
         IF (MODEL==2) THEN
            READ(100,'(3(i3))')NBECS,NBEOS,NBOOS
-           WRITE(*,'(a,i3)')'   - number of closed-shell electrons = ',NBECS
-           WRITE(*,'(a,i3)')'   - number of open-shell electrons = ',NBEOS
-           WRITE(*,'(a,i3)')'   - number of open-shell orbitals = ',NBOOS
+           WRITE(*,'(a,i3)')'   - number of closed shell electrons = ',NBECS
+           WRITE(*,'(a,i3)')'   - number of open shell electrons = ',NBEOS
+           WRITE(*,'(a,i3)')'   - number of open shell orbitals = ',NBOOS
            IF (NBE/=NBECS+NBEOS) STOP' Problem with the total number of electrons'
-           IF (NBOOS<=NBEOS) STOP' Problem with the number of open-shell orbitals!'
+           IF (NBOOS<=NBEOS) STOP' Problem with the number of open shell orbitals!'
         END IF
      ELSE
         IF (MODEL==1) THEN
@@ -225,31 +208,8 @@ SUBROUTINE SETUP_DATA
            WRITE(*,'(a,i3)')'   - number of electrons of $\alpha$ spin = ',NBEA
            WRITE(*,'(a,i3)')'   - number of electrons of $\beta$ spin = ',NBEB
            IF (NBE/=NBEA+NBEB) STOP' Problem with the total number of electrons!'
+!        ELSE IF (MODEL==3) THEN
         END IF
-     END IF
-     REWIND(100)
-     CALL LOOKFOR(100,'SYMMETRY SX',INFO)
-     IF (INFO==0) THEN
-        WRITE(*,'(a)')' The system possesses a symmetry wrt the x-plane.'
-        SYM_SX=.TRUE.
-     ELSE
-        SYM_SX=.FALSE.
-     END IF
-     REWIND(100)
-     CALL LOOKFOR(100,'SYMMETRY SY',INFO)
-     IF (INFO==0) THEN
-        WRITE(*,'(a)')' The system possesses a symmetry wrt the y-plane.'
-        SYM_SY=.TRUE.
-     ELSE
-        SYM_SY=.FALSE.
-     END IF
-     REWIND(100)
-     CALL LOOKFOR(100,'SYMMETRY SZ',INFO)
-     IF (INFO==0) THEN
-        WRITE(*,'(a)')' The system possesses a symmetry wrt the z-plane.'
-        SYM_SZ=.TRUE.
-     ELSE
-        SYM_SZ=.FALSE.
      END IF
      WRITE(*,'(a)')' --------- **** ---------'
   END IF
@@ -258,7 +218,6 @@ END SUBROUTINE SETUP_DATA
 
 FUNCTION IDENTIFYZ(Z) RESULT (SYMBOL)
 ! Function returning the symbol of a chemical element given its atomic number Z.
-  IMPLICIT NONE
   INTEGER,INTENT(IN) :: Z
   CHARACTER(2) :: SYMBOL
 
@@ -381,7 +340,6 @@ END FUNCTION IDENTIFYZ
 
 SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
 ! Function that computes the internuclear repulsion energy for the given specific geometry of the molecular system.
-  IMPLICIT NONE
   INTEGER :: I,J
   DOUBLE PRECISION,DIMENSION(3) :: DIFF
 
@@ -394,10 +352,8 @@ SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
   END DO
 END SUBROUTINE INTERNUCLEAR_REPULSION_ENERGY
 
-! Various functions for the Hartree model with temperature (Hwtemp model)
-
+! Various functions for the Hartree model with temperature
 FUNCTION POSITIVE_PART(X) RESULT(FUNC)
-  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
@@ -409,26 +365,14 @@ FUNCTION POSITIVE_PART(X) RESULT(FUNC)
 END FUNCTION POSITIVE_PART
 
 FUNCTION ENTROPY_FUNCTION(X) RESULT(FUNC)
-! entropy generating function beta
-  IMPLICIT NONE
+! beta test function for the entropy
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
   FUNC=POSITIVE_PART(X)**MB/MB
 END FUNCTION ENTROPY_FUNCTION
 
-FUNCTION DENTFUNC(X) RESULT(FUNC)
-! derivative of the entropy generating function beta
-  IMPLICIT NONE
-  DOUBLE PRECISION,INTENT(IN) :: X
-  DOUBLE PRECISION :: FUNC
-
-  FUNC=POSITIVE_PART(X)**(MB-1.D0)
-END FUNCTION DENTFUNC
-
 FUNCTION RECIP_DENTFUNC(X) RESULT(FUNC)
-! reciprocal function of the derivative of the entropy generating function beta
-  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
@@ -440,22 +384,19 @@ FUNCTION RECIP_DENTFUNC(X) RESULT(FUNC)
 END FUNCTION RECIP_DENTFUNC
 
 FUNCTION DRECIP_DENTFUNC(X) RESULT(FUNC)
-! derivative of the reciprocal function of the derivative of the entropy generating function beta
-  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
   IF (X<0.D0) THEN
      STOP'beta is not a bijection on R_-'
   ELSE IF (X==0.D0) THEN
-     STOP'beta is not differentiable at the origin'
+     STOP'No derivative at origin'
   ELSE
      FUNC=X**((2.D0-MB)/(MB-1.D0))/(MB-1.D0)
   END IF
 END FUNCTION
 
 FUNCTION FUNCFORMU(X) RESULT(FUNC)
-  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION :: FUNC
 
@@ -465,12 +406,13 @@ FUNCTION FUNCFORMU(X) RESULT(FUNC)
   FUNC=-MASS
   DO I=1,RANK_P
      Y=(X-MU_I(I))/TEMPERATURE
-     IF (Y>0.D0) FUNC=FUNC+RECIP_DENTFUNC(Y)
+     IF (Y>=0.D0) THEN
+        FUNC=FUNC+RECIP_DENTFUNC(Y)
+     END IF
   END DO
 END FUNCTION FUNCFORMU
 
 SUBROUTINE RDENTFUNCD(X,FVAL,FDERIV)
-  IMPLICIT NONE
   DOUBLE PRECISION,INTENT(IN) :: X
   DOUBLE PRECISION,INTENT(OUT) :: FVAL,FDERIV
 
@@ -480,10 +422,8 @@ SUBROUTINE RDENTFUNCD(X,FVAL,FDERIV)
   FVAL=-MASS ; FDERIV=0.D0
   DO I=1,RANK_P
      Y=(X-MU_I(I))/TEMPERATURE
-     IF (Y>0.D0) THEN
-        FVAL=FVAL+RECIP_DENTFUNC(Y)
-        FDERIV=FDERIV+DRECIP_DENTFUNC(Y)
-     END IF
+     FVAL=FVAL+RECIP_DENTFUNC(Y)
+     FDERIV=FDERIV+DRECIP_DENTFUNC(Y)
   END DO
 END SUBROUTINE RDENTFUNCD
 END MODULE
@@ -539,14 +479,13 @@ CONTAINS
 
 SUBROUTINE SETUP_BASIS
   USE case_parameters ; USE setup_tools
-  IMPLICIT NONE
   CHARACTER(LEN=4) :: CHAR
   CHARACTER(LEN=26) :: BASISNAME
   INTEGER :: INFO
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## BASIS DEFINITION',INFO)
-  IF (INFO/=0) STOP' The basis definition is not given.'
+  IF (INFO/=0) STOP
   READ(100,'(3/,a)') BASISNAME
   IF (BASISNAME(1:6)=='BASIS ') THEN
 ! The basis set is an existing one in the basis library
@@ -597,7 +536,6 @@ END SUBROUTINE SETUP_BASIS
 FUNCTION GBF_POINTWISE_VALUE(GBF,POINT) RESULT(VALUE)
 ! Function that computes the value of a gaussian basis function at a given point of space.
   USE iso_c_binding
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: GBF
   DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
   REAL(KIND=C_DOUBLE) :: VALUE
@@ -608,7 +546,6 @@ FUNCTION GBF_POINTWISE_VALUE(GBF,POINT) RESULT(VALUE)
 END FUNCTION GBF_POINTWISE_VALUE
 
 SUBROUTINE PRINTGBF(PHI,NUNIT)
-  IMPLICIT NONE
   TYPE(gaussianbasisfunction),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NUNIT
 
@@ -627,7 +564,6 @@ END SUBROUTINE PRINTGBF
 FUNCTION TWOSPINOR_POINTWISE_VALUE(PHI,POINT) RESULT(VALUE)
 ! Function that computes the value of a Pauli 2-spinor basis function at a given point of space.
   USE iso_c_binding
-  IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI
   DOUBLE PRECISION,DIMENSION(3),INTENT(IN) :: POINT
   DOUBLE COMPLEX,DIMENSION(2) :: VALUE
@@ -643,12 +579,10 @@ FUNCTION TWOSPINOR_POINTWISE_VALUE(PHI,POINT) RESULT(VALUE)
 END FUNCTION TWOSPINOR_POINTWISE_VALUE
 
 SUBROUTINE PRINT2SPINOR(PHI,NUNIT)
-  IMPLICIT NONE
   TYPE(twospinor),INTENT(IN) :: PHI
   INTEGER,INTENT(IN) :: NUNIT
 
   INTEGER :: I,J,K
-
   DO K=1,2
      WRITE(NUNIT,*)'component #',K
      IF (PHI%nbrofcontractions(K)==0) THEN
@@ -675,46 +609,42 @@ END MODULE
 MODULE scf_parameters
 ! number of different SCF algorithms to be used
   INTEGER :: NBALG
-! SCF algorithm index (1: Roothaan, 2: level-shifting, 3: DIIS, 4: ODA (non-relativistic case only), 5: \'Eric S\'er\'e's (relativistic case only))
+! SCF algorithm index (1: Roothaan, 2: level-shifting, 3: DIIS, 4: ODA (non-relativistic case only), 5: Eric S\E9r\E9's (relativistic case only))
   INTEGER,DIMENSION(5) :: ALG
 ! threshold for numerical convergence
   DOUBLE PRECISION :: TRSHLD
 ! maximum number of iterations allowed
   INTEGER :: MAXITR
-! flag for the direct computation of the bielectronic integrals
+! direct computation of the bielectronic integrals or not
   LOGICAL :: DIRECT
-! flag for the "semi-direct" computation of the bielectronic integrals (relativistic case only)
+! "semi-direct" computation of the bielectronic integrals (relativistic case only)
 ! Note: the case is considered as a (DIRECT==.FALSE.) subcase: GBF bielectronic integrals are precomputed and kept in memory, 2-spinor bielectronic integrals being computed "directly" using these values afterwards.
   LOGICAL :: SEMIDIRECT
-! flag for the storage of the computed bielectronic integrals (and/or their list) on disk or in memory
+! storage of the computed bielectronic integrals (and/or their list) on disk or in memory
   LOGICAL :: USEDISK
-! flag for the use of the SS-bielectronic integrals
+! use of the SS-bielectronic integrals
   LOGICAL :: SSINTEGRALS
-! flag for the use of the LS-bielectronic integrals
-  LOGICAL :: SLINTEGRALS
-! flag to resume a previous computation (using EIG and EIGVEC)
-  LOGICAL :: RESUME
 CONTAINS
 
 SUBROUTINE SETUP_SCF
   !$ USE omp_lib
   USE case_parameters ; USE setup_tools
-  IMPLICIT NONE
   CHARACTER :: METHOD
   CHARACTER(4) :: CHAR
-  INTEGER :: I,INFO,DIISMXSET,STAT,NUMBER_OF_THREADS
-  DOUBLE PRECISION :: LSSHIFT,DIISRCP
+  INTEGER :: I,INFO,MXSET,STAT,NUMBER_OF_THREADS
+  DOUBLE PRECISION :: MXDIV
+  DOUBLE PRECISION :: SHIFT
 
   OPEN(100,FILE=SETUP_FILE,STATUS='old',ACTION='read')
   CALL LOOKFOR(100,'## SCF PARAMETERS',INFO)
-  IF (INFO/=0) STOP' The SCF parameters are not given.'
+  IF (INFO/=0) STOP
   READ(100,'(7/,i1)') NBALG
   DO I=1,NBALG
      READ(100,'(i1)') ALG(I)
      IF (RELATIVISTIC.AND.(ALG(I)==4)) THEN
-        STOP' The Optimal Damping Algorithm is intended for the non-relativistic case only.'
+        STOP'The Optimal Damping Algorithm is intended for the non-relativistic case only.'
      ELSE IF ((.NOT.RELATIVISTIC).AND.(ALG(I)==5)) THEN
-        STOP' ES''s algorithm is intended for the relativistic case only.'
+        STOP'ES''s algorithm is intended for the relativistic case only.'
      END IF
   END DO
   READ(100,*) TRSHLD
@@ -758,27 +688,12 @@ SUBROUTINE SETUP_SCF
        WRITE(*,*)'Subroutine SETUP_SCF: unknown type of computation for bielectronic integrals.'
        STOP
      END IF
-     IF (MODEL==3) THEN
-! CGHF is a subcase of the relativistic case (for the moment...)
+     READ(100,'(a4)') CHAR
+     IF (CHAR=='NOSS') THEN
         SSINTEGRALS=.FALSE.
-        SLINTEGRALS=.FALSE.
+        WRITE(*,'(a)')' (SS-integrals are not used in the computation)'
      ELSE
-        REWIND(100)
-        CALL LOOKFOR(100,'NOSS',INFO)
-        IF (INFO==0) THEN
-           SSINTEGRALS=.FALSE.
-           WRITE(*,'(a)')' (SS-integrals are not used in the computation)'
-        ELSE
-           SSINTEGRALS=.TRUE.
-        END IF
-        REWIND(100)
-        CALL LOOKFOR(100,'NOSL',INFO)
-        IF (INFO==0) THEN
-           SLINTEGRALS=.FALSE.
-           WRITE(*,'(a)')' (SL-integrals are not used in the computation)'
-        ELSE
-           SLINTEGRALS=.TRUE.
-        END IF
+        SSINTEGRALS=.TRUE.
      END IF
   ELSE
      IF (CHAR=='DIR') THEN
@@ -806,39 +721,25 @@ SUBROUTINE SETUP_SCF
      IF (ALG(I)==2) THEN
         REWIND(100)
         CALL LOOKFOR(100,'LEVEL-SHIFTING ALGORITHM PARAMETERS',INFO)
-        IF (INFO/=0) GO TO 20
-        READ(100,'(/,f16.8)',ERR=20,END=20) LSSHIFT
-        IF (LSSHIFT<=0.) GO TO 21
+        IF (INFO/=0) GO TO 1
+        READ(100,'(/,f16.8)',ERR=1,END=1)SHIFT
      ELSE IF (ALG(I)==3) THEN
         REWIND(100)
         CALL LOOKFOR(100,'DIIS ALGORITHM PARAMETERS',INFO)
-        IF (INFO/=0) GO TO 30
-        READ(100,'(/,i2)',ERR=30,END=30) DIISMXSET
-        IF (DIISMXSET==0) THEN
-! The DIIS algorithm with restarts is used: read the parameter used to check for restart
-           READ(100,'(f16.8)',ERR=32,END=32) DIISRCP
-           IF (DIISRCP>=1.) GO TO 33
-        ELSE IF (DIISMXSET<2) THEN
-           GO TO 31
-        END IF
+        IF (INFO/=0) GO TO 2
+        READ(100,'(/,i2)',ERR=2,END=2)MXSET
+        IF (MXSET<2) GO TO 3
+	READ(100,'(/,f16.8)',ERR=5,END=5)MXDIV !size of first vs last entry in DIIS error vector
+	IF (MXDIV>1) GO TO 6
      ELSE IF (ALG(I)==5) THEN
         REWIND(100)
         CALL LOOKFOR(100,'SERE''S ALGORITHM PARAMETERS',INFO)
-        IF (INFO/=0) GO TO 50
-        READ(100,'(/,a)',ERR=50,END=50)METHOD
-        IF ((METHOD/='D').AND.(METHOD/='S').AND.(METHOD/='N')) GO TO 50
+        IF (INFO/=0) GO TO 4
+        READ(100,'(/,a)',ERR=4,END=4)METHOD
+        IF ((METHOD/='D').AND.(METHOD/='S')) GO TO 4
      END IF
   END DO
-  
-  RESUME=.FALSE.
-  CALL LOOKFOR(100,'RESUME',INFO)
-  IF(INFO == 0) THEN
-     READ(100,'(a)')CHAR
-     IF(CHAR == 'YES') THEN
-        RESUME = .TRUE.
-     END IF
-  END IF
-! determination of the number of threads to be used by OpenMP
+  !$ ! determination of the number of threads to be used by OpenMP
   !$ CALL LOOKFOR(100,'PARALLELIZATION PARAMETERS',INFO)
   !$ IF (INFO==0) THEN
   !$    READ(100,'(/,i3)')NUMBER_OF_THREADS
@@ -848,12 +749,11 @@ SUBROUTINE SETUP_SCF
   CLOSE(100)
   RETURN
 ! MESSAGES
-20 STOP'No valid shift parameter has been given for the level-shifting algorithm.'
-21 STOP'The shift parameter for the level-shifting algorithm must be positive.'
-30 STOP'No valid maximum simplex dimension has been given for the DIIS algorithm.'
-31 STOP'The maximum simplex dimension for the DIIS algorithm must be at least equal to two.'
-32 STOP'No valid parameter to check for restart was given for the DIIS algorithm with restarts.'
-33 STOP'The parameter to check for restart for the DIIS algorithm with restarts must be smaller than 1.'
-50 STOP'No valid method given for the computation of $Theta$ in ES''s algorithm.'
+1 STOP'No shift parameter given for the level-shifting algorithm.'
+2 STOP'No simplex dimension given for the DIIS algorithm.'
+3 STOP'The simplex dimension for the DIIS algorithm must be at least equal to two.'
+4 STOP'No method given for the computation of $Theta$ in ES''s algorithm.'
+5 STOP'Linear dependence check parameter not found.'
+6 STOP'Linear dependence check parameter must be smaller than 1.'
 END SUBROUTINE SETUP_SCF
 END MODULE
