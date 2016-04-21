@@ -1,7 +1,7 @@
 MODULE debug
 ! This module contains a logical flag to perform various checks in the computation of ESA's THETA function.
 !  LOGICAL,PARAMETER :: THETA_CHECK=.TRUE.
-  LOGICAL,PARAMETER :: THETA_CHECK=.FALSE.
+  LOGICAL :: THETA_CHECK=.TRUE.
 END MODULE
 
 MODULE metric_relativistic
@@ -78,6 +78,26 @@ FUNCTION ENERGY_RGHF(POEFM,PTEFM,PDM,N) RESULT(ETOT)
 
   ETOT=ELECTRONIC_ENERGY_HF(POEFM,PTEFM,PDM,N)+INTERNUCLEAR_ENERGY
 END FUNCTION ENERGY_RGHF
+
+FUNCTION ENERGY_DIFF_RGHF(POEFM,PDM1,PDM2,PHI,N) RESULT(ETOT)
+  ! computes the energy difference between PDM1 and PDM2.
+  USE case_parameters ; USE data_parameters ; USE basis_parameters
+  IMPLICIT NONE
+  INTEGER,INTENT(IN) :: N
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2),INTENT(IN) :: POEFM,PDM1,PDM2
+  DOUBLE PRECISION,DIMENSION(N*(N+1)/2) :: PTEFM1,PTEFM2p1
+  DOUBLE PRECISION :: ETOT
+  TYPE(gaussianbasisfunction),DIMENSION(:) :: PHI
+
+  CALL BUILDTEFM_RGHF(PTEFM1,N,PHI,PDM1)
+  CALL BUILDTEFM_RGHF(PTEFM2p1,N,PHI,PDM1+PDM2)
+
+  ETOT = ENERGY_RGHF(POEFM,PTEFM2p1,PDM2-PDM1,N)
+  ! ETOT = ETOT + ENERGY_RGHF(0*POEFM,PTEFM2m1,PDM2,N)
+
+  
+  ETOT = ENERGY_RHF(POEFM,PTEFM2p1,PDM2-PDM1,N)
+END FUNCTION ENERGY_DIFF_RGHF
 
 FUNCTION ELECTRONIC_ENERGY_relativistic(POEFM,PTEFM,PDM,N) RESULT(ENERGY)
 ! Function that computes the Dirac-Fock electronic energy associated to a density matrix (whose upper triangular part is stored in packed form in PDM) of a given molecular system, POEFM and PTEFM containing respectively the core hamiltonian matrix and the two-electron part of the Fock matrix (both stored similarly).

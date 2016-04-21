@@ -347,7 +347,7 @@ SUBROUTINE DRIVER_nonrelativistic
            CASE (3)
            WRITE(*,*)' Not implemented yet!'
            CASE (4)
-           WRITE(*,*)' Not implemented yet!'
+           CALL GRADIENT_RGHF(EIG,EIGVEC,NBAST,POEFM,PHI,TRSHLD,MAXITR,RESUME)
         END SELECT
 
      END SELECT
